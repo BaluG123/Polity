@@ -422,13 +422,13 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingTop: 50,
-    paddingBottom: 20,
+    paddingBottom: 15,
     paddingHorizontal: 20,
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   headerContent: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   headerTitle: {
     fontSize: 24,
@@ -458,7 +458,12 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     backgroundColor: '#FFFFFF',
-    paddingVertical: 15,
+    paddingVertical: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   filterContent: {
     paddingHorizontal: 20,
@@ -489,7 +494,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 10,
   },
   section: {
     paddingHorizontal: 20,

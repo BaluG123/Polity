@@ -237,31 +237,190 @@ export const LANDMARK_CASES = [
   }
 ];
 
-export const QUIZ_QUESTIONS = [
+export const QUIZ_LEVELS = [
   {
-    id: "q1",
-    question: "Which amendment added 'Socialist' and 'Secular' to the Preamble?",
-    options: ["41st Amendment", "42nd Amendment", "43rd Amendment", "44th Amendment"],
-    correctAnswer: 1,
-    explanation: "The 42nd Amendment (1976) added 'Socialist' and 'Secular' to the Preamble during the Emergency period.",
-    topic: "Preamble",
-    difficulty: "medium"
+    id: 'beginner',
+    title: 'Beginner Level',
+    subtitle: 'Basic concepts and fundamentals',
+    icon: '🌱',
+    color: '#4CAF50',
+    minScore: 0,
+    maxScore: 40,
+    description: 'Start with basic political science concepts',
+    questionsCount: 5,
+    timeLimit: 300, // 5 minutes
   },
   {
-    id: "q2",
-    question: "The Basic Structure Doctrine was established in which case?",
-    options: ["Golaknath case", "Kesavananda Bharati case", "Minerva Mills case", "Waman Rao case"],
-    correctAnswer: 1,
-    explanation: "The Basic Structure Doctrine was established in Kesavananda Bharati v. State of Kerala (1973) by a 13-judge bench.",
-    topic: "Constitutional Law",
-    difficulty: "medium"
+    id: 'intermediate',
+    title: 'Intermediate Level',
+    subtitle: 'Constitutional provisions and cases',
+    icon: '📚',
+    color: '#FF9800',
+    minScore: 40,
+    maxScore: 70,
+    description: 'Dive deeper into constitutional law',
+    questionsCount: 8,
+    timeLimit: 480, // 8 minutes
+  },
+  {
+    id: 'advanced',
+    title: 'Advanced Level',
+    subtitle: 'Complex scenarios and analysis',
+    icon: '🎓',
+    color: '#E91E63',
+    minScore: 70,
+    maxScore: 100,
+    description: 'Master advanced political concepts',
+    questionsCount: 10,
+    timeLimit: 600, // 10 minutes
+  },
+  {
+    id: 'expert',
+    title: 'Expert Level',
+    subtitle: 'UPSC/KPSC level questions',
+    icon: '👑',
+    color: '#9C27B0',
+    minScore: 85,
+    maxScore: 100,
+    description: 'Challenge yourself with expert-level questions',
+    questionsCount: 12,
+    timeLimit: 720, // 12 minutes
   }
 ];
+
+export const QUIZ_QUESTIONS = {
+  beginner: [
+    {
+      id: "b1",
+      question: "When did India gain independence?",
+      options: ["August 14, 1947", "August 15, 1947", "August 16, 1947", "July 15, 1947"],
+      correctAnswer: 1,
+      explanation: "India gained independence on August 15, 1947, from British colonial rule.",
+      topic: "Independence",
+      difficulty: "easy"
+    },
+    {
+      id: "b2",
+      question: "Who was the first Prime Minister of India?",
+      options: ["Mahatma Gandhi", "Jawaharlal Nehru", "Sardar Patel", "Dr. Rajendra Prasad"],
+      correctAnswer: 1,
+      explanation: "Jawaharlal Nehru was India's first Prime Minister, serving from 1947 to 1964.",
+      topic: "Independence",
+      difficulty: "easy"
+    },
+    {
+      id: "b3",
+      question: "When did the Indian Constitution come into effect?",
+      options: ["January 26, 1949", "January 26, 1950", "August 15, 1950", "November 26, 1949"],
+      correctAnswer: 1,
+      explanation: "The Indian Constitution came into effect on January 26, 1950, which is celebrated as Republic Day.",
+      topic: "Constitution",
+      difficulty: "easy"
+    },
+    {
+      id: "b4",
+      question: "How many fundamental rights are there in the Indian Constitution?",
+      options: ["5", "6", "7", "8"],
+      correctAnswer: 1,
+      explanation: "There are 6 fundamental rights in the Indian Constitution after the 44th Amendment removed the right to property.",
+      topic: "Fundamental Rights",
+      difficulty: "easy"
+    },
+    {
+      id: "b5",
+      question: "Who is known as the 'Father of the Indian Constitution'?",
+      options: ["Mahatma Gandhi", "Jawaharlal Nehru", "Dr. B.R. Ambedkar", "Sardar Patel"],
+      correctAnswer: 2,
+      explanation: "Dr. B.R. Ambedkar is known as the 'Father of the Indian Constitution' for his role as chairman of the drafting committee.",
+      topic: "Constitution",
+      difficulty: "easy"
+    }
+  ],
+  intermediate: [
+    {
+      id: "i1",
+      question: "Which amendment added 'Socialist' and 'Secular' to the Preamble?",
+      options: ["41st Amendment", "42nd Amendment", "43rd Amendment", "44th Amendment"],
+      correctAnswer: 1,
+      explanation: "The 42nd Amendment (1976) added 'Socialist' and 'Secular' to the Preamble during the Emergency period.",
+      topic: "Preamble",
+      difficulty: "medium"
+    },
+    {
+      id: "i2",
+      question: "Article 32 is known as the:",
+      options: ["Right to Equality", "Heart and Soul of Constitution", "Right to Freedom", "Right to Education"],
+      correctAnswer: 1,
+      explanation: "Article 32 (Right to Constitutional Remedies) is called the 'Heart and Soul of the Constitution' by Dr. Ambedkar.",
+      topic: "Fundamental Rights",
+      difficulty: "medium"
+    },
+    {
+      id: "i3",
+      question: "The Basic Structure Doctrine was established in which case?",
+      options: ["Golaknath case", "Kesavananda Bharati case", "Minerva Mills case", "Waman Rao case"],
+      correctAnswer: 1,
+      explanation: "The Basic Structure Doctrine was established in Kesavananda Bharati v. State of Kerala (1973) by a 13-judge bench.",
+      topic: "Constitutional Law",
+      difficulty: "medium"
+    },
+    {
+      id: "i4",
+      question: "Which article deals with Uniform Civil Code?",
+      options: ["Article 43", "Article 44", "Article 45", "Article 46"],
+      correctAnswer: 1,
+      explanation: "Article 44 under DPSP directs the State to secure a Uniform Civil Code for all citizens.",
+      topic: "DPSP",
+      difficulty: "medium"
+    },
+    {
+      id: "i5",
+      question: "The President of India is elected by:",
+      options: ["Direct election by people", "Electoral College", "Parliament only", "State Assemblies only"],
+      correctAnswer: 1,
+      explanation: "The President is elected by an Electoral College consisting of elected members of Parliament and State Legislative Assemblies.",
+      topic: "President",
+      difficulty: "medium"
+    }
+  ],
+  advanced: [
+    {
+      id: "a1",
+      question: "In Maneka Gandhi case, the Supreme Court established that procedure established by law must be:",
+      options: ["Just and fair", "Fair, just and reasonable", "Reasonable only", "Constitutional"],
+      correctAnswer: 1,
+      explanation: "In Maneka Gandhi v. Union of India (1978), the SC held that procedure must be fair, just and reasonable, not just legally valid.",
+      topic: "Constitutional Law",
+      difficulty: "hard"
+    },
+    {
+      id: "a2",
+      question: "The 73rd Amendment Act is related to:",
+      options: ["Urban Local Bodies", "Panchayati Raj", "Cooperative Societies", "Education"],
+      correctAnswer: 1,
+      explanation: "The 73rd Amendment (1992) gave constitutional status to Panchayati Raj institutions.",
+      topic: "Local Government",
+      difficulty: "hard"
+    }
+  ],
+  expert: [
+    {
+      id: "e1",
+      question: "Which principle was NOT part of the original Basic Structure as defined in Kesavananda Bharati case?",
+      options: ["Supremacy of Constitution", "Secular character", "Judicial review", "Economic justice"],
+      correctAnswer: 3,
+      explanation: "Economic justice was not explicitly mentioned as part of the basic structure in the original Kesavananda Bharati judgment.",
+      topic: "Constitutional Law",
+      difficulty: "expert"
+    }
+  ]
+};
 
 // Export all data
 export const POLITY_DATA = {
   INDIAN_CONSTITUTION,
   HISTORICAL_EVENTS,
   LANDMARK_CASES,
+  QUIZ_LEVELS,
   QUIZ_QUESTIONS
 };
