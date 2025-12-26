@@ -472,8 +472,8 @@ export const QUIZ_LEVELS = [
     minScore: 0,
     maxScore: 40,
     description: 'Start with basic political science concepts',
-    questionsCount: 5,
-    timeLimit: 300, // 5 minutes
+    questionsCount: 100,
+    timeLimit: 6000, // 100 minutes (1 minute per question)
   },
   {
     id: 'intermediate',
@@ -485,7 +485,7 @@ export const QUIZ_LEVELS = [
     maxScore: 70,
     description: 'Dive deeper into constitutional law',
     questionsCount: 8,
-    timeLimit: 480, // 8 minutes
+    timeLimit: 600, // 10 minutes (1.25 minutes per question)
   },
   {
     id: 'advanced',
@@ -496,8 +496,8 @@ export const QUIZ_LEVELS = [
     minScore: 70,
     maxScore: 100,
     description: 'Master advanced political concepts',
-    questionsCount: 10,
-    timeLimit: 600, // 10 minutes
+    questionsCount: 4,
+    timeLimit: 360, // 6 minutes (1.5 minutes per question)
   },
   {
     id: 'expert',
@@ -508,8 +508,8 @@ export const QUIZ_LEVELS = [
     minScore: 85,
     maxScore: 100,
     description: 'Challenge yourself with expert-level questions',
-    questionsCount: 12,
-    timeLimit: 720, // 12 minutes
+    questionsCount: 2,
+    timeLimit: 240, // 4 minutes (2 minutes per question)
   }
 ];
 

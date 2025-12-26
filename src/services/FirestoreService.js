@@ -21,7 +21,6 @@ export const FirestoreService = {
     // Seed database with local data
     seedDatabase: async () => {
         try {
-            console.log('Starting seeding...');
             const batch = firestore().batch();
 
             // Seed Levels
@@ -36,13 +35,12 @@ export const FirestoreService = {
                 questions.forEach((q) => {
                     const docRef = firestore()
                         .collection(QUESTIONS_COLLECTION)
-                        .doc(q.id); // Use specific ID to avoid dupes on re-run
+                        .doc(q.id);
                     batch.set(docRef, { ...q, levelId });
                 });
             });
 
             await batch.commit();
-            console.log('Database seeded successfully!');
             return true;
         } catch (error) {
             console.error('Error seeding database:', error);
@@ -79,20 +77,13 @@ export const FirestoreService = {
             return snapshot.docs.map(doc => doc.data());
         } catch (error) {
             console.error('Error fetching questions:', error);
-            return QUIZ_QUESTIONS[levelId] || []; // Fail-safe
+            return QUIZ_QUESTIONS[levelId] || [];
         }
     },
 
     // Save Quiz Result
     saveQuizResult: async (userId, userProfile, levelId, score, totalQuestions) => {
         try {
-            console.log('=== SAVING QUIZ RESULT ===');
-            console.log('User ID:', userId);
-            console.log('User Profile:', userProfile);
-            console.log('Level ID:', levelId);
-            console.log('Score:', score);
-            console.log('Total Questions:', totalQuestions);
-            
             const timestamp = firestore.FieldValue.serverTimestamp();
 
             // Intelligent Scoring Algorithm
@@ -131,26 +122,12 @@ export const FirestoreService = {
                 const difficultyPoints = basePoints * (difficultyMultiplier[levelId] || 1.0);
                 const finalPoints = Math.round(difficultyPoints * performanceBonus * speedBonus);
 
-                console.log('🎯 Scoring breakdown:', {
-                    level: levelId,
-                    score: score,
-                    totalQuestions: totalQuestions,
-                    percentage: percentage,
-                    basePoints: basePoints,
-                    difficultyMultiplier: difficultyMultiplier[levelId],
-                    performanceBonus: performanceBonus,
-                    speedBonus: speedBonus,
-                    finalPoints: finalPoints
-                });
-
                 return Math.max(finalPoints, 1); // Minimum 1 point for participation
             };
 
             const intelligentPoints = calculateIntelligentScore(levelId, score, totalQuestions);
-            console.log('🧠 Calculated intelligent points:', intelligentPoints);
 
             // 1. Save detailed result to user history
-            console.log('Saving to user history...');
             await firestore()
                 .collection('users')
                 .doc(userId)
@@ -163,15 +140,12 @@ export const FirestoreService = {
                     pointsEarned: intelligentPoints,
                     completedAt: timestamp,
                 });
-            console.log('✅ Quiz history saved successfully');
 
             // 2. Update Leaderboard (atomic transaction)
-            console.log('Updating leaderboard...');
             const leaderboardRef = firestore().collection(LEADERBOARD_COLLECTION).doc(userId);
 
             await firestore().runTransaction(async (transaction) => {
                 const doc = await transaction.get(leaderboardRef);
-                console.log('Existing document exists:', doc.exists);
 
                 let newTotalScore = intelligentPoints;
                 let quizzesPlayed = 1;
@@ -179,8 +153,7 @@ export const FirestoreService = {
                 let currentStreak = 1;
 
                 if (doc.exists) {
-                    const data = doc.data() || {}; // Add fallback to empty object
-                    console.log('Existing leaderboard data:', data);
+                    const data = doc.data() || {};
                     newTotalScore = (data.totalScore || 0) + intelligentPoints;
                     quizzesPlayed = (data.quizzesPlayed || 0) + 1;
                     
@@ -218,17 +191,12 @@ export const FirestoreService = {
                     lastQuizLevel: levelId,
                 };
 
-                console.log('Saving leaderboard data:', leaderboardData);
                 transaction.set(leaderboardRef, leaderboardData, { merge: true });
             });
 
-            console.log('✅ Leaderboard updated successfully');
-            console.log('=== QUIZ RESULT SAVED ===');
             return { success: true, pointsEarned: intelligentPoints };
         } catch (error) {
-            console.error('❌ Error saving quiz result:', error);
-            console.error('Error details:', error.message);
-            console.error('Error code:', error.code);
+            console.error('Error saving quiz result:', error);
             throw error;
         }
     },
@@ -236,22 +204,19 @@ export const FirestoreService = {
     // Fetch Leaderboard
     getLeaderboard: async (limit = 50) => {
         try {
-            console.log('Fetching leaderboard from Firestore...');
             const snapshot = await firestore()
                 .collection(LEADERBOARD_COLLECTION)
                 .orderBy('totalScore', 'desc')
                 .limit(limit)
                 .get();
 
-            console.log(`Found ${snapshot.docs.length} leaderboard entries`);
             const results = snapshot.docs.map((doc, index) => ({
                 ...doc.data(),
                 rank: index + 1,
-                totalScore: doc.data().totalScore || 0, // Ensure totalScore is always a number
-                quizzesPlayed: doc.data().quizzesPlayed || 0, // Ensure quizzesPlayed is always a number
+                totalScore: doc.data().totalScore || 0,
+                quizzesPlayed: doc.data().quizzesPlayed || 0,
             }));
             
-            console.log('Leaderboard results:', results);
             return results;
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
@@ -262,9 +227,7 @@ export const FirestoreService = {
     // Test Firestore connection
     testConnection: async () => {
         try {
-            console.log('Testing Firestore connection...');
             const testDoc = await firestore().collection('test').doc('connection').get();
-            console.log('Firestore connection test successful');
             return true;
         } catch (error) {
             console.error('Firestore connection test failed:', error);
@@ -275,15 +238,11 @@ export const FirestoreService = {
     // Check user's leaderboard entry
     checkUserLeaderboardEntry: async (userId) => {
         try {
-            console.log('Checking user leaderboard entry for:', userId);
             const doc = await firestore().collection(LEADERBOARD_COLLECTION).doc(userId).get();
             
             if (doc.exists) {
-                const data = doc.data();
-                console.log('User leaderboard data found:', data);
-                return data;
+                return doc.data();
             } else {
-                console.log('No leaderboard entry found for user');
                 return null;
             }
         } catch (error) {
@@ -295,7 +254,6 @@ export const FirestoreService = {
     // Get user's quiz history
     getUserQuizHistory: async (userId) => {
         try {
-            console.log('Getting quiz history for user:', userId);
             const snapshot = await firestore()
                 .collection('users')
                 .doc(userId)
@@ -308,7 +266,6 @@ export const FirestoreService = {
                 ...doc.data()
             }));
             
-            console.log('User quiz history:', history);
             return history;
         } catch (error) {
             console.error('Error getting user quiz history:', error);
