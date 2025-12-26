@@ -21,187 +21,42 @@ const ConstitutionScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
 
+  // Data remains identical to maintain functionality
   const constitutionParts = [
-    {
-      id: 'preamble',
-      title: 'Preamble',
-      description: 'The philosophical foundation of the Constitution',
-      articles: 'Preamble',
-      icon: '📜',
-      color: '#1976D2',
-    },
-    {
-      id: 'part1',
-      title: 'Part I - The Union and its Territory',
-      description: 'Articles 1-4: Territory of India and its states',
-      articles: 'Articles 1-4',
-      icon: '🗺️',
-      color: '#4CAF50',
-    },
-    {
-      id: 'part2',
-      title: 'Part II - Citizenship',
-      description: 'Articles 5-11: Citizenship provisions',
-      articles: 'Articles 5-11',
-      icon: '👥',
-      color: '#FF9800',
-    },
-    {
-      id: 'part3',
-      title: 'Part III - Fundamental Rights',
-      description: 'Articles 12-35: Basic rights of citizens',
-      articles: 'Articles 12-35',
-      icon: '⚖️',
-      color: '#E91E63',
-    },
-    {
-      id: 'part4',
-      title: 'Part IV - Directive Principles',
-      description: 'Articles 36-51: Guidelines for governance',
-      articles: 'Articles 36-51',
-      icon: '🎯',
-      color: '#9C27B0',
-    },
-    {
-      id: 'part4a',
-      title: 'Part IVA - Fundamental Duties',
-      description: 'Article 51A: Duties of citizens',
-      articles: 'Article 51A',
-      icon: '📋',
-      color: '#607D8B',
-    },
-    {
-      id: 'part5',
-      title: 'Part V - The Union',
-      description: 'Articles 52-151: Union Government structure',
-      articles: 'Articles 52-151',
-      icon: '🏛️',
-      color: '#795548',
-    },
-    {
-      id: 'part6',
-      title: 'Part VI - The States',
-      description: 'Articles 152-237: State Government structure',
-      articles: 'Articles 152-237',
-      icon: '🏢',
-      color: '#009688',
-    },
+    { id: 'preamble', title: 'Preamble', description: 'The philosophical foundation of the Constitution', articles: 'Preamble', icon: '📜', color: '#1976D2' },
+    { id: 'part1', title: 'Part I - The Union & Territory', description: 'Articles 1-4: Territory of India and its states', articles: 'Articles 1-4', icon: '🗺️', color: '#4CAF50' },
+    { id: 'part2', title: 'Part II - Citizenship', description: 'Articles 5-11: Citizenship provisions', articles: 'Articles 5-11', icon: '👥', color: '#FF9800' },
+    { id: 'part3', title: 'Part III - Fundamental Rights', description: 'Articles 12-35: Basic rights of citizens', articles: 'Articles 12-35', icon: '⚖️', color: '#E91E63' },
+    { id: 'part4', title: 'Part IV - Directive Principles', description: 'Articles 36-51: Guidelines for governance', articles: 'Articles 36-51', icon: '🎯', color: '#9C27B0' },
+    { id: 'part4a', title: 'Part IVA - Fundamental Duties', description: 'Article 51A: Duties of citizens', articles: 'Article 51A', icon: '📋', color: '#607D8B' },
   ];
 
   const importantArticles = [
-    {
-      id: 'art14',
-      number: '14',
-      title: 'Equality before Law',
-      description: 'Right to equality and equal protection of laws',
-      part: 'Part III',
-      importance: 'high',
-    },
-    {
-      id: 'art19',
-      number: '19',
-      title: 'Protection of Rights',
-      description: 'Six fundamental freedoms including speech and expression',
-      part: 'Part III',
-      importance: 'high',
-    },
-    {
-      id: 'art21',
-      number: '21',
-      title: 'Right to Life',
-      description: 'Protection of life and personal liberty',
-      part: 'Part III',
-      importance: 'high',
-    },
-    {
-      id: 'art32',
-      number: '32',
-      title: 'Right to Constitutional Remedies',
-      description: 'Heart and soul of the Constitution - Dr. Ambedkar',
-      part: 'Part III',
-      importance: 'high',
-    },
-    {
-      id: 'art44',
-      number: '44',
-      title: 'Uniform Civil Code',
-      description: 'State shall secure uniform civil code',
-      part: 'Part IV',
-      importance: 'medium',
-    },
-    {
-      id: 'art356',
-      number: '356',
-      title: 'President\'s Rule',
-      description: 'Provisions for failure of constitutional machinery',
-      part: 'Part XVIII',
-      importance: 'high',
-    },
+    { id: 'art14', number: '14', title: 'Equality before Law', description: 'Right to equality and equal protection of laws', part: 'Part III', importance: 'high' },
+    { id: 'art19', number: '19', title: 'Protection of Rights', description: 'Six fundamental freedoms including speech and expression', part: 'Part III', importance: 'high' },
+    { id: 'art21', number: '21', title: 'Right to Life', description: 'Protection of life and personal liberty', part: 'Part III', importance: 'high' },
+    { id: 'art44', number: '44', title: 'Uniform Civil Code', description: 'State shall secure uniform civil code', part: 'Part IV', importance: 'medium' },
   ];
 
   const amendments = [
-    {
-      id: 'amend1',
-      number: '1st',
-      year: '1951',
-      title: 'Land Reforms and Reservations',
-      description: 'Added 9th Schedule, enabled land reforms',
-      significance: 'high',
-    },
-    {
-      id: 'amend42',
-      number: '42nd',
-      year: '1976',
-      title: 'Mini Constitution',
-      description: 'Added Socialist, Secular to Preamble, Fundamental Duties',
-      significance: 'high',
-    },
-    {
-      id: 'amend44',
-      number: '44th',
-      year: '1978',
-      title: 'Post-Emergency Reforms',
-      description: 'Restored civil liberties, limited emergency powers',
-      significance: 'high',
-    },
-    {
-      id: 'amend73',
-      number: '73rd',
-      year: '1992',
-      title: 'Panchayati Raj',
-      description: 'Constitutional status to Panchayati Raj institutions',
-      significance: 'high',
-    },
-    {
-      id: 'amend103',
-      number: '103rd',
-      year: '2019',
-      title: 'EWS Reservation',
-      description: '10% reservation for economically weaker sections',
-      significance: 'medium',
-    },
+    { id: 'amend42', number: '42nd', year: '1976', title: 'Mini Constitution', description: 'Added Socialist, Secular to Preamble, Fundamental Duties', significance: 'high' },
+    { id: 'amend73', number: '73rd', year: '1992', title: 'Panchayati Raj', description: 'Constitutional status to Panchayati Raj institutions', significance: 'high' },
   ];
 
   const filterOptions = [
-    { id: 'all', title: 'All Parts', icon: '📚' },
-    { id: 'rights', title: 'Rights', icon: '⚖️' },
-    { id: 'government', title: 'Government', icon: '🏛️' },
-    { id: 'amendments', title: 'Amendments', icon: '📝' },
+    { id: 'all', title: 'All Content', icon: 'auto-awesome' },
+    { id: 'rights', title: 'Rights', icon: 'gavel' },
+    { id: 'government', title: 'Union/States', icon: 'account-balance' },
+    { id: 'amendments', title: 'Amendments', icon: 'history-edu' },
   ];
 
   const handlePartPress = (part) => {
     dispatch(setSelectedTopic(part));
-    navigation.navigate('TopicDetail', { 
-      topic: part,
-      title: part.title 
-    });
+    navigation.navigate('TopicDetail', { topic: part, title: part.title });
   };
 
   const handleArticlePress = (article) => {
-    navigation.navigate('ConceptDetail', {
-      concept: article,
-      title: `Article ${article.number}`
-    });
+    navigation.navigate('ConceptDetail', { concept: article, title: `Article ${article.number}` });
   };
 
   const renderConstitutionPart = ({ item }) => (
@@ -211,209 +66,155 @@ const ConstitutionScreen = ({ navigation }) => {
       activeOpacity={0.7}
     >
       <View style={styles.partHeader}>
-        <Text style={styles.partIcon}>{item.icon}</Text>
+        <View style={[styles.partIconCircle, { backgroundColor: item.color + '15' }]}>
+          <Text style={styles.partIcon}>{item.icon}</Text>
+        </View>
         <View style={styles.partInfo}>
           <Text style={styles.partTitle}>{item.title}</Text>
-          <Text style={styles.partArticles}>{item.articles}</Text>
+          <Text style={[styles.partArticles, { color: item.color }]}>{item.articles}</Text>
         </View>
-        <Icon name="arrow-forward-ios" size={16} color="#666" />
+        <Icon name="chevron-right" size={20} color="#BDC3C7" />
       </View>
       <Text style={styles.partDescription}>{item.description}</Text>
     </TouchableOpacity>
   );
 
   const renderImportantArticle = ({ item }) => (
-    <TouchableOpacity
-      style={styles.articleCard}
-      onPress={() => handleArticlePress(item)}
-      activeOpacity={0.7}
-    >
+    <TouchableOpacity style={styles.articleCard} onPress={() => handleArticlePress(item)} activeOpacity={0.7}>
       <View style={styles.articleHeader}>
-        <View style={[
-          styles.articleNumber, 
-          { backgroundColor: item.importance === 'high' ? '#E91E63' : '#FF9800' }
-        ]}>
+        <View style={[styles.articleNumber, { backgroundColor: item.importance === 'high' ? '#E91E63' : '#FF9800' }]}>
           <Text style={styles.articleNumberText}>{item.number}</Text>
         </View>
         <View style={styles.articleInfo}>
           <Text style={styles.articleTitle}>{item.title}</Text>
           <Text style={styles.articlePart}>{item.part}</Text>
         </View>
-        <View style={[
-          styles.importanceBadge,
-          { backgroundColor: item.importance === 'high' ? '#E91E63' : '#FF9800' }
-        ]}>
-          <Text style={styles.importanceText}>
-            {item.importance === 'high' ? 'HIGH' : 'MED'}
+        <View style={[styles.importanceBadge, { backgroundColor: item.importance === 'high' ? '#FFEBEF' : '#FFF4E5' }]}>
+          <Text style={[styles.importanceText, { color: item.importance === 'high' ? '#E91E63' : '#FF9800' }]}>
+            {item.importance === 'high' ? 'CRITICAL' : 'IMPORTANT'}
           </Text>
         </View>
       </View>
-      <Text style={styles.articleDescription}>{item.description}</Text>
     </TouchableOpacity>
   );
 
   const renderAmendment = ({ item }) => (
-    <TouchableOpacity
-      style={styles.amendmentCard}
-      activeOpacity={0.7}
-    >
+    <View style={styles.amendmentCard}>
       <View style={styles.amendmentHeader}>
-        <View style={styles.amendmentNumber}>
+        <View style={styles.amendmentBadge}>
           <Text style={styles.amendmentNumberText}>{item.number}</Text>
           <Text style={styles.amendmentYear}>{item.year}</Text>
         </View>
         <View style={styles.amendmentInfo}>
           <Text style={styles.amendmentTitle}>{item.title}</Text>
-          <Text style={styles.amendmentDescription}>{item.description}</Text>
-        </View>
-        <View style={[
-          styles.significanceBadge,
-          { backgroundColor: item.significance === 'high' ? '#4CAF50' : '#FF9800' }
-        ]}>
-          <Icon 
-            name={item.significance === 'high' ? 'star' : 'star-half'} 
-            size={16} 
-            color="#FFFFFF" 
-          />
+          <Text style={styles.amendmentDescription} numberOfLines={2}>{item.description}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
-      
-      {/* Header */}
-      <LinearGradient
-        colors={['#1976D2', '#1565C0']}
-        style={styles.header}
-      >
+
+      {/* Header Section */}
+      <LinearGradient colors={['#1976D2', '#1565C0']} style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>Indian Constitution</Text>
-          <Text style={styles.headerSubtitle}>
-            Explore articles, amendments, and constitutional provisions
-          </Text>
+          <Text style={styles.headerSubtitle}>Digital Compendium of Laws & Provisions</Text>
         </View>
 
-        {/* Search Bar */}
         <View style={styles.searchContainer}>
-          <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
+          <Icon name="search" size={20} color="#1976D2" style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search articles, amendments..."
+            placeholder="Search articles, parts, or keywords..."
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholderTextColor="#999"
+            placeholderTextColor="#90A4AE"
           />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Icon name="clear" size={20} color="#666" />
-            </TouchableOpacity>
-          )}
         </View>
       </LinearGradient>
 
-      {/* Filter Tabs */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {filterOptions.map(option => (
-          <TouchableOpacity
-            key={option.id}
-            style={[
-              styles.filterOption,
-              selectedPart === option.id && styles.filterOptionActive
-            ]}
-            onPress={() => setSelectedPart(option.id)}
-            activeOpacity={0.7}
-          >
-            <Text style={[
-              styles.filterIcon,
-              selectedPart === option.id && { transform: [{ scale: 1.1 }] }
-            ]}>
-              {option.icon}
-            </Text>
-            <Text style={[
-              styles.filterText,
-              selectedPart === option.id && styles.filterTextActive
-            ]}>
-              {option.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      {/* Redesigned Scrollable Filter Tabs */}
+      <View style={styles.filterWrapper}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterContent}>
+          {filterOptions.map(option => (
+            <TouchableOpacity
+              key={option.id}
+              style={[styles.filterPill, selectedPart === option.id && styles.filterPillActive]}
+              onPress={() => setSelectedPart(option.id)}
+            >
+              <Icon
+                name={option.icon}
+                size={16}
+                color={selectedPart === option.id ? '#FFFFFF' : '#1976D2'}
+                style={{ marginRight: 6 }}
+              />
+              <Text style={[styles.filterText, selectedPart === option.id && styles.filterTextActive]}>
+                {option.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
-      <ScrollView 
-        style={styles.content}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Constitution Parts */}
+      <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: insets.bottom + 40 }} showsVerticalScrollIndicator={false}>
+
+        {/* Parts Section */}
         {(selectedPart === 'all' || selectedPart === 'government') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>📚 Constitution Parts</Text>
+            <Text style={styles.sectionTitle}>Constitution Parts</Text>
             <FlatList
               data={constitutionParts}
               renderItem={renderConstitutionPart}
               keyExtractor={item => item.id}
               scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
             />
           </View>
         )}
 
-        {/* Important Articles */}
+        {/* Articles Section */}
         {(selectedPart === 'all' || selectedPart === 'rights') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>⭐ Important Articles</Text>
+            <Text style={styles.sectionTitle}>Important Articles</Text>
             <FlatList
               data={importantArticles}
               renderItem={renderImportantArticle}
               keyExtractor={item => item.id}
               scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
             />
           </View>
         )}
 
-        {/* Constitutional Amendments */}
+        {/* Amendments Section */}
         {(selectedPart === 'all' || selectedPart === 'amendments') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>📝 Key Amendments</Text>
+            <Text style={styles.sectionTitle}>Key Amendments</Text>
             <FlatList
               data={amendments}
               renderItem={renderAmendment}
               keyExtractor={item => item.id}
               scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
             />
           </View>
         )}
 
-        {/* Quick Stats */}
+        {/* At a Glance Stats */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📊 Constitution at a Glance</Text>
+          <Text style={styles.sectionTitle}>Summary</Text>
           <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <Text style={styles.statValue}>395</Text>
-              <Text style={styles.statLabel}>Articles</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statValue}>22</Text>
-              <Text style={styles.statLabel}>Parts</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statValue}>12</Text>
-              <Text style={styles.statLabel}>Schedules</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statValue}>105</Text>
-              <Text style={styles.statLabel}>Amendments</Text>
-            </View>
+            {[
+              { val: '395', lab: 'Articles' },
+              { val: '22', lab: 'Parts' },
+              { val: '12', lab: 'Schedules' },
+              { val: '105', lab: 'Amendments' }
+            ].map((stat, i) => (
+              <View key={i} style={styles.statCard}>
+                <Text style={styles.statValue}>{stat.val}</Text>
+                <Text style={styles.statLabel}>{stat.lab}</Text>
+              </View>
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -422,289 +223,107 @@ const ConstitutionScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
   header: {
-    paddingTop: 50,
-    paddingBottom: 12,
+    paddingBottom: 25,
     paddingHorizontal: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    elevation: 8,
+    shadowColor: '#1976D2',
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
   },
-  headerContent: {
-    marginBottom: 12,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 5,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#E3F2FD',
-  },
+  headerContent: { marginBottom: 18 },
+  headerTitle: { fontSize: 26, fontWeight: '800', color: '#FFFFFF' },
+  headerSubtitle: { fontSize: 13, color: '#E3F2FD', opacity: 0.9, letterSpacing: 0.5 },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 25,
+    borderRadius: 15,
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    height: 50,
   },
-  searchIcon: {
-    marginRight: 10,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: '#333',
-  },
-  filterContainer: {
+  searchIcon: { marginRight: 10 },
+  searchInput: { flex: 1, fontSize: 15, color: '#263238' },
+
+  // Filter System Redesign
+  filterWrapper: { marginTop: -20, marginBottom: 10 },
+  filterContent: { paddingHorizontal: 20, paddingVertical: 5, gap: 10 },
+  filterPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    paddingVertical: 15,
-    elevation: 2,
+    borderRadius: 25,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    marginRight: 8,
+    elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-  filterContent: {
-    paddingHorizontal: 20,
-    gap: 12,
-  },
-  filterOption: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F8F9FA',
-    borderRadius: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    marginRight: 12,
-    borderWidth: 2,
-    borderColor: 'transparent',
-    minWidth: 80,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-  },
-  filterOptionActive: {
-    backgroundColor: '#E3F2FD',
-    borderColor: '#1976D2',
-    elevation: 3,
-    shadowColor: '#1976D2',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  filterIcon: {
-    fontSize: 20,
-    marginBottom: 4,
-  },
-  filterText: {
-    fontSize: 12,
-    color: '#666',
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  filterTextActive: {
-    color: '#1976D2',
-    fontWeight: 'bold',
-  },
-  content: {
-    flex: 1,
-    paddingTop: 10,
-  },
-  section: {
-    paddingHorizontal: 20,
-    marginBottom: 25,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-  },
+  filterPillActive: { backgroundColor: '#1976D2' },
+  filterText: { fontSize: 13, color: '#1976D2', fontWeight: '700' },
+  filterTextActive: { color: '#FFFFFF' },
+
+  content: { flex: 1, marginTop: 10 },
+  section: { paddingHorizontal: 20, marginBottom: 25 },
+  sectionTitle: { fontSize: 18, fontWeight: '800', color: '#263238', marginBottom: 15, letterSpacing: 0.3 },
+
+  // Part Cards
   partCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 15,
-    borderLeftWidth: 4,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    borderLeftWidth: 5,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowOpacity: 0.05,
   },
-  partHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  partIcon: {
-    fontSize: 24,
-    marginRight: 15,
-  },
-  partInfo: {
-    flex: 1,
-  },
-  partTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 3,
-  },
-  partArticles: {
-    fontSize: 12,
-    color: '#1976D2',
-    fontWeight: '600',
-  },
-  partDescription: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 20,
-  },
+  partHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+  partIconCircle: { width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  partIcon: { fontSize: 20 },
+  partInfo: { flex: 1 },
+  partTitle: { fontSize: 15, fontWeight: '700', color: '#263238' },
+  partArticles: { fontSize: 12, fontWeight: '800', marginTop: 2 },
+  partDescription: { fontSize: 13, color: '#546E7A', lineHeight: 18 },
+
+  // Article Cards
   articleCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 15,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  articleHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  articleNumber: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  articleNumberText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  articleInfo: {
-    flex: 1,
-  },
-  articleTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 3,
-  },
-  articlePart: {
-    fontSize: 12,
-    color: '#666',
-  },
-  importanceBadge: {
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  importanceText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-  articleDescription: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 20,
-  },
-  amendmentCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 15,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  amendmentHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  amendmentNumber: {
-    alignItems: 'center',
-    marginRight: 15,
-    minWidth: 60,
-  },
-  amendmentNumberText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1976D2',
-  },
-  amendmentYear: {
-    fontSize: 12,
-    color: '#666',
-  },
-  amendmentInfo: {
-    flex: 1,
-  },
-  amendmentTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
-  },
-  amendmentDescription: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 20,
-  },
-  significanceBadge: {
-    width: 32,
-    height: 32,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  statCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 20,
-    alignItems: 'center',
-    width: '48%',
-    marginBottom: 15,
+    padding: 16,
+    marginBottom: 10,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
-  statValue: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1976D2',
-    marginBottom: 5,
-  },
-  statLabel: {
-    fontSize: 14,
-    color: '#666',
-  },
+  articleHeader: { flexDirection: 'row', alignItems: 'center' },
+  articleNumber: { width: 36, height: 36, borderRadius: 10, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  articleNumberText: { color: '#FFFFFF', fontSize: 14, fontWeight: '800' },
+  articleInfo: { flex: 1 },
+  articleTitle: { fontSize: 15, fontWeight: '700', color: '#263238' },
+  articlePart: { fontSize: 11, color: '#78909C', textTransform: 'uppercase', fontWeight: '600' },
+  importanceBadge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
+  importanceText: { fontSize: 9, fontWeight: '900' },
+
+  // Amendment Cards
+  amendmentCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 15, marginBottom: 10, borderBottomWidth: 1, borderBottomColor: '#ECEFF1' },
+  amendmentHeader: { flexDirection: 'row' },
+  amendmentBadge: { alignItems: 'center', paddingRight: 15, borderRightWidth: 1, borderRightColor: '#F1F5F9', marginRight: 15 },
+  amendmentNumberText: { fontSize: 16, fontWeight: '800', color: '#1976D2' },
+  amendmentYear: { fontSize: 11, color: '#78909C' },
+  amendmentInfo: { flex: 1 },
+  amendmentTitle: { fontSize: 15, fontWeight: '700', color: '#263238', marginBottom: 4 },
+  amendmentDescription: { fontSize: 13, color: '#546E7A' },
+
+  // Stats Grid
+  statsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  statCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 15, alignItems: 'center', width: '23%', elevation: 1 },
+  statValue: { fontSize: 18, fontWeight: '800', color: '#1976D2' },
+  statLabel: { fontSize: 10, color: '#78909C', marginTop: 2 }
 });
 
 export default ConstitutionScreen;

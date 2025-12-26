@@ -8,8 +8,8 @@ import {
   StatusBar,
   Dimensions,
   Modal,
-  Image,
 } from 'react-native';
+import { WebView } from 'react-native-webview';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,7 +17,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { setSelectedEvent, setHistoricalEvents } from '../store/slices/politySlice';
 import { HISTORICAL_EVENTS } from '../data/polityData';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const HistoricalMapScreen = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -32,17 +32,15 @@ const HistoricalMapScreen = ({ navigation }) => {
   }, [dispatch]);
 
   const categories = [
-    { id: 'all', title: 'All', icon: '📚', color: '#1976D2' },
-    { id: 'Independence', title: 'Indep', icon: '🇮🇳', color: '#FF9800' },
-    { id: 'Constitution', title: 'Const', icon: '📜', color: '#1976D2' },
-    { id: 'Amendment', title: 'Amend', icon: '📝', color: '#9C27B0' },
-    { id: 'Judiciary', title: 'Court', icon: '⚖️', color: '#E91E63' },
-    { id: 'Emergency', title: 'Emerg', icon: '⚠️', color: '#F44336' },
-    { id: 'Federalism', title: 'Federal', icon: '🗺️', color: '#607D8B' },
+    { id: 'all', title: 'All Events', icon: 'layers', color: '#1976D2' },
+    { id: 'Independence', title: 'Independence', icon: 'wb-sunny', color: '#FF9800' },
+    { id: 'Constitution', title: 'Constitution', icon: 'article', color: '#1976D2' },
+    { id: 'Amendment', title: 'Amendments', icon: 'history-edu', color: '#9C27B0' },
+    { id: 'Judiciary', title: 'Courts', icon: 'gavel', color: '#E91E63' },
   ];
 
-  const filteredEvents = selectedCategory === 'all' 
-    ? historicalEvents 
+  const filteredEvents = selectedCategory === 'all'
+    ? historicalEvents
     : historicalEvents.filter(event => event.category === selectedCategory);
 
   const sortedEvents = [...filteredEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -53,555 +51,273 @@ const HistoricalMapScreen = ({ navigation }) => {
   };
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-IN', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       day: 'numeric',
-      month: 'long',
+      month: 'short',
       year: 'numeric'
     });
   };
 
-  const getYearFromDate = (dateString) => {
-    return new Date(dateString).getFullYear();
-  };
-
-  const renderMapView = () => (
-    <View style={styles.mapContainer}>
-      {/* Simplified India Map with Event Markers */}
-      <View style={styles.indiaMapContainer}>
-        <Text style={styles.mapTitle}>🗺️ India - Historical Political Events</Text>
-        
-        {/* Map Background */}
-        <View style={styles.mapBackground}>
-          <Text style={styles.mapLabel}>INDIA</Text>
+  const renderMapView = () => {
+    const mapHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <style>
+          body { margin: 0; padding: 0; background: #f0f4f8; }
+          #map { width: 100%; height: 100vh; }
+          .custom-pin {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+          }
+        </style>
+      </head>
+      <body>
+        <div id="map"></div>
+        <script>
+          const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([22.5937, 78.9629], 5);
           
-          {/* Event Markers */}
-          {filteredEvents.map((event, index) => (
-            <TouchableOpacity
-              key={event.id}
-              style={[
-                styles.eventMarker,
-                {
-                  backgroundColor: event.color,
-                  left: `${45 + (index % 3) * 15}%`,
-                  top: `${30 + (index % 4) * 15}%`,
-                }
-              ]}
-              onPress={() => handleEventPress(event)}
-            >
-              <Text style={styles.markerIcon}>{event.icon}</Text>
-              <Text style={styles.markerYear}>{getYearFromDate(event.date)}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        
-        {/* Legend */}
-        <View style={styles.legend}>
-          <Text style={styles.legendTitle}>Legend</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {categories.slice(1).map(category => (
-              <View key={category.id} style={styles.legendItem}>
-                <View style={[styles.legendColor, { backgroundColor: category.color }]} />
-                <Text style={styles.legendText}>{category.title}</Text>
-              </View>
-            ))}
-          </ScrollView>
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19
+          }).addTo(map);
+
+          const events = ${JSON.stringify(filteredEvents)};
+          
+          events.forEach(event => {
+            if(event.location && event.location.latitude) {
+               const marker = L.marker([event.location.latitude, event.location.longitude], {
+                 icon: L.divIcon({
+                   className: 'custom-pin',
+                   html: "<div style='background-color:" + (event.color || '#1976D2') + "; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white;'></div>",
+                   iconSize: [22, 22],
+                   iconAnchor: [11, 11]
+                 })
+               }).addTo(map);
+               
+               marker.on('click', function() {
+                 window.ReactNativeWebView.postMessage(JSON.stringify(event));
+               });
+            }
+          });
+        </script>
+      </body>
+      </html>
+    `;
+
+    return (
+      <View style={styles.mapWrapper}>
+        <WebView
+          originWhitelist={['*']}
+          source={{ html: mapHtml }}
+          style={styles.webView}
+          onMessage={(event) => handleEventPress(JSON.parse(event.nativeEvent.data))}
+        />
+        <View style={styles.mapOverlayHint}>
+          <Icon name="touch-app" size={16} color="#1976D2" />
+          <Text style={styles.hintText}>Tap markers for details</Text>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   const renderTimelineView = () => (
     <ScrollView style={styles.timelineContainer} showsVerticalScrollIndicator={false}>
-      <Text style={styles.timelineTitle}>📅 Political Events Timeline</Text>
-      
       {sortedEvents.map((event, index) => (
-        <TouchableOpacity
-          key={event.id}
-          style={styles.timelineItem}
-          onPress={() => handleEventPress(event)}
-        >
-          <View style={styles.timelineLeft}>
-            <View style={[styles.timelineDot, { backgroundColor: event.color }]}>
-              <Text style={styles.timelineIcon}>{event.icon}</Text>
+        <TouchableOpacity key={event.id} style={styles.timelineCard} onPress={() => handleEventPress(event)}>
+          <View style={styles.timelineLeftRail}>
+            <View style={[styles.timelineNode, { backgroundColor: event.color }]}>
+              <Text style={styles.nodeIcon}>{event.icon}</Text>
             </View>
-            {index < sortedEvents.length - 1 && <View style={styles.timelineLine} />}
+            {index < sortedEvents.length - 1 && <View style={styles.verticalLine} />}
           </View>
-          
-          <View style={styles.timelineContent}>
-            <View style={styles.timelineHeader}>
-              <Text style={styles.timelineDate}>{formatDate(event.date)}</Text>
-              <View style={[styles.categoryBadge, { backgroundColor: event.color }]}>
-                <Text style={styles.categoryText}>{event.category}</Text>
+          <View style={styles.timelineCardContent}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardDate}>{formatDate(event.date)}</Text>
+              <View style={[styles.miniBadge, { backgroundColor: event.color + '15' }]}>
+                <Text style={[styles.miniBadgeText, { color: event.color }]}>{event.category}</Text>
               </View>
             </View>
-            <Text style={styles.timelineEventTitle}>{event.title}</Text>
-            <Text style={styles.timelineDescription}>{event.description}</Text>
-            <Text style={styles.timelineLocation}>📍 {event.location.name}</Text>
+            <Text style={styles.cardTitle}>{event.title}</Text>
+            <Text numberOfLines={2} style={styles.cardDesc}>{event.description}</Text>
+            <View style={styles.cardFooter}>
+              <Icon name="place" size={14} color="#78909C" />
+              <Text style={styles.cardLocText}>{event.location.name}</Text>
+            </View>
           </View>
         </TouchableOpacity>
       ))}
     </ScrollView>
   );
 
-  const renderEventModal = () => (
-    <Modal
-      visible={showEventModal}
-      animationType="slide"
-      presentationStyle="pageSheet"
-      onRequestClose={() => setShowEventModal(false)}
-    >
-      <View style={styles.modalContainer}>
-        <LinearGradient
-          colors={[selectedEvent?.color || '#1976D2', '#1565C0']}
-          style={styles.modalHeader}
-        >
-          <View style={styles.modalHeaderContent}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setShowEventModal(false)}
-            >
-              <Icon name="close" size={24} color="#FFFFFF" />
-            </TouchableOpacity>
-            <Text style={styles.modalIcon}>{selectedEvent?.icon}</Text>
-            <Text style={styles.modalTitle}>{selectedEvent?.title}</Text>
-            <Text style={styles.modalDate}>{formatDate(selectedEvent?.date || '')}</Text>
-          </View>
-        </LinearGradient>
-
-        <ScrollView style={styles.modalContent}>
-          <View style={styles.modalSection}>
-            <Text style={styles.sectionTitle}>📍 Location</Text>
-            <Text style={styles.sectionContent}>{selectedEvent?.location.name}</Text>
-          </View>
-
-          <View style={styles.modalSection}>
-            <Text style={styles.sectionTitle}>📝 Description</Text>
-            <Text style={styles.sectionContent}>{selectedEvent?.description}</Text>
-          </View>
-
-          <View style={styles.modalSection}>
-            <Text style={styles.sectionTitle}>⭐ Historical Significance</Text>
-            <Text style={styles.sectionContent}>{selectedEvent?.significance}</Text>
-          </View>
-
-          <View style={styles.modalSection}>
-            <Text style={styles.sectionTitle}>🏷️ Category</Text>
-            <View style={[styles.categoryBadge, { backgroundColor: selectedEvent?.color }]}>
-              <Text style={styles.categoryText}>{selectedEvent?.category}</Text>
-            </View>
-          </View>
-        </ScrollView>
-      </View>
-    </Modal>
-  );
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
-      
-      {/* Header */}
-      <LinearGradient
-        colors={['#1976D2', '#1565C0']}
-        style={styles.header}
-      >
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Historical Events</Text>
-          <Text style={styles.headerSubtitle}>
-            Explore key moments in Indian political history
-          </Text>
-        </View>
 
-        {/* View Toggle */}
-        <View style={styles.viewToggle}>
-          <TouchableOpacity
-            style={[styles.toggleButton, !timelineView && styles.toggleButtonActive]}
-            onPress={() => setTimelineView(false)}
-          >
-            <Icon name="map" size={20} color={!timelineView ? "#1976D2" : "#FFFFFF"} />
-            <Text style={[styles.toggleText, !timelineView && styles.toggleTextActive]}>
-              Map View
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.toggleButton, timelineView && styles.toggleButtonActive]}
-            onPress={() => setTimelineView(true)}
-          >
-            <Icon name="timeline" size={20} color={timelineView ? "#1976D2" : "#FFFFFF"} />
-            <Text style={[styles.toggleText, timelineView && styles.toggleTextActive]}>
-              Timeline
-            </Text>
-          </TouchableOpacity>
+      {/* Header */}
+      <LinearGradient colors={['#1976D2', '#1565C0']} style={[styles.header, { paddingTop: insets.top + 15 }]}>
+        <View style={styles.headerRow}>
+          <View>
+            <Text style={styles.headerTitle}>Political Map</Text>
+            <Text style={styles.headerSubtitle}>Historical Journey of India</Text>
+          </View>
+
+          <View style={styles.toggleSegment}>
+            <TouchableOpacity
+              onPress={() => setTimelineView(false)}
+              style={[styles.segmentBtn, !timelineView && styles.segmentBtnActive]}>
+              <Icon name="map" size={18} color={!timelineView ? '#1976D2' : '#FFF'} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setTimelineView(true)}
+              style={[styles.segmentBtn, timelineView && styles.segmentBtnActive]}>
+              <Icon name="list" size={18} color={timelineView ? '#1976D2' : '#FFF'} />
+            </TouchableOpacity>
+          </View>
         </View>
       </LinearGradient>
 
-      {/* Category Filter */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoryContainer}
-        contentContainerStyle={styles.categoryContent}
-      >
-        {categories.map(category => (
-          <TouchableOpacity
-            key={category.id}
-            style={[
-              styles.categoryOption,
-              selectedCategory === category.id && styles.categoryOptionActive
-            ]}
-            onPress={() => setSelectedCategory(category.id)}
-          >
-            <Text style={styles.categoryIcon}>{category.icon}</Text>
-            <Text style={[
-              styles.categoryText,
-              selectedCategory === category.id && styles.categoryTextActive
-            ]}>
-              {category.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      {/* Modern Filter System */}
+      <View style={styles.filterBar}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
+          {categories.map(cat => (
+            <TouchableOpacity
+              key={cat.id}
+              style={[styles.pill, selectedCategory === cat.id && styles.pillActive]}
+              onPress={() => setSelectedCategory(cat.id)}
+            >
+              <Icon
+                name={cat.icon}
+                size={16}
+                color={selectedCategory === cat.id ? '#FFF' : '#1976D2'}
+                style={{ marginRight: 6 }}
+              />
+              <Text style={[styles.pillText, selectedCategory === cat.id && styles.pillTextActive]}>
+                {cat.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
-      {/* Content */}
-      <View style={styles.content}>
+      <View style={styles.mainArea}>
         {timelineView ? renderTimelineView() : renderMapView()}
       </View>
 
       {/* Event Detail Modal */}
-      {renderEventModal()}
+      <Modal visible={showEventModal} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setShowEventModal(false)}>
+        <View style={styles.modalRoot}>
+          <View style={[styles.modalTopBar, { backgroundColor: selectedEvent?.color || '#1976D2' }]}>
+            <TouchableOpacity style={styles.modalClose} onPress={() => setShowEventModal(false)}>
+              <Icon name="expand-more" size={32} color="#FFF" />
+            </TouchableOpacity>
+            <Text style={styles.modalEmoji}>{selectedEvent?.icon}</Text>
+          </View>
+
+          <ScrollView style={styles.modalScroll}>
+            <Text style={styles.modalDateTitle}>{formatDate(selectedEvent?.date || '')}</Text>
+            <Text style={styles.modalMainTitle}>{selectedEvent?.title}</Text>
+
+            <View style={styles.modalInfoRow}>
+              <View style={styles.infoBox}>
+                <Icon name="place" size={20} color="#1976D2" />
+                <Text style={styles.infoLabel}>Location</Text>
+                <Text style={styles.infoValue}>{selectedEvent?.location.name}</Text>
+              </View>
+              <View style={styles.infoBox}>
+                <Icon name="category" size={20} color="#1976D2" />
+                <Text style={styles.infoLabel}>Category</Text>
+                <Text style={styles.infoValue}>{selectedEvent?.category}</Text>
+              </View>
+            </View>
+
+            <View style={styles.modalSection}>
+              <Text style={styles.modalSectionHead}>Summary</Text>
+              <Text style={styles.modalSectionText}>{selectedEvent?.description}</Text>
+            </View>
+
+            <View style={[styles.modalSection, styles.significanceBox]}>
+              <Text style={[styles.modalSectionHead, { color: '#1976D2' }]}>Historical Significance</Text>
+              <Text style={styles.modalSectionText}>{selectedEvent?.significance}</Text>
+            </View>
+          </ScrollView>
+        </View>
+      </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
+  header: { paddingBottom: 35, paddingHorizontal: 20 },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  headerTitle: { fontSize: 24, fontWeight: '800', color: '#FFF' },
+  headerSubtitle: { fontSize: 13, color: '#E3F2FD', marginTop: 2 },
+
+  toggleSegment: { flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 12, padding: 4 },
+  segmentBtn: { padding: 8, borderRadius: 10, width: 40, alignItems: 'center' },
+  segmentBtnActive: { backgroundColor: '#FFF' },
+
+  filterBar: { marginTop: -20, marginBottom: 10 },
+  filterScroll: { paddingHorizontal: 20, paddingVertical: 5 },
+  pill: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF',
+    borderRadius: 25, paddingHorizontal: 16, paddingVertical: 10, marginRight: 10,
+    elevation: 3, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 4
   },
-  header: {
-    paddingTop: 50,
-    paddingBottom: 12,
-    paddingHorizontal: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+  pillActive: { backgroundColor: '#1976D2' },
+  pillText: { fontSize: 13, color: '#1976D2', fontWeight: '700' },
+  pillTextActive: { color: '#FFF' },
+
+  mainArea: { flex: 1 },
+  mapWrapper: { flex: 1, margin: 15, borderRadius: 24, overflow: 'hidden', elevation: 5, shadowColor: '#000', shadowOpacity: 0.2 },
+  webView: { flex: 1 },
+  mapOverlayHint: {
+    position: 'absolute', bottom: 20, alignSelf: 'center', backgroundColor: '#FFF',
+    flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 8,
+    borderRadius: 20, elevation: 3
   },
-  headerContent: {
-    marginBottom: 12,
+  hintText: { fontSize: 12, color: '#1976D2', fontWeight: '600', marginLeft: 6 },
+
+  timelineContainer: { paddingHorizontal: 20 },
+  timelineCard: { flexDirection: 'row', marginBottom: 5 },
+  timelineLeftRail: { alignItems: 'center', marginRight: 15, width: 40 },
+  timelineNode: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', zIndex: 1 },
+  nodeIcon: { fontSize: 18 },
+  verticalLine: { width: 2, flex: 1, backgroundColor: '#E0E0E0', marginVertical: 4 },
+
+  timelineCardContent: {
+    flex: 1, backgroundColor: '#FFF', borderRadius: 16, padding: 15, marginBottom: 20,
+    elevation: 2, shadowColor: '#000', shadowOpacity: 0.05
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 5,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#E3F2FD',
-  },
-  viewToggle: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 20,
-    padding: 3,
-  },
-  toggleButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 17,
-  },
-  toggleButtonActive: {
-    backgroundColor: '#FFFFFF',
-  },
-  toggleText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-    marginLeft: 5,
-  },
-  toggleTextActive: {
-    color: '#1976D2',
-  },
-  categoryContainer: {
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 4,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 1,
-  },
-  categoryContent: {
-    paddingHorizontal: 20,
-  },
-  categoryOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F0F0F0',
-    borderRadius: 12,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-    marginRight: 4,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    height: 22,
-  },
-  categoryOptionActive: {
-    backgroundColor: '#E3F2FD',
-    borderColor: '#1976D2',
-  },
-  categoryIcon: {
-    fontSize: 10,
-    marginRight: 2,
-  },
-  categoryText: {
-    fontSize: 10,
-    color: '#666',
-    fontWeight: '600',
-  },
-  categoryTextActive: {
-    color: '#1976D2',
-  },
-  content: {
-    flex: 1,
-    paddingTop: 10,
-  },
-  mapContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  indiaMapContainer: {
-    flex: 1,
-  },
-  mapTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  mapBackground: {
-    flex: 1,
-    backgroundColor: '#E8F5E8',
-    borderRadius: 15,
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-    minHeight: 400,
-    borderWidth: 2,
-    borderColor: '#C8E6C9',
-  },
-  mapLabel: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-    opacity: 0.2,
-    position: 'absolute',
-  },
-  eventMarker: {
-    position: 'absolute',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    borderWidth: 3,
-    borderColor: '#FFFFFF',
-  },
-  markerIcon: {
-    fontSize: 18,
-  },
-  markerYear: {
-    fontSize: 9,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    marginTop: 1,
-  },
-  legend: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 15,
-  },
-  legendTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  legendColor: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: 5,
-  },
-  legendText: {
-    fontSize: 12,
-    color: '#666',
-  },
-  timelineContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  timelineTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  timelineItem: {
-    flexDirection: 'row',
-    marginBottom: 20,
-  },
-  timelineLeft: {
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  timelineDot: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  timelineIcon: {
-    fontSize: 16,
-  },
-  timelineLine: {
-    width: 2,
-    flex: 1,
-    backgroundColor: '#E0E0E0',
-    marginTop: 10,
-  },
-  timelineContent: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 15,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  timelineHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  timelineDate: {
-    fontSize: 14,
-    color: '#1976D2',
-    fontWeight: '600',
-  },
-  categoryBadge: {
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  categoryText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-  timelineEventTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
-  },
-  timelineDescription: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 20,
-    marginBottom: 8,
-  },
-  timelineLocation: {
-    fontSize: 12,
-    color: '#999',
-    fontStyle: 'italic',
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
-  modalHeader: {
-    paddingTop: 50,
-    paddingBottom: 30,
-    paddingHorizontal: 20,
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-  },
-  modalHeaderContent: {
-    alignItems: 'center',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalIcon: {
-    fontSize: 60,
-    marginBottom: 15,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  modalDate: {
-    fontSize: 16,
-    color: '#E3F2FD',
-  },
-  modalContent: {
-    flex: 1,
-    padding: 20,
-  },
-  modalSection: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 20,
-    marginBottom: 15,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  sectionContent: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 22,
-  },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  cardDate: { fontSize: 12, fontWeight: '800', color: '#78909C' },
+  miniBadge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
+  miniBadgeText: { fontSize: 10, fontWeight: '800' },
+  cardTitle: { fontSize: 16, fontWeight: '700', color: '#263238', marginBottom: 5 },
+  cardDesc: { fontSize: 13, color: '#546E7A', lineHeight: 18 },
+  cardFooter: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
+  cardLocText: { fontSize: 11, color: '#78909C', marginLeft: 4, fontWeight: '600' },
+
+  modalRoot: { flex: 1, backgroundColor: '#FFF' },
+  modalTopBar: { height: 180, justifyContent: 'center', alignItems: 'center', borderBottomLeftRadius: 30, borderBottomRightRadius: 30 },
+  modalClose: { position: 'absolute', top: 20, right: 20 },
+  modalEmoji: { fontSize: 60 },
+  modalScroll: { padding: 25 },
+  modalDateTitle: { fontSize: 14, fontWeight: '800', color: '#1976D2', textTransform: 'uppercase' },
+  modalMainTitle: { fontSize: 26, fontWeight: '800', color: '#263238', marginVertical: 10 },
+  modalInfoRow: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20 },
+  infoBox: { backgroundColor: '#F1F5F9', width: '48%', padding: 15, borderRadius: 16 },
+  infoLabel: { fontSize: 11, color: '#64748B', marginTop: 5, fontWeight: '600' },
+  infoValue: { fontSize: 14, fontWeight: '700', color: '#334155' },
+  modalSection: { marginBottom: 25 },
+  modalSectionHead: { fontSize: 18, fontWeight: '800', color: '#263238', marginBottom: 10 },
+  modalSectionText: { fontSize: 15, color: '#475569', lineHeight: 24 },
+  significanceBox: { backgroundColor: '#E3F2FD', padding: 20, borderRadius: 20 }
 });
 
 export default HistoricalMapScreen;

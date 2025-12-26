@@ -26,6 +26,129 @@ export const INDIAN_CONSTITUTION = {
 };
 
 export const HISTORICAL_EVENTS = [
+  // --- BRITISH ERA (Foundational Acts) ---
+  {
+    id: "regulating_act_1773",
+    title: "Regulating Act of 1773",
+    date: "1773-06-10",
+    location: {
+      latitude: 22.5726,
+      longitude: 88.3639,
+      name: "Fort William, Calcutta"
+    },
+    description: "The first step by the British Government to regulate the affairs of the East India Company.",
+    significance: "Laid the foundations of central administration in India.",
+    category: "British Era",
+    icon: "🏛️",
+    color: "#455A64"
+  },
+  {
+    id: "charter_act_1833",
+    title: "Charter Act of 1833",
+    date: "1833-08-28",
+    location: {
+      latitude: 22.5726,
+      longitude: 88.3639,
+      name: "Calcutta"
+    },
+    description: "Made the Governor-General of Bengal as the Governor-General of India.",
+    significance: "Final step towards centralization in British India.",
+    category: "British Era",
+    icon: "📜",
+    color: "#455A64"
+  },
+  {
+    id: "govt_india_act_1858",
+    title: "Government of India Act 1858",
+    date: "1858-08-02",
+    location: {
+      latitude: 51.5074,
+      longitude: -0.1278,
+      name: "London (Royal Assent)"
+    },
+    description: "Transferred the powers of the East India Company to the British Crown following the 1857 revolt.",
+    significance: "End of Company Rule; start of the British Raj.",
+    category: "British Era",
+    icon: "👑",
+    color: "#5D4037"
+  },
+  {
+    id: "morley_minto_1909",
+    title: "Indian Councils Act 1909",
+    date: "1909-05-25",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "New Delhi"
+    },
+    description: "Known as Morley-Minto Reforms; introduced separate electorates for Muslims.",
+    significance: "Legalized communalism in Indian politics.",
+    category: "British Era",
+    icon: "⚖️",
+    color: "#5D4037"
+  },
+  {
+    id: "govt_india_act_1935",
+    title: "Government of India Act 1935",
+    date: "1935-08-02",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Parliament House"
+    },
+    description: "Provided for the establishment of an All-India Federation and provincial autonomy.",
+    significance: "The primary source/blueprint for the 1950 Constitution.",
+    category: "British Era",
+    icon: "📋",
+    color: "#1976D2"
+  },
+
+  // --- CONSTITUTION FORMATION ERA ---
+  {
+    id: "cabinet_mission",
+    title: "Cabinet Mission Plan",
+    date: "1946-05-16",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "New Delhi"
+    },
+    description: "Proposed the formation of a Constituent Assembly to frame the Constitution.",
+    significance: "Authorized the creation of the body that wrote our Constitution.",
+    category: "Constitution",
+    icon: "🤝",
+    color: "#1976D2"
+  },
+  {
+    id: "first_meeting_assembly",
+    title: "First Meeting of Assembly",
+    date: "1946-12-09",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Constitution Hall, Delhi"
+    },
+    description: "The Constituent Assembly met for the first time. Dr. Sachchidananda Sinha was the temporary President.",
+    significance: "The actual beginning of the drafting process.",
+    category: "Constitution",
+    icon: "🏛️",
+    color: "#1976D2"
+  },
+  {
+    id: "objective_resolution",
+    title: "Objective Resolution",
+    date: "1946-12-13",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "New Delhi"
+    },
+    description: "Moved by Jawaharlal Nehru, outlining the philosophy of the Constitution.",
+    significance: "Later became the Preamble of the Constitution.",
+    category: "Constitution",
+    icon: "💡",
+    color: "#FF9800"
+  },
   {
     id: "independence",
     title: "Independence Day",
@@ -42,6 +165,21 @@ export const HISTORICAL_EVENTS = [
     color: "#FF9800"
   },
   {
+    id: "drafting_committee",
+    title: "Drafting Committee Set Up",
+    date: "1947-08-29",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "New Delhi"
+    },
+    description: "Committee set up with Dr. B.R. Ambedkar as Chairman to prepare the draft Constitution.",
+    significance: "Started the formal technical drafting of the laws.",
+    category: "Constitution",
+    icon: "✍️",
+    color: "#E91E63"
+  },
+  {
     id: "constitution_adoption",
     title: "Constitution Adoption",
     date: "1949-11-26",
@@ -50,8 +188,8 @@ export const HISTORICAL_EVENTS = [
       longitude: 77.2090,
       name: "Constitution Hall, New Delhi"
     },
-    description: "The Constituent Assembly adopted the Indian Constitution after 2 years, 11 months, and 18 days of deliberation.",
-    significance: "Foundation of constitutional democracy in India",
+    description: "The Constituent Assembly adopted the Indian Constitution after years of deliberation.",
+    significance: "Foundation of constitutional democracy; celebrated as Law Day.",
     category: "Constitution",
     icon: "📜",
     color: "#1976D2"
@@ -71,35 +209,22 @@ export const HISTORICAL_EVENTS = [
     icon: "🏛️",
     color: "#4CAF50"
   },
+
+  // --- POST-INDEPENDENCE MILESTONES ---
   {
-    id: "first_amendment",
-    title: "First Constitutional Amendment",
-    date: "1951-06-18",
+    id: "kesavananda_bharati",
+    title: "Kesavananda Bharati Case",
+    date: "1973-04-24",
     location: {
       latitude: 28.6139,
       longitude: 77.2090,
-      name: "Parliament House, New Delhi"
+      name: "Supreme Court"
     },
-    description: "Added the Ninth Schedule to protect land reform laws from judicial review.",
-    significance: "First modification to the Constitution, enabling land reforms",
-    category: "Amendment",
-    icon: "📝",
-    color: "#9C27B0"
-  },
-  {
-    id: "states_reorganization",
-    title: "States Reorganization Act",
-    date: "1956-11-01",
-    location: {
-      latitude: 28.6139,
-      longitude: 77.2090,
-      name: "New Delhi"
-    },
-    description: "Reorganized Indian states on linguistic basis, creating 14 states and 6 union territories.",
-    significance: "Redrew India's political map based on language",
-    category: "Federalism",
-    icon: "🗺️",
-    color: "#607D8B"
+    description: "Established the Basic Structure Doctrine.",
+    significance: "Protected the Constitution's core principles from being changed.",
+    category: "Judiciary",
+    icon: "⚖️",
+    color: "#E91E63"
   },
   {
     id: "emergency_1975",
@@ -110,86 +235,11 @@ export const HISTORICAL_EVENTS = [
       longitude: 77.2090,
       name: "New Delhi"
     },
-    description: "Prime Minister Indira Gandhi declared a state of emergency, suspending civil liberties.",
-    significance: "Darkest period for Indian democracy, led to constitutional reforms",
+    description: "Suspension of civil liberties under Article 352.",
+    significance: "Tested the resilience of Indian democracy.",
     category: "Emergency",
     icon: "⚠️",
     color: "#F44336"
-  },
-  {
-    id: "42nd_amendment",
-    title: "42nd Constitutional Amendment",
-    date: "1976-12-18",
-    location: {
-      latitude: 28.6139,
-      longitude: 77.2090,
-      name: "Parliament House, New Delhi"
-    },
-    description: "Known as 'Mini Constitution', added 'Socialist' and 'Secular' to Preamble, introduced Fundamental Duties.",
-    significance: "Most comprehensive amendment, changed the basic structure",
-    category: "Amendment",
-    icon: "📋",
-    color: "#795548"
-  },
-  {
-    id: "kesavananda_bharati",
-    title: "Kesavananda Bharati Case",
-    date: "1973-04-24",
-    location: {
-      latitude: 28.6139,
-      longitude: 77.2090,
-      name: "Supreme Court, New Delhi"
-    },
-    description: "Supreme Court established the Basic Structure Doctrine, limiting Parliament's power to amend the Constitution.",
-    significance: "Landmark judgment that protected the Constitution's core principles",
-    category: "Judiciary",
-    icon: "⚖️",
-    color: "#E91E63"
-  },
-  {
-    id: "mandal_commission",
-    title: "Mandal Commission Implementation",
-    date: "1990-08-07",
-    location: {
-      latitude: 28.6139,
-      longitude: 77.2090,
-      name: "New Delhi"
-    },
-    description: "V.P. Singh government implemented 27% reservation for OBCs in central government jobs.",
-    significance: "Extended affirmative action beyond SCs and STs",
-    category: "Social Justice",
-    icon: "🤝",
-    color: "#009688"
-  },
-  {
-    id: "73rd_amendment",
-    title: "73rd Constitutional Amendment",
-    date: "1992-12-22",
-    location: {
-      latitude: 28.6139,
-      longitude: 77.2090,
-      name: "Parliament House, New Delhi"
-    },
-    description: "Gave constitutional status to Panchayati Raj institutions, strengthening grassroots democracy.",
-    significance: "Institutionalized local self-governance",
-    category: "Local Government",
-    icon: "🏘️",
-    color: "#8BC34A"
-  },
-  {
-    id: "rti_act",
-    title: "Right to Information Act",
-    date: "2005-10-12",
-    location: {
-      latitude: 28.6139,
-      longitude: 77.2090,
-      name: "New Delhi"
-    },
-    description: "Enacted to promote transparency and accountability in government functioning.",
-    significance: "Empowered citizens to access government information",
-    category: "Transparency",
-    icon: "🔍",
-    color: "#FF5722"
   },
   {
     id: "article_370_abrogation",
@@ -200,8 +250,8 @@ export const HISTORICAL_EVENTS = [
       longitude: 74.7973,
       name: "Jammu & Kashmir"
     },
-    description: "Article 370 was abrogated and J&K was bifurcated into two Union Territories.",
-    significance: "Major constitutional and political change in Kashmir",
+    description: "Special status of J&K removed and bifurcated into Union Territories.",
+    significance: "Full integration of J&K into the Indian Union.",
     category: "Federalism",
     icon: "🏔️",
     color: "#3F51B5"
