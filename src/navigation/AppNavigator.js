@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch } from 'react-redux';
+import { subscribeToAuthChanges } from '../services/AuthService';
+import { setUser } from '../store/slices/authSlice';
 
 // Screens
 import HomeScreen from '../screens/HomeScreen';
@@ -18,6 +21,7 @@ import TopicDetailScreen from '../screens/TopicDetailScreen';
 import ConceptDetailScreen from '../screens/ConceptDetailScreen';
 import CaseStudyDetailScreen from '../screens/CaseStudyDetailScreen';
 import HistoricalMapScreen from '../screens/HistoricalMapScreen';
+import LeaderboardScreen from '../screens/LeaderboardScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -25,10 +29,10 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   const insets = useSafeAreaInsets();
   const { height: screenHeight } = Dimensions.get('window');
-  
+
   // Calculate appropriate tab bar height based on device
-  const tabBarHeight = Platform.OS === 'ios' 
-    ? Math.max(60 + insets.bottom, 80) 
+  const tabBarHeight = Platform.OS === 'ios'
+    ? Math.max(60 + insets.bottom, 80)
     : Math.min(65, screenHeight * 0.08);
 
   return (
@@ -78,36 +82,36 @@ const TabNavigator = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen 
-        name="Home" 
+      <Tab.Screen
+        name="Home"
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
         }}
       />
-      <Tab.Screen 
-        name="Explore" 
+      <Tab.Screen
+        name="Explore"
         component={ExploreScreen}
         options={{
           tabBarLabel: 'Explore',
         }}
       />
-      <Tab.Screen 
-        name="Constitution" 
+      <Tab.Screen
+        name="Constitution"
         component={ConstitutionScreen}
         options={{
           tabBarLabel: 'Constitution',
         }}
       />
-      <Tab.Screen 
-        name="Map" 
+      <Tab.Screen
+        name="Map"
         component={HistoricalMapScreen}
         options={{
           tabBarLabel: 'Events Map',
         }}
       />
-      <Tab.Screen 
-        name="Quiz" 
+      <Tab.Screen
+        name="Quiz"
         component={QuizScreen}
         options={{
           tabBarLabel: 'Quiz',
@@ -117,7 +121,36 @@ const TabNavigator = () => {
   );
 };
 
+import NotificationService from '../services/NotificationService';
+
 const AppNavigator = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Notifications
+    const setupNotifications = async () => {
+      await NotificationService.configure();
+      await NotificationService.scheduleDailyReminder(20, 0); // 8:00 PM
+    };
+    setupNotifications();
+
+    // Auth
+    const unsubscribe = subscribeToAuthChanges((user) => {
+      // We store serializable user data in Redux
+      const serializableUser = user ? {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        emailVerified: user.emailVerified,
+      } : null;
+
+      dispatch(setUser(serializableUser));
+    });
+
+    return () => unsubscribe();
+  }, [dispatch]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -132,41 +165,46 @@ const AppNavigator = () => {
           },
         }}
       >
-        <Stack.Screen 
-          name="Main" 
-          component={TabNavigator} 
+        <Stack.Screen
+          name="Main"
+          component={TabNavigator}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="TopicDetail" 
+        <Stack.Screen
+          name="Leaderboard"
+          component={LeaderboardScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TopicDetail"
           component={TopicDetailScreen}
           options={({ route }) => ({
             title: route.params?.title || 'Topic Details',
           })}
         />
-        <Stack.Screen 
-          name="ConceptDetail" 
+        <Stack.Screen
+          name="ConceptDetail"
           component={ConceptDetailScreen}
           options={({ route }) => ({
             title: route.params?.title || 'Concept Details',
           })}
         />
-        <Stack.Screen 
-          name="CaseStudyDetail" 
+        <Stack.Screen
+          name="CaseStudyDetail"
           component={CaseStudyDetailScreen}
           options={({ route }) => ({
             title: route.params?.title || 'Case Study',
           })}
         />
-        <Stack.Screen 
-          name="Progress" 
+        <Stack.Screen
+          name="Progress"
           component={ProgressScreen}
           options={{
             title: 'Your Progress',
           }}
         />
-        <Stack.Screen 
-          name="Bookmarks" 
+        <Stack.Screen
+          name="Bookmarks"
           component={BookmarkScreen}
           options={{
             title: 'Bookmarks',

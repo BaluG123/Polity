@@ -16,12 +16,52 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width } = Dimensions.get('window');
 
+import { signInWithGoogle, signOut } from '../services/AuthService';
+import { Image } from 'react-native';
+
 const HomeScreen = ({ navigation }) => {
   const { studyStreak } = useSelector(state => state.progress);
   const { bookmarks } = useSelector(state => state.polity);
-  const { user } = useSelector(state => state.auth);
+  const { user, loading } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
+
+  const handleProfilePress = async () => {
+    if (user) {
+      Alert.alert(
+        'Sign Out',
+        `Signed in as ${user.displayName || user.email}`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Sign Out', onPress: async () => {
+              try {
+                await signOut();
+              } catch (error) {
+                Alert.alert('Error', 'Failed to sign out');
+              }
+            }, style: 'destructive'
+          }
+        ]
+      );
+    } else {
+      try {
+        await signInWithGoogle();
+      } catch (error) {
+        // Error handling is managed in AuthService, but added here for safety
+        if (error.code === 'statusCodes.SIGN_IN_CANCELLED') {
+          // user cancelled the login flow
+        } else if (error.code === 'statusCodes.IN_PROGRESS') {
+          // operation (e.g. sign in) is in progress already
+        } else if (error.code === 'statusCodes.PLAY_SERVICES_NOT_AVAILABLE') {
+          Alert.alert('Error', 'Google Play Services not available or outdated.');
+        } else {
+          console.error(error);
+          Alert.alert('Sign In Failed', 'Could not sign in with Google. Please try again.');
+        }
+      }
+    }
+  };
 
   const quickActions = [
     {
@@ -47,6 +87,14 @@ const HomeScreen = ({ navigation }) => {
       icon: 'quiz',
       color: '#E91E63',
       screen: 'Quiz',
+    },
+    {
+      id: 'leaderboard',
+      title: 'Leaderboard',
+      subtitle: 'Top Scorers',
+      icon: 'emoji-events',
+      color: '#FFD700',
+      screen: 'Leaderboard',
     },
     {
       id: 'explore',
@@ -85,7 +133,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
-      
+
       {/* Header */}
       <LinearGradient
         colors={['#1976D2', '#1565C0']}
@@ -96,10 +144,14 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.appTitle}>TargetPolity</Text>
             <Text style={styles.appSubtitle}>Master Indian Polity & Constitution</Text>
           </View>
-          
+
           <View style={styles.headerRight}>
-            <TouchableOpacity style={styles.profileBtn}>
-              <Icon name="account-circle" size={32} color="#FFFFFF" />
+            <TouchableOpacity style={styles.profileBtn} onPress={handleProfilePress}>
+              {user && user.photoURL ? (
+                <Image source={{ uri: user.photoURL }} style={{ width: 36, height: 36, borderRadius: 18 }} />
+              ) : (
+                <Icon name="account-circle" size={32} color="#FFFFFF" />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -111,13 +163,13 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.statValue}>{studyStreak || 0}</Text>
             <Text style={styles.statLabel}>Day Streak</Text>
           </View>
-          
+
           <View style={styles.statCard}>
             <Icon name="bookmark" size={24} color="#4CAF50" />
             <Text style={styles.statValue}>{bookmarks.length}</Text>
             <Text style={styles.statLabel}>Bookmarks</Text>
           </View>
-          
+
           <View style={styles.statCard}>
             <Icon name="trending-up" size={24} color="#2196F3" />
             <Text style={styles.statValue}>85%</Text>
@@ -126,7 +178,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </LinearGradient>
 
-      <ScrollView 
+      <ScrollView
         style={styles.content}
         contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
         showsVerticalScrollIndicator={false}
@@ -173,7 +225,7 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
-          
+
           {recentTopics.map((topic) => (
             <TouchableOpacity
               key={topic.id}
@@ -188,15 +240,15 @@ const HomeScreen = ({ navigation }) => {
                   <Text style={styles.topicCategory}>{topic.category}</Text>
                 </View>
               </View>
-              
+
               <View style={styles.topicRight}>
                 <Text style={styles.progressText}>{topic.progress}%</Text>
                 <View style={styles.progressBar}>
-                  <View 
+                  <View
                     style={[
-                      styles.progressFill, 
+                      styles.progressFill,
                       { width: `${topic.progress}%` }
-                    ]} 
+                    ]}
                   />
                 </View>
               </View>
@@ -213,7 +265,7 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.tipTitle}>Article 21 - Right to Life</Text>
             </View>
             <Text style={styles.tipContent}>
-              The Supreme Court in Maneka Gandhi case (1978) expanded Article 21 to include 'right to live with dignity'. 
+              The Supreme Court in Maneka Gandhi case (1978) expanded Article 21 to include 'right to live with dignity'.
               This landmark judgment transformed the interpretation of fundamental rights in India.
             </Text>
             <TouchableOpacity style={styles.tipButton}>
@@ -226,7 +278,7 @@ const HomeScreen = ({ navigation }) => {
         {/* Featured Historical Event */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>📅 This Day in History</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.historyCard}
             onPress={() => navigation.navigate('Map')}
           >

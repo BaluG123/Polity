@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,16 +8,22 @@ import {
   StatusBar,
   Modal,
   Dimensions,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { QUIZ_LEVELS, QUIZ_QUESTIONS } from '../data/polityData';
+import { useSelector } from 'react-redux';
+import { FirestoreService } from '../services/FirestoreService';
 
 const { width } = Dimensions.get('window');
 
 const QuizScreen = ({ navigation }) => {
+  const { user } = useSelector(state => state.auth);
+  const [levels, setLevels] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [currentQuestions, setCurrentQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [userAnswers, setUserAnswers] = useState([]);
@@ -26,9 +32,35 @@ const QuizScreen = ({ navigation }) => {
   const [quizStarted, setQuizStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [showDetailedResults, setShowDetailedResults] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSeeding, setIsSeeding] = useState(false);
   const insets = useSafeAreaInsets();
 
-  const currentQuestions = selectedLevel ? QUIZ_QUESTIONS[selectedLevel.id] || [] : [];
+  useEffect(() => {
+    loadLevels();
+  }, []);
+
+  const loadLevels = async () => {
+    setIsLoading(true);
+    const fetchedLevels = await FirestoreService.getQuizLevels();
+    setLevels(fetchedLevels);
+    setIsLoading(false);
+  };
+
+  const handleSeedDatabase = async () => {
+    setIsSeeding(true);
+    try {
+      const success = await FirestoreService.seedDatabase();
+      if (success) {
+        Alert.alert('Success', 'Database seeded successfully!');
+        loadLevels();
+      }
+    } catch (e) {
+      Alert.alert('Error', 'Failed to seed database');
+    } finally {
+      setIsSeeding(false);
+    }
+  };
 
   useEffect(() => {
     let timer;
@@ -40,7 +72,29 @@ const QuizScreen = ({ navigation }) => {
     return () => clearTimeout(timer);
   }, [timeLeft, quizStarted, showResult]);
 
-  const handleLevelSelect = (level) => {
+  const handleLevelSelect = async (level) => {
+    if (!user) {
+      Alert.alert(
+        'Sign In Required',
+        'You need to sign in to take the quiz and track your progress.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Sign In', onPress: () => navigation.navigate('Home') } // Go to profile/home to sign in
+        ]
+      );
+      return;
+    }
+
+    setIsLoading(true);
+    const questions = await FirestoreService.getQuestionsByLevel(level.id);
+    setIsLoading(false);
+
+    if (questions.length === 0) {
+      Alert.alert('Oops', 'No questions found for this level yet.');
+      return;
+    }
+
+    setCurrentQuestions(questions);
     setSelectedLevel(level);
     setTimeLeft(level.timeLimit);
     setQuizStarted(true);
@@ -65,22 +119,39 @@ const QuizScreen = ({ navigation }) => {
       question: currentQuestions[currentQuestion],
     };
 
-    setUserAnswers([...userAnswers, newAnswer]);
+    const updatedUserAnswers = [...userAnswers, newAnswer];
+    setUserAnswers(updatedUserAnswers);
 
+    let newScore = score;
     if (isCorrect) {
-      setScore(score + 1);
+      newScore = score + 1;
+      setScore(newScore);
     }
 
     if (currentQuestion + 1 < currentQuestions.length) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
     } else {
-      handleQuizEnd();
+      handleQuizEnd(newScore);
     }
   };
 
-  const handleQuizEnd = () => {
+  const handleQuizEnd = async (finalScore = score) => {
     setShowResult(true);
+    if (user && selectedLevel) {
+      try {
+        await FirestoreService.saveQuizResult(
+          user.uid,
+          user,
+          selectedLevel.id,
+          finalScore,
+          currentQuestions.length
+        );
+        console.log('Score saved!');
+      } catch (error) {
+        console.error('Failed to save score:', error);
+      }
+    }
   };
 
   const handleRestartQuiz = () => {
@@ -117,48 +188,63 @@ const QuizScreen = ({ navigation }) => {
     <View style={styles.levelContainer}>
       <Text style={styles.levelTitle}>Choose Your Level</Text>
       <Text style={styles.levelSubtitle}>Select difficulty based on your knowledge</Text>
-      
-      {QUIZ_LEVELS.map((level) => (
-        <TouchableOpacity
-          key={level.id}
-          style={[styles.levelCard, { borderLeftColor: level.color }]}
-          onPress={() => handleLevelSelect(level)}
-          activeOpacity={0.7}
-        >
-          <View style={styles.levelHeader}>
-            <View style={[styles.levelIcon, { backgroundColor: level.color }]}>
-              <Text style={styles.levelIconText}>{level.icon}</Text>
+
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#1976D2" style={{ marginTop: 50 }} />
+      ) : levels.length === 0 ? (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyText}>No quiz levels available.</Text>
+          <TouchableOpacity
+            style={styles.seedButton}
+            onPress={handleSeedDatabase}
+            disabled={isSeeding}
+          >
+            {isSeeding ? <ActivityIndicator color="#fff" /> : <Text style={styles.seedButtonText}>Initialize Database (Seed Data)</Text>}
+          </TouchableOpacity>
+        </View>
+      ) : (
+        levels.map((level) => (
+          <TouchableOpacity
+            key={level.id}
+            style={[styles.levelCard, { borderLeftColor: level.color }]}
+            onPress={() => handleLevelSelect(level)}
+            activeOpacity={0.7}
+          >
+            <View style={styles.levelHeader}>
+              <View style={[styles.levelIcon, { backgroundColor: level.color }]}>
+                <Text style={styles.levelIconText}>{level.icon}</Text>
+              </View>
+              <View style={styles.levelInfo}>
+                <Text style={styles.levelName}>{level.title}</Text>
+                <Text style={styles.levelDescription}>{level.subtitle}</Text>
+              </View>
+              <Icon name="arrow-forward-ios" size={16} color="#666" />
             </View>
-            <View style={styles.levelInfo}>
-              <Text style={styles.levelName}>{level.title}</Text>
-              <Text style={styles.levelDescription}>{level.subtitle}</Text>
+
+            <View style={styles.levelStats}>
+              <View style={styles.levelStat}>
+                <Icon name="quiz" size={16} color={level.color} />
+                <Text style={styles.levelStatText}>{level.questionsCount} Questions</Text>
+              </View>
+              <View style={styles.levelStat}>
+                <Icon name="timer" size={16} color={level.color} />
+                <Text style={styles.levelStatText}>{Math.floor(level.timeLimit / 60)} Minutes</Text>
+              </View>
+              <View style={styles.levelStat}>
+                <Icon name="trending-up" size={16} color={level.color} />
+                <Text style={styles.levelStatText}>{level.minScore}%+ Required</Text>
+              </View>
             </View>
-            <Icon name="arrow-forward-ios" size={16} color="#666" />
-          </View>
-          
-          <View style={styles.levelStats}>
-            <View style={styles.levelStat}>
-              <Icon name="quiz" size={16} color={level.color} />
-              <Text style={styles.levelStatText}>{level.questionsCount} Questions</Text>
-            </View>
-            <View style={styles.levelStat}>
-              <Icon name="timer" size={16} color={level.color} />
-              <Text style={styles.levelStatText}>{Math.floor(level.timeLimit / 60)} Minutes</Text>
-            </View>
-            <View style={styles.levelStat}>
-              <Icon name="trending-up" size={16} color={level.color} />
-              <Text style={styles.levelStatText}>{level.minScore}%+ Required</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      ))}
+          </TouchableOpacity>
+        ))
+      )}
     </View>
   );
 
   const renderQuestion = () => {
     const question = currentQuestions[currentQuestion];
     const progress = ((currentQuestion + 1) / currentQuestions.length) * 100;
-    
+
     return (
       <View style={styles.questionContainer}>
         {/* Header with timer and progress */}
@@ -243,11 +329,11 @@ const QuizScreen = ({ navigation }) => {
   const renderResult = () => {
     const percentage = getScorePercentage();
     const performance = getPerformanceMessage();
-    
+
     return (
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>Quiz Completed! 🎉</Text>
-        
+
         <View style={[styles.scoreContainer, { borderColor: performance.color }]}>
           <Text style={styles.scoreValue}>{score}/{currentQuestions.length}</Text>
           <Text style={[styles.scorePercentage, { color: performance.color }]}>{percentage}%</Text>
@@ -275,14 +361,14 @@ const QuizScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.resultActions}>
-          <TouchableOpacity 
-            style={styles.detailsButton} 
+          <TouchableOpacity
+            style={styles.detailsButton}
             onPress={() => setShowDetailedResults(true)}
           >
             <Icon name="visibility" size={20} color="#1976D2" />
             <Text style={styles.detailsButtonText}>View Details</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={styles.restartButton} onPress={handleRestartQuiz}>
             <Icon name="refresh" size={20} color="#FFFFFF" />
             <Text style={styles.restartButtonText}>Try Again</Text>
@@ -325,16 +411,16 @@ const QuizScreen = ({ navigation }) => {
                   styles.answerStatus,
                   { backgroundColor: answer.isCorrect ? '#4CAF50' : '#F44336' }
                 ]}>
-                  <Icon 
-                    name={answer.isCorrect ? 'check' : 'close'} 
-                    size={16} 
-                    color="#FFFFFF" 
+                  <Icon
+                    name={answer.isCorrect ? 'check' : 'close'}
+                    size={16}
+                    color="#FFFFFF"
                   />
                 </View>
               </View>
-              
+
               <Text style={styles.reviewQuestion}>{answer.question.question}</Text>
-              
+
               <View style={styles.answersSection}>
                 {answer.question.options.map((option, optionIndex) => (
                   <View
@@ -364,7 +450,7 @@ const QuizScreen = ({ navigation }) => {
                   </View>
                 ))}
               </View>
-              
+
               <View style={styles.explanationSection}>
                 <Text style={styles.explanationTitle}>💡 Explanation:</Text>
                 <Text style={styles.explanationText}>{answer.question.explanation}</Text>
@@ -379,7 +465,7 @@ const QuizScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
-      
+
       {/* Header */}
       <LinearGradient
         colors={['#1976D2', '#1565C0']}
@@ -393,7 +479,7 @@ const QuizScreen = ({ navigation }) => {
         </View>
       </LinearGradient>
 
-      <ScrollView 
+      <ScrollView
         style={styles.content}
         contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
         showsVerticalScrollIndicator={false}
@@ -436,7 +522,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
   },
-  
+
   // Level Selection Styles
   levelContainer: {
     paddingHorizontal: 20,
@@ -789,6 +875,28 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  seedButton: {
+    backgroundColor: '#1976D2',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 20,
+    alignSelf: 'center',
+  },
+  seedButtonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  emptyState: {
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
   },
   modalTitle: {
     fontSize: 24,

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "57549035472",
+    "project_id": "targetpolity-5918e",
+    "storage_bucket": "targetpolity-5918e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57549035472:android:3e3d37a7fe5081758c0bd5",
+        "android_client_info": {
+          "package_name": "com.targetpolity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57549035472-b24m690ng20j2q1pujitbbij1cl241fv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.targetpolity",
+            "certificate_hash": "fca9f92d8b20c410601068c1f4d3703862bbbaaa"
+          }
+        },
+        {
+          "client_id": "57549035472-hegi6idf85i1et3nv2r9gibm4gaorr5c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFMXOzIuPWPB1yX7VbootojcyWdJJB6h4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57549035472-hegi6idf85i1et3nv2r9gibm4gaorr5c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
