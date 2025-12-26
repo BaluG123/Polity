@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setSelectedTopic } from '../store/slices/politySlice';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { INDIAN_CONSTITUTION } from '../data/polityData';
 
 const ConstitutionScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,19 +24,106 @@ const ConstitutionScreen = ({ navigation }) => {
 
   // Data remains identical to maintain functionality
   const constitutionParts = [
-    { id: 'preamble', title: 'Preamble', description: 'The philosophical foundation of the Constitution', articles: 'Preamble', icon: '📜', color: '#1976D2' },
-    { id: 'part1', title: 'Part I - The Union & Territory', description: 'Articles 1-4: Territory of India and its states', articles: 'Articles 1-4', icon: '🗺️', color: '#4CAF50' },
-    { id: 'part2', title: 'Part II - Citizenship', description: 'Articles 5-11: Citizenship provisions', articles: 'Articles 5-11', icon: '👥', color: '#FF9800' },
-    { id: 'part3', title: 'Part III - Fundamental Rights', description: 'Articles 12-35: Basic rights of citizens', articles: 'Articles 12-35', icon: '⚖️', color: '#E91E63' },
-    { id: 'part4', title: 'Part IV - Directive Principles', description: 'Articles 36-51: Guidelines for governance', articles: 'Articles 36-51', icon: '🎯', color: '#9C27B0' },
-    { id: 'part4a', title: 'Part IVA - Fundamental Duties', description: 'Article 51A: Duties of citizens', articles: 'Article 51A', icon: '📋', color: '#607D8B' },
+    { 
+      id: 'preamble', 
+      title: 'Preamble', 
+      description: 'The philosophical foundation of the Constitution', 
+      articles: 'Preamble', 
+      icon: '📜', 
+      color: '#1976D2' 
+    },
+    { 
+      id: 'part1', 
+      title: 'Part I - The Union & Territory', 
+      description: 'Articles 1-4: Territory of India and its states', 
+      articles: 'Articles 1-4', 
+      icon: '🗺️', 
+      color: '#4CAF50' 
+    },
+    { 
+      id: 'part2', 
+      title: 'Part II - Citizenship', 
+      description: 'Articles 5-11: Citizenship provisions', 
+      articles: 'Articles 5-11', 
+      icon: '👥', 
+      color: '#FF9800' 
+    },
+    { 
+      id: 'part3', 
+      title: 'Part III - Fundamental Rights', 
+      description: 'Articles 12-35: Basic rights of citizens', 
+      articles: 'Articles 12-35', 
+      icon: '⚖️', 
+      color: '#E91E63',
+      hasDetailedContent: true,
+      detailedContent: INDIAN_CONSTITUTION.fundamentalRights
+    },
+    { 
+      id: 'part4', 
+      title: 'Part IV - Directive Principles', 
+      description: 'Articles 36-51: Guidelines for governance', 
+      articles: 'Articles 36-51', 
+      icon: '🎯', 
+      color: '#9C27B0',
+      hasDetailedContent: true,
+      detailedContent: INDIAN_CONSTITUTION.dpsp
+    },
+    { 
+      id: 'part4a', 
+      title: 'Part IVA - Fundamental Duties', 
+      description: 'Article 51A: Duties of citizens', 
+      articles: 'Article 51A', 
+      icon: '📋', 
+      color: '#607D8B' 
+    },
   ];
 
   const importantArticles = [
-    { id: 'art14', number: '14', title: 'Equality before Law', description: 'Right to equality and equal protection of laws', part: 'Part III', importance: 'high' },
-    { id: 'art19', number: '19', title: 'Protection of Rights', description: 'Six fundamental freedoms including speech and expression', part: 'Part III', importance: 'high' },
-    { id: 'art21', number: '21', title: 'Right to Life', description: 'Protection of life and personal liberty', part: 'Part III', importance: 'high' },
-    { id: 'art44', number: '44', title: 'Uniform Civil Code', description: 'State shall secure uniform civil code', part: 'Part IV', importance: 'medium' },
+    { 
+      id: 'art14', 
+      number: '14', 
+      title: 'Equality before Law', 
+      description: 'Right to equality and equal protection of laws', 
+      part: 'Part III', 
+      importance: 'high',
+      content: INDIAN_CONSTITUTION.fundamentalRights.topics[0].concepts[0].content
+    },
+    { 
+      id: 'art15', 
+      number: '15', 
+      title: 'Prohibition of Discrimination', 
+      description: 'No discrimination on grounds of religion, race, caste, sex', 
+      part: 'Part III', 
+      importance: 'high',
+      content: INDIAN_CONSTITUTION.fundamentalRights.topics[0].concepts[1].content
+    },
+    { 
+      id: 'art19', 
+      number: '19', 
+      title: 'Protection of Rights', 
+      description: 'Six fundamental freedoms including speech and expression', 
+      part: 'Part III', 
+      importance: 'high',
+      content: INDIAN_CONSTITUTION.fundamentalRights.topics[1].concepts[0].content
+    },
+    { 
+      id: 'art21', 
+      number: '21', 
+      title: 'Right to Life', 
+      description: 'Protection of life and personal liberty', 
+      part: 'Part III', 
+      importance: 'high',
+      content: INDIAN_CONSTITUTION.fundamentalRights.topics[1].concepts[2].content
+    },
+    { 
+      id: 'art44', 
+      number: '44', 
+      title: 'Uniform Civil Code', 
+      description: 'State shall secure uniform civil code', 
+      part: 'Part IV', 
+      importance: 'medium',
+      content: "Article 44 under Directive Principles of State Policy directs the State to secure a Uniform Civil Code for all citizens throughout the territory of India.\n\nKey Points:\n• Non-justiciable directive to the State\n• Aims to replace personal laws based on religion\n• Promotes national integration and gender equality\n• Controversial due to religious sensitivities\n• Goa is the only state with Uniform Civil Code\n\nObjectives:\n• Gender justice and equality\n• National integration\n• Simplification of laws\n• Secularism in personal matters\n\nChallenges:\n• Religious diversity\n• Cultural sensitivity\n• Political considerations\n• Constitutional vs practical implementation"
+    },
   ];
 
   const amendments = [
@@ -52,11 +140,58 @@ const ConstitutionScreen = ({ navigation }) => {
 
   const handlePartPress = (part) => {
     dispatch(setSelectedTopic(part));
-    navigation.navigate('TopicDetail', { topic: part, title: part.title });
+    
+    // If the part has detailed content, navigate to a special detailed view
+    if (part.hasDetailedContent) {
+      navigation.navigate('ConceptDetail', { 
+        title: part.title,
+        content: formatDetailedContent(part.detailedContent),
+        subtitle: part.description
+      });
+    } else {
+      navigation.navigate('TopicDetail', { topic: part, title: part.title });
+    }
+  };
+
+  const formatDetailedContent = (detailedContent) => {
+    if (!detailedContent || !detailedContent.topics) {
+      return "Detailed content is being prepared for this section.";
+    }
+
+    let formattedContent = `${detailedContent.title}\n\n`;
+    
+    detailedContent.topics.forEach((topic, topicIndex) => {
+      formattedContent += `${topicIndex + 1}. ${topic.title}\n`;
+      formattedContent += `${topic.description}\n\n`;
+      
+      if (topic.concepts) {
+        topic.concepts.forEach((concept, conceptIndex) => {
+          formattedContent += `${topicIndex + 1}.${conceptIndex + 1} ${concept.title}\n`;
+          formattedContent += `${concept.content}\n\n`;
+          
+          if (concept.keywords && concept.keywords.length > 0) {
+            formattedContent += `Keywords: ${concept.keywords.join(', ')}\n\n`;
+          }
+          
+          if (concept.examTips) {
+            formattedContent += `💡 Exam Tips: ${concept.examTips}\n\n`;
+          }
+          
+          formattedContent += "---\n\n";
+        });
+      }
+    });
+    
+    return formattedContent;
   };
 
   const handleArticlePress = (article) => {
-    navigation.navigate('ConceptDetail', { concept: article, title: `Article ${article.number}` });
+    navigation.navigate('ConceptDetail', { 
+      concept: article, 
+      title: `Article ${article.number}`,
+      content: article.content,
+      subtitle: article.description
+    });
   };
 
   const renderConstitutionPart = ({ item }) => (

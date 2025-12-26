@@ -19,7 +19,6 @@ const LeaderboardScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const [userStats, setUserStats] = useState(null);
     const { user } = useSelector(state => state.auth);
     const insets = useSafeAreaInsets();
 
@@ -30,17 +29,8 @@ const LeaderboardScreen = ({ navigation }) => {
     const loadLeaderboard = async () => {
         setLoading(true);
         try {
-            console.log('Loading leaderboard...');
             const result = await FirestoreService.getLeaderboard();
-            console.log('Leaderboard data received:', result);
             setData(result);
-            
-            // Find current user's stats
-            if (user) {
-                const currentUserStats = result.find(item => item.userId === user.uid);
-                setUserStats(currentUserStats);
-                console.log('Current user stats:', currentUserStats);
-            }
         } catch (error) {
             console.error('Error loading leaderboard:', error);
         } finally {
@@ -52,82 +42,6 @@ const LeaderboardScreen = ({ navigation }) => {
         setRefreshing(true);
         await loadLeaderboard();
         setRefreshing(false);
-    };
-
-    const renderUserStatsCard = () => {
-        if (!user) return null;
-
-        const stats = userStats || {
-            rank: 'N/A',
-            totalScore: 0,
-            quizzesPlayed: 0
-        };
-
-        const getRankDisplay = () => {
-            if (!userStats) return 'Not Ranked';
-            if (stats.rank === 1) return '🥇 1st Place';
-            if (stats.rank === 2) return '🥈 2nd Place';
-            if (stats.rank === 3) return '🥉 3rd Place';
-            return `#${stats.rank}`;
-        };
-
-        const getAverageScore = () => {
-            if (!stats.quizzesPlayed || stats.quizzesPlayed === 0) return 0;
-            return Math.round(stats.totalScore / stats.quizzesPlayed);
-        };
-
-        return (
-            <View style={styles.userStatsContainer}>
-                <LinearGradient
-                    colors={['#667eea', '#764ba2']}
-                    style={styles.userStatsCard}
-                >
-                    <View style={styles.userStatsHeader}>
-                        <View style={styles.userAvatarContainer}>
-                            {user.photoURL ? (
-                                <Image source={{ uri: user.photoURL }} style={styles.userAvatar} />
-                            ) : (
-                                <View style={styles.userAvatarPlaceholder}>
-                                    <Text style={styles.userAvatarText}>
-                                        {(user.displayName || user.email || 'U').charAt(0).toUpperCase()}
-                                    </Text>
-                                </View>
-                            )}
-                        </View>
-                        <View style={styles.userInfo}>
-                            <Text style={styles.userStatsName}>
-                                {user.displayName || user.email || 'Anonymous'}
-                            </Text>
-                            <Text style={styles.userStatsRank}>{getRankDisplay()}</Text>
-                        </View>
-                        <View style={styles.userStatsMainScore}>
-                            <Text style={styles.userStatsTotalScore}>{stats.totalScore}</Text>
-                            <Text style={styles.userStatsScoreLabel}>Total Points</Text>
-                        </View>
-                    </View>
-
-                    <View style={styles.userStatsGrid}>
-                        <View style={styles.userStatItem}>
-                            <Icon name="quiz" size={24} color="#FFFFFF" />
-                            <Text style={styles.userStatValue}>{stats.quizzesPlayed}</Text>
-                            <Text style={styles.userStatLabel}>Quizzes</Text>
-                        </View>
-                        <View style={styles.userStatItem}>
-                            <Icon name="trending-up" size={24} color="#FFFFFF" />
-                            <Text style={styles.userStatValue}>{getAverageScore()}</Text>
-                            <Text style={styles.userStatLabel}>Avg Score</Text>
-                        </View>
-                        <View style={styles.userStatItem}>
-                            <Icon name="emoji-events" size={24} color="#FFFFFF" />
-                            <Text style={styles.userStatValue}>
-                                {stats.rank <= 3 && userStats ? '🏆' : stats.rank || 'N/A'}
-                            </Text>
-                            <Text style={styles.userStatLabel}>Rank</Text>
-                        </View>
-                    </View>
-                </LinearGradient>
-            </View>
-        );
     };
 
     const testAddToLeaderboard = async () => {
@@ -190,7 +104,7 @@ const LeaderboardScreen = ({ navigation }) => {
                             {item.displayName || 'Anonymous'}
                         </Text>
                         <Text style={styles.userStats}>
-                            {item.quizzesPlayed || 0} Quizzes Played
+                            {item.quizzesPlayed || 0} Quizzes • Streak: {item.currentStreak || 0}
                         </Text>
                     </View>
                 </View>
@@ -228,8 +142,6 @@ const LeaderboardScreen = ({ navigation }) => {
                 </View>
                 <Text style={styles.headerSubtitle}>Top Performers</Text>
             </LinearGradient>
-
-            {renderUserStatsCard()}
 
             <View style={styles.leaderboardSection}>
                 <Text style={styles.leaderboardTitle}>🏆 Top Players</Text>

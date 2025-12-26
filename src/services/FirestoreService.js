@@ -86,10 +86,71 @@ export const FirestoreService = {
     // Save Quiz Result
     saveQuizResult: async (userId, userProfile, levelId, score, totalQuestions) => {
         try {
-            console.log('Saving quiz result:', { userId, userProfile, levelId, score, totalQuestions });
+            console.log('=== SAVING QUIZ RESULT ===');
+            console.log('User ID:', userId);
+            console.log('User Profile:', userProfile);
+            console.log('Level ID:', levelId);
+            console.log('Score:', score);
+            console.log('Total Questions:', totalQuestions);
+            
             const timestamp = firestore.FieldValue.serverTimestamp();
 
+            // Intelligent Scoring Algorithm
+            const calculateIntelligentScore = (levelId, score, totalQuestions) => {
+                const percentage = (score / totalQuestions) * 100;
+                
+                // Base points per correct answer
+                const basePointsPerQuestion = {
+                    'beginner': 10,
+                    'intermediate': 15,
+                    'advanced': 25,
+                    'expert': 40
+                };
+
+                // Difficulty multiplier
+                const difficultyMultiplier = {
+                    'beginner': 1.0,
+                    'intermediate': 1.5,
+                    'advanced': 2.0,
+                    'expert': 3.0
+                };
+
+                // Performance bonus based on percentage
+                let performanceBonus = 1.0;
+                if (percentage >= 90) performanceBonus = 2.0;      // Excellent: 200% bonus
+                else if (percentage >= 80) performanceBonus = 1.5; // Very Good: 150% bonus
+                else if (percentage >= 70) performanceBonus = 1.2; // Good: 120% bonus
+                else if (percentage >= 60) performanceBonus = 1.0; // Average: 100% (no bonus)
+                else performanceBonus = 0.5;                       // Below Average: 50% penalty
+
+                // Speed bonus (assuming faster completion = better performance)
+                const speedBonus = 1.1; // 10% bonus for completing quiz
+
+                // Calculate final points
+                const basePoints = score * (basePointsPerQuestion[levelId] || 10);
+                const difficultyPoints = basePoints * (difficultyMultiplier[levelId] || 1.0);
+                const finalPoints = Math.round(difficultyPoints * performanceBonus * speedBonus);
+
+                console.log('🎯 Scoring breakdown:', {
+                    level: levelId,
+                    score: score,
+                    totalQuestions: totalQuestions,
+                    percentage: percentage,
+                    basePoints: basePoints,
+                    difficultyMultiplier: difficultyMultiplier[levelId],
+                    performanceBonus: performanceBonus,
+                    speedBonus: speedBonus,
+                    finalPoints: finalPoints
+                });
+
+                return Math.max(finalPoints, 1); // Minimum 1 point for participation
+            };
+
+            const intelligentPoints = calculateIntelligentScore(levelId, score, totalQuestions);
+            console.log('🧠 Calculated intelligent points:', intelligentPoints);
+
             // 1. Save detailed result to user history
+            console.log('Saving to user history...');
             await firestore()
                 .collection('users')
                 .doc(userId)
@@ -99,24 +160,49 @@ export const FirestoreService = {
                     score,
                     totalQuestions,
                     percentage: (score / totalQuestions) * 100,
+                    pointsEarned: intelligentPoints,
                     completedAt: timestamp,
                 });
-            console.log('Quiz history saved successfully');
+            console.log('✅ Quiz history saved successfully');
 
             // 2. Update Leaderboard (atomic transaction)
+            console.log('Updating leaderboard...');
             const leaderboardRef = firestore().collection(LEADERBOARD_COLLECTION).doc(userId);
 
             await firestore().runTransaction(async (transaction) => {
                 const doc = await transaction.get(leaderboardRef);
+                console.log('Existing document exists:', doc.exists);
 
-                let newTotalScore = score;
+                let newTotalScore = intelligentPoints;
                 let quizzesPlayed = 1;
+                let bestStreak = 1;
+                let currentStreak = 1;
 
                 if (doc.exists) {
-                    const data = doc.data();
+                    const data = doc.data() || {}; // Add fallback to empty object
                     console.log('Existing leaderboard data:', data);
-                    newTotalScore = (data.totalScore || 0) + score;
+                    newTotalScore = (data.totalScore || 0) + intelligentPoints;
                     quizzesPlayed = (data.quizzesPlayed || 0) + 1;
+                    
+                    // Calculate streak (consecutive quizzes with >60% score)
+                    const percentage = (score / totalQuestions) * 100;
+                    if (percentage >= 60) {
+                        currentStreak = (data.currentStreak || 0) + 1;
+                        bestStreak = Math.max(currentStreak, data.bestStreak || 0);
+                    } else {
+                        currentStreak = 0;
+                        bestStreak = data.bestStreak || 0;
+                    }
+                } else {
+                    // First time user - set initial values
+                    const percentage = (score / totalQuestions) * 100;
+                    if (percentage >= 60) {
+                        currentStreak = 1;
+                        bestStreak = 1;
+                    } else {
+                        currentStreak = 0;
+                        bestStreak = 0;
+                    }
                 }
 
                 const leaderboardData = {
@@ -125,17 +211,24 @@ export const FirestoreService = {
                     photoURL: userProfile.photoURL || null,
                     totalScore: newTotalScore,
                     quizzesPlayed,
+                    currentStreak,
+                    bestStreak,
+                    averageScore: Math.round(newTotalScore / quizzesPlayed),
                     lastActive: timestamp,
+                    lastQuizLevel: levelId,
                 };
 
                 console.log('Saving leaderboard data:', leaderboardData);
                 transaction.set(leaderboardRef, leaderboardData, { merge: true });
             });
 
-            console.log('Leaderboard updated successfully');
-            return true;
+            console.log('✅ Leaderboard updated successfully');
+            console.log('=== QUIZ RESULT SAVED ===');
+            return { success: true, pointsEarned: intelligentPoints };
         } catch (error) {
-            console.error('Error saving quiz result:', error);
+            console.error('❌ Error saving quiz result:', error);
+            console.error('Error details:', error.message);
+            console.error('Error code:', error.code);
             throw error;
         }
     },
@@ -151,106 +244,18 @@ export const FirestoreService = {
                 .get();
 
             console.log(`Found ${snapshot.docs.length} leaderboard entries`);
-            let results = snapshot.docs.map((doc, index) => ({
+            const results = snapshot.docs.map((doc, index) => ({
                 ...doc.data(),
                 rank: index + 1,
                 totalScore: doc.data().totalScore || 0, // Ensure totalScore is always a number
                 quizzesPlayed: doc.data().quizzesPlayed || 0, // Ensure quizzesPlayed is always a number
             }));
             
-            // If no data exists, return sample data
-            if (results.length === 0) {
-                results = [
-                    {
-                        userId: 'sample1',
-                        displayName: 'Rajesh Kumar',
-                        totalScore: 95,
-                        quizzesPlayed: 12,
-                        rank: 1,
-                        photoURL: null
-                    },
-                    {
-                        userId: 'sample2',
-                        displayName: 'Priya Sharma',
-                        totalScore: 87,
-                        quizzesPlayed: 10,
-                        rank: 2,
-                        photoURL: null
-                    },
-                    {
-                        userId: 'sample3',
-                        displayName: 'Amit Singh',
-                        totalScore: 82,
-                        quizzesPlayed: 9,
-                        rank: 3,
-                        photoURL: null
-                    },
-                    {
-                        userId: 'sample4',
-                        displayName: 'Sneha Patel',
-                        totalScore: 78,
-                        quizzesPlayed: 8,
-                        rank: 4,
-                        photoURL: null
-                    },
-                    {
-                        userId: 'sample5',
-                        displayName: 'Vikram Gupta',
-                        totalScore: 75,
-                        quizzesPlayed: 7,
-                        rank: 5,
-                        photoURL: null
-                    }
-                ];
-            }
-            
             console.log('Leaderboard results:', results);
             return results;
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
-            // Return sample data on error too
-            return [
-                {
-                    userId: 'sample1',
-                    displayName: 'Rajesh Kumar',
-                    totalScore: 95,
-                    quizzesPlayed: 12,
-                    rank: 1,
-                    photoURL: null
-                },
-                {
-                    userId: 'sample2',
-                    displayName: 'Priya Sharma',
-                    totalScore: 87,
-                    quizzesPlayed: 10,
-                    rank: 2,
-                    photoURL: null
-                },
-                {
-                    userId: 'sample3',
-                    displayName: 'Amit Singh',
-                    totalScore: 82,
-                    quizzesPlayed: 9,
-                    rank: 3,
-                    photoURL: null
-                },
-                {
-                    userId: 'sample4',
-                    displayName: 'Sneha Patel',
-                    totalScore: 78,
-                    quizzesPlayed: 8,
-                    rank: 4,
-                    photoURL: null
-                },
-                {
-                    userId: 'sample5',
-                    displayName: 'Vikram Gupta',
-                    totalScore: 75,
-                    quizzesPlayed: 7,
-                    rank: 5,
-                    photoURL: null
-                }
-            ];
+            return [];
         }
     },
 
@@ -264,6 +269,50 @@ export const FirestoreService = {
         } catch (error) {
             console.error('Firestore connection test failed:', error);
             return false;
+        }
+    },
+
+    // Check user's leaderboard entry
+    checkUserLeaderboardEntry: async (userId) => {
+        try {
+            console.log('Checking user leaderboard entry for:', userId);
+            const doc = await firestore().collection(LEADERBOARD_COLLECTION).doc(userId).get();
+            
+            if (doc.exists) {
+                const data = doc.data();
+                console.log('User leaderboard data found:', data);
+                return data;
+            } else {
+                console.log('No leaderboard entry found for user');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error checking user leaderboard entry:', error);
+            return null;
+        }
+    },
+
+    // Get user's quiz history
+    getUserQuizHistory: async (userId) => {
+        try {
+            console.log('Getting quiz history for user:', userId);
+            const snapshot = await firestore()
+                .collection('users')
+                .doc(userId)
+                .collection('quiz_history')
+                .orderBy('completedAt', 'desc')
+                .get();
+            
+            const history = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            
+            console.log('User quiz history:', history);
+            return history;
+        } catch (error) {
+            console.error('Error getting user quiz history:', error);
+            return [];
         }
     }
 };

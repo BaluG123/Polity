@@ -141,14 +141,17 @@ const QuizScreen = ({ navigation }) => {
     if (user && selectedLevel) {
       try {
         console.log('Attempting to save quiz result for user:', user.uid, user.displayName || user.email);
-        await FirestoreService.saveQuizResult(
+        const result = await FirestoreService.saveQuizResult(
           user.uid,
           user,
           selectedLevel.id,
           finalScore,
           currentQuestions.length
         );
-        console.log('Score saved successfully!');
+        console.log('Score saved successfully!', result);
+        if (result && result.pointsEarned) {
+          console.log(`🎉 You earned ${result.pointsEarned} points!`);
+        }
       } catch (error) {
         console.error('Failed to save score:', error);
         Alert.alert('Error', 'Failed to save your score to the leaderboard. Please check your internet connection.');

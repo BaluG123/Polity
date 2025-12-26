@@ -22,6 +22,8 @@ import ConceptDetailScreen from '../screens/ConceptDetailScreen';
 import CaseStudyDetailScreen from '../screens/CaseStudyDetailScreen';
 import HistoricalMapScreen from '../screens/HistoricalMapScreen';
 import LeaderboardScreen from '../screens/LeaderboardScreen';
+import GovernmentScreen from '../screens/GovernmentScreen';
+import JudiciaryScreen from '../screens/JudiciaryScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -173,6 +175,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Leaderboard"
           component={LeaderboardScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Government"
+          component={GovernmentScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Judiciary"
+          component={JudiciaryScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
