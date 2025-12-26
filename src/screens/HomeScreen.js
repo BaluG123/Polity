@@ -19,6 +19,7 @@ const { width } = Dimensions.get('window');
 
 import { signInWithGoogle, signOut } from '../services/AuthService';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { FirestoreService } from '../services/FirestoreService';
 
 const HomeScreen = ({ navigation }) => {
   const { studyStreak } = useSelector(state => state.progress);
@@ -135,6 +136,42 @@ const HomeScreen = ({ navigation }) => {
     },
   ];
 
+
+
+  // ... inside component ...
+
+  const handleSecretSeed = async () => {
+    Alert.alert(
+      'Secret Admin Menu',
+      'Do you want to seed the database with quiz questions?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Seed Database',
+          onPress: async () => {
+            try {
+              const success = await FirestoreService.seedDatabase();
+              if (success) {
+                Alert.alert('Success', 'Database seeded successfully!');
+              }
+            } catch (error) {
+              Alert.alert('Error', 'Failed to seed database.');
+              console.error(error);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const getGreeting = () => {
+    if (user && user.displayName) {
+      const firstName = user.displayName.split(' ')[0];
+      return `Hello, ${firstName}!`;
+    }
+    return 'TargetPolity';
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
@@ -146,7 +183,9 @@ const HomeScreen = ({ navigation }) => {
       >
         <View style={styles.headerContent}>
           <View style={styles.headerLeft}>
-            <Text style={styles.appTitle}>TargetPolity</Text>
+            <TouchableOpacity onLongPress={handleSecretSeed} activeOpacity={0.9}>
+              <Text style={styles.appTitle}>{getGreeting()}</Text>
+            </TouchableOpacity>
             <Text style={styles.appSubtitle}>Master Indian Polity & Constitution</Text>
           </View>
 
