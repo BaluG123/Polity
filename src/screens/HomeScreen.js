@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { INDIAN_CONSTITUTION } from '../data/polityData';
 
 const { width } = Dimensions.get('window');
 
@@ -119,6 +120,8 @@ const HomeScreen = ({ navigation }) => {
       category: 'Constitution',
       progress: 75,
       icon: '⚖️',
+      hasDetailedContent: true,
+      content: INDIAN_CONSTITUTION.fundamentalRights
     },
     {
       id: 'historical_events',
@@ -126,6 +129,237 @@ const HomeScreen = ({ navigation }) => {
       category: 'Timeline',
       progress: 60,
       icon: '📅',
+      hasDetailedContent: true,
+      content: {
+        title: 'Historical Events in Indian Political Development',
+        topics: [
+          {
+            title: 'British Colonial Era (1773-1947)',
+            description: 'Key legislative acts and constitutional developments under British rule',
+            concepts: [
+              {
+                title: 'Regulating Act of 1773',
+                content: `The Regulating Act of 1773 was the first step by the British Government to regulate the affairs of the East India Company in India.
+
+KEY PROVISIONS:
+• Designated Governor of Bengal as Governor-General
+• Established Supreme Court at Calcutta (1774)
+• Prohibited private trade by Company servants
+• Required Court of Directors to report Indian affairs to British Government
+
+SIGNIFICANCE:
+• First constitutional step towards centralized administration
+• Beginning of British Crown's control over Company
+• Laid foundation for future constitutional developments
+• Warren Hastings became first Governor-General
+
+LIMITATIONS:
+• Governor-General had limited control over other presidencies
+• Conflicts between Governor-General and Council
+• Supreme Court's jurisdiction unclear`,
+                keywords: ['Regulating Act', '1773', 'Warren Hastings', 'Governor-General', 'Supreme Court'],
+                examTips: 'Remember this as the first constitutional act for India. Warren Hastings was the first Governor-General under this act.'
+              },
+              {
+                title: 'Government of India Act 1858',
+                content: `The Government of India Act 1858 transferred the powers of the East India Company to the British Crown following the 1857 revolt.
+
+KEY PROVISIONS:
+• Company's rule ended, Crown rule began
+• Secretary of State for India created in British Cabinet
+• Council of India (15 members) to assist Secretary of State
+• Governor-General became Viceroy (representative of Crown)
+• Indian Civil Service established
+
+SIGNIFICANCE:
+• End of Company Rule, beginning of Crown Rule
+• Direct administration by British Government
+• Lord Canning became first Viceroy
+• Established pattern of colonial administration
+
+IMPACT:
+• More systematic administration
+• Better coordination with British policy
+• Foundation for future constitutional reforms
+• Centralized decision-making in London`,
+                keywords: ['Government of India Act', '1858', 'Crown Rule', 'Viceroy', 'Secretary of State'],
+                examTips: 'This act ended Company rule and started Crown rule. Lord Canning was the first Viceroy.'
+              }
+            ]
+          },
+          {
+            title: 'Constitutional Development (1909-1935)',
+            description: 'Progressive constitutional reforms leading to limited self-governance',
+            concepts: [
+              {
+                title: 'Morley-Minto Reforms (1909)',
+                content: `The Indian Councils Act 1909, known as Morley-Minto Reforms, introduced separate electorates and expanded legislative councils.
+
+KEY FEATURES:
+• Separate electorates for Muslims
+• Expanded Legislative Councils (Central and Provincial)
+• Indian members in Viceroy's Executive Council
+• Limited powers to discuss budget and ask questions
+
+SIGNIFICANCE:
+• First recognition of communal representation
+• Beginning of constitutional reforms
+• Limited Indian participation in governance
+• Foundation for future communal politics
+
+CRITICISM:
+• Legalized communalism in Indian politics
+• Divide and rule policy
+• Limited powers to Indian members
+• No real transfer of power`,
+                keywords: ['Morley-Minto', '1909', 'separate electorates', 'communal representation'],
+                examTips: 'Remember this introduced separate electorates for Muslims, which later became a major issue in Indian politics.'
+              },
+              {
+                title: 'Government of India Act 1935',
+                content: `The Government of India Act 1935 was the most comprehensive constitutional document for India, serving as the blueprint for the 1950 Constitution.
+
+KEY FEATURES:
+• All-India Federation (never implemented)
+• Provincial Autonomy (implemented in 1937)
+• Bicameral legislature at Centre
+• Federal Court established
+• Separate electorates continued
+
+PROVINCIAL AUTONOMY:
+• Responsible government in provinces
+• Governor as constitutional head
+• Council of Ministers responsible to legislature
+• Reserved subjects under Governor
+
+FEDERAL PROVISIONS:
+• Federation of British India and Princely States
+• Distribution of powers (Federal, Provincial, Concurrent)
+• Federal Court as highest judicial authority
+• Governor-General retained special powers
+
+SIGNIFICANCE:
+• Largest constitutional document (321 sections, 10 schedules)
+• Blueprint for Indian Constitution
+• First experience of responsible government
+• Foundation for federal structure
+
+LIMITATIONS:
+• Federation never implemented due to princely states' opposition
+• Governor retained special powers
+• No real transfer of power at Centre
+• Communal electorates continued`,
+                keywords: ['Government of India Act 1935', 'Provincial Autonomy', 'Federation', 'Federal Court'],
+                examTips: 'This act was the primary source of the Indian Constitution. Remember it introduced provincial autonomy and federal structure.'
+              }
+            ]
+          },
+          {
+            title: 'Independence and Constitution Making (1946-1950)',
+            description: 'The final phase leading to independence and constitutional framework',
+            concepts: [
+              {
+                title: 'Cabinet Mission Plan (1946)',
+                content: `The Cabinet Mission Plan proposed the framework for Indian independence and constitutional structure.
+
+PROPOSALS:
+• Rejection of Pakistan demand
+• Three-tier federal structure
+• Constituent Assembly formation
+• Interim Government
+• Grouping of provinces
+
+CONSTITUENT ASSEMBLY:
+• 389 members (292 from British India, 97 from Princely States)
+• Indirect election by Provincial Assemblies
+• Communal representation basis
+• Dr. Rajendra Prasad as President
+
+SIGNIFICANCE:
+• Last British attempt to keep India united
+• Provided framework for Constituent Assembly
+• Basis for constitutional making process
+• Interim Government formation
+
+OUTCOME:
+• Partially accepted by Congress and Muslim League
+• Led to formation of Constituent Assembly
+• Interim Government under Nehru
+• Foundation for constitutional process`,
+                keywords: ['Cabinet Mission', '1946', 'Constituent Assembly', 'three-tier federation'],
+                examTips: 'Cabinet Mission Plan led to the formation of Constituent Assembly which drafted our Constitution.'
+              },
+              {
+                title: 'Independence Day (August 15, 1947)',
+                content: `India gained independence on August 15, 1947, marking the end of British colonial rule and birth of two nations.
+
+EVENTS:
+• Indian Independence Act 1947 passed by British Parliament
+• Partition into India and Pakistan
+• Transfer of power to Indian leaders
+• Jawaharlal Nehru became first Prime Minister
+• Lord Mountbatten as first Governor-General
+
+PARTITION:
+• Based on two-nation theory
+• Massive population exchange
+• Communal riots and displacement
+• Integration of princely states
+• Refugee rehabilitation
+
+CHALLENGES:
+• Communal violence
+• Administrative reorganization
+• Economic disruption
+• Integration of 562 princely states
+• Refugee crisis
+
+SIGNIFICANCE:
+• End of 200 years of British rule
+• Birth of world's largest democracy
+• Beginning of decolonization process
+• Model for other independence movements`,
+                keywords: ['Independence', 'August 15 1947', 'Partition', 'Nehru', 'Mountbatten'],
+                examTips: 'Remember the date August 15, 1947, and that Nehru was the first PM while Mountbatten was the first Governor-General.'
+              },
+              {
+                title: 'Constitution Adoption (November 26, 1949)',
+                content: `The Indian Constitution was adopted by the Constituent Assembly on November 26, 1949, after nearly three years of deliberation.
+
+DRAFTING PROCESS:
+• Constituent Assembly worked from 1946-1949
+• 11 sessions over 2 years, 11 months, 18 days
+• 114 days of actual deliberation
+• Dr. B.R. Ambedkar as Drafting Committee Chairman
+• 395 articles, 8 schedules initially
+
+KEY FEATURES ADOPTED:
+• Parliamentary system of government
+• Federal structure with unitary bias
+• Fundamental Rights and Duties
+• Independent Judiciary
+• Universal Adult Suffrage
+
+SOURCES:
+• Government of India Act 1935 (major source)
+• British Constitution (Parliamentary system)
+• US Constitution (Fundamental Rights, Judicial Review)
+• Irish Constitution (Directive Principles)
+• Canadian Constitution (Federation)
+
+SIGNIFICANCE:
+• World's longest written constitution
+• Comprehensive document covering all aspects
+• Balance between various interests
+• Foundation of Indian democracy
+• November 26 celebrated as Law Day`,
+                keywords: ['Constitution adoption', 'November 26 1949', 'Ambedkar', 'Constituent Assembly'],
+                examTips: 'Constitution was adopted on November 26, 1949 but came into effect on January 26, 1950. Ambedkar was the Drafting Committee Chairman.'
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       id: 'president',
@@ -133,6 +367,8 @@ const HomeScreen = ({ navigation }) => {
       category: 'Government',
       progress: 45,
       icon: '🏛️',
+      hasDetailedContent: true,
+      content: INDIAN_CONSTITUTION.presidentOfIndia
     },
   ];
 
@@ -170,6 +406,52 @@ const HomeScreen = ({ navigation }) => {
       return `Hello, ${firstName}!`;
     }
     return 'TargetPolity';
+  };
+
+  const handleTopicPress = (topic) => {
+    if (topic.hasDetailedContent && topic.content) {
+      // Navigate to ConceptDetail with formatted content
+      navigation.navigate('ConceptDetail', {
+        title: topic.title,
+        content: formatDetailedContent(topic.content),
+        subtitle: `${topic.category} - ${topic.progress}% Complete`
+      });
+    } else {
+      // Navigate to TopicDetail for topics without detailed content
+      navigation.navigate('TopicDetail', { topic });
+    }
+  };
+
+  const formatDetailedContent = (detailedContent) => {
+    if (!detailedContent || !detailedContent.topics) {
+      return "Detailed content is being prepared for this section.";
+    }
+
+    let formattedContent = `${detailedContent.title}\n\n`;
+    
+    detailedContent.topics.forEach((topic, topicIndex) => {
+      formattedContent += `${topicIndex + 1}. ${topic.title}\n`;
+      formattedContent += `${topic.description}\n\n`;
+      
+      if (topic.concepts) {
+        topic.concepts.forEach((concept, conceptIndex) => {
+          formattedContent += `${topicIndex + 1}.${conceptIndex + 1} ${concept.title}\n`;
+          formattedContent += `${concept.content}\n\n`;
+          
+          if (concept.keywords && concept.keywords.length > 0) {
+            formattedContent += `Keywords: ${concept.keywords.join(', ')}\n\n`;
+          }
+          
+          if (concept.examTips) {
+            formattedContent += `💡 Exam Tips: ${concept.examTips}\n\n`;
+          }
+          
+          formattedContent += "---\n\n";
+        });
+      }
+    });
+    
+    return formattedContent;
   };
 
   return (
@@ -274,7 +556,7 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity
               key={topic.id}
               style={styles.topicCard}
-              onPress={() => navigation.navigate('TopicDetail', { topic })}
+              onPress={() => handleTopicPress(topic)}
               activeOpacity={0.7}
             >
               <View style={styles.topicLeft}>
