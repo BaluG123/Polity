@@ -140,6 +140,7 @@ const QuizScreen = ({ navigation }) => {
     setShowResult(true);
     if (user && selectedLevel) {
       try {
+        console.log('Attempting to save quiz result for user:', user.uid, user.displayName || user.email);
         await FirestoreService.saveQuizResult(
           user.uid,
           user,
@@ -147,10 +148,13 @@ const QuizScreen = ({ navigation }) => {
           finalScore,
           currentQuestions.length
         );
-        console.log('Score saved!');
+        console.log('Score saved successfully!');
       } catch (error) {
         console.error('Failed to save score:', error);
+        Alert.alert('Error', 'Failed to save your score to the leaderboard. Please check your internet connection.');
       }
+    } else {
+      console.log('Cannot save score - user or selectedLevel missing:', { user: !!user, selectedLevel: !!selectedLevel });
     }
   };
 
