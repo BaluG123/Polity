@@ -586,7 +586,835 @@ export const QUIZ_QUESTIONS = {
       explanation: "There are 12 schedules in the Indian Constitution covering various aspects like languages, forms of oaths, etc.",
       topic: "Constitution",
       difficulty: "easy"
-    }
+    },
+    {
+    id: "b9",
+    question: "Which article of the Indian Constitution deals with the 'Fundamental Duties'?",
+    options: ["Article 50", "Article 51A", "Article 44", "Article 21"],
+    correctAnswer: 1,
+    explanation: "Fundamental Duties were added by the 42nd Amendment Act in 1976 and are listed under Article 51A.",
+    topic: "Fundamental Duties",
+    difficulty: "medium"
+  },
+  {
+    id: "b10",
+    question: "Who acts as the ex-officio Chairman of the Rajya Sabha?",
+    options: ["The President", "The Vice-President", "The Prime Minister", "The Speaker"],
+    correctAnswer: 1,
+    explanation: "The Vice-President of India serves as the ex-officio Chairman of the Rajya Sabha (the Upper House of Parliament).",
+    topic: "Parliament",
+    difficulty: "easy"
+  },
+  {
+    id: "b11",
+    question: "Which amendment is often referred to as the 'Mini-Constitution' of India?",
+    options: ["42nd Amendment", "44th Amendment", "1st Amendment", "73rd Amendment"],
+    correctAnswer: 0,
+    explanation: "The 42nd Amendment (1976) brought massive changes to the Constitution, including the Preamble, and is thus called the Mini-Constitution.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b12",
+    question: "What is the minimum age required to become the President of India?",
+    options: ["25 years", "30 years", "35 years", "40 years"],
+    correctAnswer: 2,
+    explanation: "According to Article 58, a person must be at least 35 years old to be eligible for election as President.",
+    topic: "President",
+    difficulty: "easy"
+  },
+  {
+    id: "b13",
+    question: "The 'Directive Principles of State Policy' (DPSP) were borrowed from which country's constitution?",
+    options: ["USA", "Ireland", "Britain", "Canada"],
+    correctAnswer: 1,
+    explanation: "The DPSP, which guide the government in making laws, were borrowed from the Irish Constitution.",
+    topic: "DPSP",
+    difficulty: "medium"
+  },
+  {
+    id: "b14",
+    question: "Who presides over a joint sitting of both Houses of Parliament?",
+    options: ["The President", "The Vice-President", "The Speaker of Lok Sabha", "The Chief Justice"],
+    correctAnswer: 2,
+    explanation: "While the President calls for a joint sitting, it is presided over by the Speaker of the Lok Sabha.",
+    topic: "Parliament",
+    difficulty: "medium"
+  },
+  {
+    id: "b15",
+    question: "Which of the following is NOT a fundamental right?",
+    options: ["Right to Equality", "Right to Liberty", "Right to Property", "Right against Exploitation"],
+    correctAnswer: 2,
+    explanation: "The Right to Property was removed from the list of Fundamental Rights by the 44th Amendment in 1978 and made a legal right.",
+    topic: "Fundamental Rights",
+    difficulty: "easy"
+  },
+  {
+    id: "b16",
+    question: "The 73rd Constitutional Amendment Act is related to which of the following?",
+    options: ["Municipalities", "Panchayati Raj", "Land Reforms", "Defection"],
+    correctAnswer: 1,
+    explanation: "The 73rd Amendment (1992) gave constitutional status to Panchayati Raj institutions (rural local government).",
+    topic: "Local Government",
+    difficulty: "medium"
+  },
+  {
+    id: "b17",
+    question: "How many members are nominated by the President to the Rajya Sabha?",
+    options: ["2", "10", "12", "15"],
+    correctAnswer: 2,
+    explanation: "The President nominates 12 members to the Rajya Sabha for their special knowledge or practical experience in Art, Literature, Science, and Social Service.",
+    topic: "Parliament",
+    difficulty: "easy"
+  },
+  {
+    id: "b18",
+    question: "Who appoints the Chief Justice of India?",
+    options: ["The Prime Minister", "The Law Minister", "The President", "The Parliament"],
+    correctAnswer: 2,
+    explanation: "The Chief Justice of India and other judges of the Supreme Court are appointed by the President of India.",
+    topic: "Judiciary",
+    difficulty: "easy"
+  },
+  {
+    id: "b19",
+    question: "Which article of the Constitution provides for 'Financial Emergency'?",
+    options: ["Article 352", "Article 356", "Article 360", "Article 368"],
+    correctAnswer: 2,
+    explanation: "Article 360 empowers the President to declare a Financial Emergency if the financial stability of India is threatened.",
+    topic: "Emergency",
+    difficulty: "medium"
+  },
+  {
+    id: "b20",
+    question: "The 'Quit India Movement' was launched in which year?",
+    options: ["1930", "1942", "1919", "1945"],
+    correctAnswer: 1,
+    explanation: "Mahatma Gandhi launched the Quit India Movement on August 8, 1942, demanding an end to British rule in India.",
+    topic: "Independence",
+    difficulty: "easy"
+  },
+  {
+    id: "b21",
+    question: "Who was the first woman Governor of an Indian state?",
+    options: ["Sarojini Naidu", "Sucheta Kripalani", "Indira Gandhi", "Vijayalakshmi Pandit"],
+    correctAnswer: 0,
+    explanation: "Sarojini Naidu, known as the 'Nightingale of India', was the first woman to become the Governor of an Indian state (Uttar Pradesh).",
+    topic: "General History",
+    difficulty: "medium"
+  },
+  {
+    id: "b22",
+    question: "Which house of the Parliament is known as the 'Permanent House'?",
+    options: ["Lok Sabha", "Rajya Sabha", "Vidhan Sabha", "Panchayat"],
+    correctAnswer: 1,
+    explanation: "The Rajya Sabha is called the Permanent House because it is not subject to dissolution; one-third of its members retire every second year.",
+    topic: "Parliament",
+    difficulty: "easy"
+  },
+  {
+    id: "b23",
+    question: "What is the maximum gap allowed between two sessions of Parliament?",
+    options: ["3 months", "6 months", "9 months", "1 year"],
+    correctAnswer: 1,
+    explanation: "According to the Constitution, there should not be a gap of more than six months between two sessions of Parliament.",
+    topic: "Parliament",
+    difficulty: "medium"
+  },
+  {
+    id: "b24",
+    question: "Which writ is issued by the court to produce a person who has been detained?",
+    options: ["Mandamus", "Certiorari", "Habeas Corpus", "Quo-Warranto"],
+    correctAnswer: 2,
+    explanation: "Habeas Corpus (literally 'to have the body') is an order issued by the court to a person who has detained another, to produce the body of the latter.",
+    topic: "Fundamental Rights",
+    difficulty: "medium"
+  },
+  {
+    id: "b25",
+    question: "Who was the first Law Minister of independent India?",
+    options: ["Jawaharlal Nehru", "Dr. B.R. Ambedkar", "Maulana Abul Kalam Azad", "Sardar Patel"],
+    correctAnswer: 1,
+    explanation: "Dr. B.R. Ambedkar served as the first Law and Justice Minister of independent India from 1947 to 1951.",
+    topic: "General History",
+    difficulty: "medium"
+  },
+  {
+    id: "b26",
+    question: "In which year was the Preamble of the Indian Constitution amended for the first time?",
+    options: ["1951", "1976", "1988", "It has never been amended"],
+    correctAnswer: 1,
+    explanation: "The Preamble has been amended only once, in 1976, by the 42nd Amendment, adding the words 'Socialist', 'Secular', and 'Integrity'.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b27",
+    question: "Who administered the oath of office to the first President of India?",
+    options: ["The Prime Minister", "The Chief Justice of India", "The Vice-President", "The Speaker"],
+    correctAnswer: 1,
+    explanation: "The Chief Justice of India administers the oath of office to the President of India.",
+    topic: "President",
+    difficulty: "medium"
+  },
+  {
+    id: "b28",
+    question: "Which article of the Constitution deals with the 'Right to Education'?",
+    options: ["Article 21", "Article 21A", "Article 19", "Article 14"],
+    correctAnswer: 1,
+    explanation: "Article 21A states that the State shall provide free and compulsory education to all children of the age of 6 to 14 years.",
+    topic: "Fundamental Rights",
+    difficulty: "easy"
+  },
+  {
+    id: "b29",
+    question: "The concept of 'Single Citizenship' in India is inspired by which country?",
+    options: ["USA", "Britain", "Canada", "France"],
+    correctAnswer: 1,
+    explanation: "Despite being a federal country like the USA (which has dual citizenship), India adopted Single Citizenship from the British Constitution.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b30",
+    question: "Who was the Chairman of the Union Constitution Committee of the Constituent Assembly?",
+    options: ["Dr. B.R. Ambedkar", "Jawaharlal Nehru", "J.B. Kripalani", "Sardar Patel"],
+    correctAnswer: 1,
+    explanation: "Jawaharlal Nehru was the chairman of the Union Constitution Committee and the Union Powers Committee.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b31",
+    question: "Which fundamental right was described by Dr. Ambedkar as the 'Heart and Soul'?",
+    options: ["Right to Equality", "Right to Freedom", "Right to Constitutional Remedies", "Right against Exploitation"],
+    correctAnswer: 2,
+    explanation: "Dr. B.R. Ambedkar called Article 32 (Right to Constitutional Remedies) the 'Heart and Soul' because it makes all other rights effective.",
+    topic: "Fundamental Rights",
+    difficulty: "easy"
+  },
+  {
+    id: "b32",
+    question: "The power to form new states or change boundaries of existing states rests with:",
+    options: ["The President", "The Parliament", "The Supreme Court", "The State Government"],
+    correctAnswer: 1,
+    explanation: "Under Article 3, the Parliament has the power to create new states and alter the areas, boundaries, or names of existing states.",
+    topic: "Polity",
+    difficulty: "medium"
+  },
+  {
+    id: "b33",
+    question: "Who was the first woman to become the Prime Minister of India?",
+    options: ["Pratibha Patil", "Indira Gandhi", "Sushma Swaraj", "Annie Besant"],
+    correctAnswer: 1,
+    explanation: "Indira Gandhi was the first and, to date, the only female Prime Minister of India, serving from 1966 to 1977 and again from 1980 to 1984.",
+    topic: "General History",
+    difficulty: "easy"
+  },
+  {
+    id: "b34",
+    question: "Which part of the Indian Constitution deals with the Municipalities?",
+    options: ["Part IX", "Part IX-A", "Part X", "Part XI"],
+    correctAnswer: 1,
+    explanation: "Part IX-A was added by the 74th Amendment Act (1992) to provide a constitutional framework for Municipalities.",
+    topic: "Local Government",
+    difficulty: "medium"
+  },
+  {
+    id: "b35",
+    question: "What is the tenure of a member of the Rajya Sabha?",
+    options: ["4 years", "5 years", "6 years", "2 years"],
+    correctAnswer: 2,
+    explanation: "While the Rajya Sabha itself is never dissolved, each member is elected for a term of 6 years.",
+    topic: "Parliament",
+    difficulty: "easy"
+  },
+  {
+    id: "b36",
+    question: "Who has the power to declare a National Emergency in India?",
+    options: ["The Prime Minister", "The President", "The Chief Justice", "The Defense Minister"],
+    correctAnswer: 1,
+    explanation: "The President can declare a National Emergency under Article 352 on the written recommendation of the Cabinet.",
+    topic: "Emergency",
+    difficulty: "easy"
+  },
+  {
+    id: "b37",
+    question: "Which constitutional body is responsible for conducting elections to the Parliament?",
+    options: ["UPSC", "Election Commission of India", "Planning Commission", "Supreme Court"],
+    correctAnswer: 1,
+    explanation: "The Election Commission (Article 324) is responsible for conducting elections to the Parliament, State Legislatures, and the offices of President and VP.",
+    topic: "Polity",
+    difficulty: "easy"
+  },
+  {
+    id: "b38",
+    question: "The 'Satyamev Jayate' slogan is taken from which ancient Indian text?",
+    options: ["Rigveda", "Mundaka Upanishad", "Ramayana", "Bhagavad Gita"],
+    correctAnswer: 1,
+    explanation: "'Satyamev Jayate' (Truth alone triumphs) is inscribed in Devanagari script at the base of the national emblem and is taken from the Mundaka Upanishad.",
+    topic: "General History",
+    difficulty: "medium"
+  },
+  {
+    id: "b39",
+    question: "Which Article of the Constitution prohibits 'Untouchability'?",
+    options: ["Article 14", "Article 15", "Article 16", "Article 17"],
+    correctAnswer: 3,
+    explanation: "Article 17 abolishes 'Untouchability' and forbids its practice in any form.",
+    topic: "Fundamental Rights",
+    difficulty: "medium"
+  },
+  {
+    id: "b40",
+    question: "Who was the first Indian to join the Indian Civil Service (ICS)?",
+    options: ["Satyendranath Tagore", "Dadabhai Naoroji", "Subhash Chandra Bose", "Surendranath Banerjee"],
+    correctAnswer: 0,
+    explanation: "Satyendranath Tagore, the elder brother of Rabindranath Tagore, was the first Indian to join the ICS in 1863.",
+    topic: "General History",
+    difficulty: "hard"
+  },
+  {
+    id: "b41",
+    question: "The 'Speaker' of the Lok Sabha submits his resignation to whom?",
+    options: ["The President", "The Prime Minister", "The Deputy Speaker of Lok Sabha", "The Chief Justice"],
+    correctAnswer: 2,
+    explanation: "The Speaker of the Lok Sabha can resign by writing to the Deputy Speaker of the Lok Sabha.",
+    topic: "Parliament",
+    difficulty: "medium"
+  },
+  {
+    id: "b42",
+    question: "Which fundamental right cannot be suspended even during an Emergency?",
+    options: ["Right to Speech", "Right to Assembly", "Right to Life and Personal Liberty", "Right to Equality"],
+    correctAnswer: 2,
+    explanation: "Articles 20 and 21 (Right to life and personal liberty) cannot be suspended even during a National Emergency.",
+    topic: "Fundamental Rights",
+    difficulty: "hard"
+  },
+  {
+    id: "b43",
+    question: "In the Indian flag, what does the 'Saffron' color represent?",
+    options: ["Peace and Truth", "Strength and Courage", "Fertility and Growth", "Faith and Chivalry"],
+    correctAnswer: 1,
+    explanation: "In the National Flag, saffron represents strength and courage, white represents peace and truth, and green represents fertility and growth.",
+    topic: "National Symbols",
+    difficulty: "easy"
+  },
+  {
+    id: "b44",
+    question: "How many High Courts are currently there in India?",
+    options: ["21", "24", "25", "28"],
+    correctAnswer: 2,
+    explanation: "There are currently 25 High Courts in India, with the Andhra Pradesh High Court being the latest one (established in 2019).",
+    topic: "Judiciary",
+    difficulty: "medium"
+  },
+  {
+    id: "b45",
+    question: "Who was the Vice-Chairman of the Drafting Committee?",
+    options: ["T.T. Krishnamachari", "B.L. Mitter", "There was no Vice-Chairman", "H.C. Mukherjee"],
+    correctAnswer: 2,
+    explanation: "The Drafting Committee had a Chairman (Dr. Ambedkar) and seven members, but there was no specific 'Vice-Chairman' post within the committee itself.",
+    topic: "Constitution",
+    difficulty: "hard"
+  },
+  {
+    id: "b46",
+    question: "The 'Preamble' of the Indian Constitution begins with which words?",
+    options: ["I, the citizen of India", "We, the people of India", "India is a sovereign", "The Constitution of India"],
+    correctAnswer: 1,
+    explanation: "The Preamble begins with: 'We, the People of India, having solemnly resolved to constitute India into a Sovereign Socialist Secular Democratic Republic...'",
+    topic: "Constitution",
+    difficulty: "easy"
+  },
+  {
+    id: "b47",
+    question: "Which schedule of the Indian Constitution contains the list of official languages?",
+    options: ["Seventh Schedule", "Eighth Schedule", "Ninth Schedule", "Tenth Schedule"],
+    correctAnswer: 1,
+    explanation: "The Eighth Schedule lists the 22 official languages recognized by the Indian Constitution.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b48",
+    question: "Who was the founder of the 'Indian National Congress'?",
+    options: ["W.C. Bonnerjee", "Allan Octavian Hume", "Dadabhai Naoroji", "Mahatma Gandhi"],
+    correctAnswer: 1,
+    explanation: "A.O. Hume, a retired British officer, was the primary founder of the Indian National Congress in 1885.",
+    topic: "General History",
+    difficulty: "medium"
+  },
+  {
+    id: "b49",
+    question: "The 'Minimum Needs Programme' was introduced in which Five Year Plan?",
+    options: ["Third Plan", "Fourth Plan", "Fifth Plan", "Sixth Plan"],
+    correctAnswer: 2,
+    explanation: "The Minimum Needs Programme (MNP) was introduced in the first year of the Fifth Five Year Plan (1974–78).",
+    topic: "Economic Polity",
+    difficulty: "hard"
+  },
+  {
+    id: "b50",
+    question: "Which article empowers the President to grant pardons?",
+    options: ["Article 72", "Article 52", "Article 161", "Article 76"],
+    correctAnswer: 0,
+    explanation: "Article 72 of the Constitution empowers the President to grant pardons, reprieves, respites, or remissions of punishment.",
+    topic: "President",
+    difficulty: "medium"
+  },
+  {
+    id: "b51",
+    question: "Which article of the Constitution directs the State to separate the Judiciary from the Executive?",
+    options: ["Article 48", "Article 50", "Article 51", "Article 44"],
+    correctAnswer: 1,
+    explanation: "Article 50 of the Directive Principles of State Policy (DPSP) mandates the separation of the judiciary from the executive in public services.",
+    topic: "DPSP",
+    difficulty: "hard"
+  },
+  {
+    id: "b52",
+    question: "Which article of the Indian Constitution deals with the Uniform Civil Code?",
+    options: ["Article 42", "Article 43", "Article 44", "Article 45"],
+    correctAnswer: 2,
+    explanation: "Article 44 states that the State shall endeavor to secure for the citizens a Uniform Civil Code throughout the territory of India.",
+    topic: "DPSP",
+    difficulty: "medium"
+  },
+  {
+    id: "b53",
+    question: "Who is known as the 'Guardian of the Public Purse' in India?",
+    options: ["The Prime Minister", "The Finance Minister", "The Comptroller and Auditor General (CAG)", "The RBI Governor"],
+    correctAnswer: 2,
+    explanation: "The CAG (Article 148) is responsible for auditing all receipts and expenditures of the Government of India and the States.",
+    topic: "Constitutional Bodies",
+    difficulty: "medium"
+  },
+  {
+    id: "b54",
+    question: "The 'Objective Resolution', which formed the basis of the Preamble, was moved by:",
+    options: ["Dr. B.R. Ambedkar", "Jawaharlal Nehru", "Sardar Patel", "Dr. Rajendra Prasad"],
+    correctAnswer: 1,
+    explanation: "Jawaharlal Nehru moved the Objective Resolution in the Constituent Assembly on December 13, 1946.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b55",
+    question: "Who was the first Indian woman to become the President of the Indian National Congress?",
+    options: ["Annie Besant", "Sarojini Naidu", "Vijaya Lakshmi Pandit", "Aruna Asaf Ali"],
+    correctAnswer: 1,
+    explanation: "Sarojini Naidu presided over the Kanpur session in 1925. (Note: Annie Besant was the first woman, but she was not Indian).",
+    topic: "Independence",
+    difficulty: "hard"
+  },
+  {
+    id: "b56",
+    question: "Which Constitutional Amendment reduced the voting age from 21 to 18 years?",
+    options: ["42nd Amendment", "44th Amendment", "61st Amendment", "73rd Amendment"],
+    correctAnswer: 2,
+    explanation: "The 61st Amendment Act of 1988 (which came into force in 1989) lowered the voting age for Lok Sabha and Assembly elections.",
+    topic: "Elections",
+    difficulty: "medium"
+  },
+  {
+    id: "b57",
+    question: "The idea of 'Liberty, Equality, and Fraternity' in the Preamble was borrowed from:",
+    options: ["The American Revolution", "The French Revolution", "The Russian Revolution", "The British Constitution"],
+    correctAnswer: 1,
+    explanation: "These ideals were borrowed from the French Revolution (1789–1799) and incorporated into the Indian Preamble.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b58",
+    question: "In which year did the Jallianwala Bagh Massacre take place?",
+    options: ["1917", "1918", "1919", "1920"],
+    correctAnswer: 2,
+    explanation: "The massacre occurred on April 13, 1919, in Amritsar, when British troops fired on a crowd of non-violent protesters.",
+    topic: "Independence",
+    difficulty: "easy"
+  },
+  {
+    id: "b59",
+    question: "Who was the first Viceroy of India?",
+    options: ["Lord Canning", "Lord Mountbatten", "Lord William Bentinck", "Lord Dalhousie"],
+    correctAnswer: 0,
+    explanation: "Lord Canning became the first Viceroy of India after the Government of India Act 1858 replaced the Company rule with Crown rule.",
+    topic: "General History",
+    difficulty: "hard"
+  },
+  {
+    id: "b60",
+    question: "Which part of the Constitution is known as the 'Magna Carta' of India?",
+    options: ["Part II", "Part III", "Part IV", "Part IX"],
+    correctAnswer: 1,
+    explanation: "Part III (Fundamental Rights) is called the Magna Carta because it contains a long and comprehensive list of justiciable rights.",
+    topic: "Fundamental Rights",
+    difficulty: "medium"
+  },
+  {
+    id: "b61",
+    question: "Who was the political guru of Mahatma Gandhi?",
+    options: ["Dadabhai Naoroji", "Bal Gangadhar Tilak", "Gopal Krishna Gokhale", "Rabindranath Tagore"],
+    correctAnswer: 2,
+    explanation: "Gopal Krishna Gokhale was the one who advised Gandhi to travel around India to understand the ground reality after his return from South Africa.",
+    topic: "Independence",
+    difficulty: "medium"
+  },
+  {
+    id: "b62",
+    question: "The 'Swaraj Party' was formed by Motilal Nehru and whom?",
+    options: ["C.R. Das", "Subhash Chandra Bose", "Jawaharlal Nehru", "Bipin Chandra Pal"],
+    correctAnswer: 0,
+    explanation: "Chittaranjan Das and Motilal Nehru formed the Swaraj Party in 1923 after the suspension of the Non-Cooperation Movement.",
+    topic: "Independence",
+    difficulty: "medium"
+  },
+  {
+    id: "b63",
+    question: "Which Article of the Constitution deals with the 'Abolition of Titles'?",
+    options: ["Article 14", "Article 16", "Article 18", "Article 20"],
+    correctAnswer: 2,
+    explanation: "Article 18 prevents the State from conferring any title except military or academic distinctions to ensure social equality.",
+    topic: "Fundamental Rights",
+    difficulty: "medium"
+  },
+  {
+    id: "b64",
+    question: "What is the maximum strength of the Lok Sabha as per the Constitution?",
+    options: ["530", "545", "550", "552"],
+    correctAnswer: 3,
+    explanation: "The maximum strength is 552 (530 from States, 20 from UTs, and 2 nominated members). *Note: The nomination of Anglo-Indians was ended in 2020.*",
+    topic: "Parliament",
+    difficulty: "easy"
+  },
+  {
+    id: "b65",
+    question: "The 'Simon Commission' visited India in which year?",
+    options: ["1927", "1928", "1929", "1930"],
+    correctAnswer: 1,
+    explanation: "The commission was appointed in 1927 but arrived in India in 1928. It was boycotted because it had no Indian members.",
+    topic: "Independence",
+    difficulty: "medium"
+  },
+  {
+    id: "b66",
+    question: "Who was the first Chief Election Commissioner of India?",
+    options: ["Sukumar Sen", "K.V.K. Sundaram", "S.P. Sen Verma", "T.N. Seshan"],
+    correctAnswer: 0,
+    explanation: "Sukumar Sen served as the first Chief Election Commissioner from 1950 to 1958, overseeing the first two general elections.",
+    topic: "Elections",
+    difficulty: "hard"
+  },
+  {
+    id: "b67",
+    question: "Which plan became the basis for the Partition of India?",
+    options: ["Cripps Mission", "Wavell Plan", "Mountbatten Plan", "Cabinet Mission Plan"],
+    correctAnswer: 2,
+    explanation: "The Mountbatten Plan (June 3 Plan) of 1947 proposed the partition of India into two independent dominions: India and Pakistan.",
+    topic: "Independence",
+    difficulty: "easy"
+  },
+  {
+    id: "b68",
+    question: "The 'Doctrine of Lapse' was introduced by which Governor-General?",
+    options: ["Lord Wellesley", "Lord Dalhousie", "Lord Curzon", "Lord Hastings"],
+    correctAnswer: 1,
+    explanation: "Lord Dalhousie used the Doctrine of Lapse to annex princely states where the ruler died without a natural male heir.",
+    topic: "General History",
+    difficulty: "medium"
+  },
+  {
+    id: "b69",
+    question: "Who was the President of the 1929 Lahore Session of the INC where 'Purna Swaraj' was declared?",
+    options: ["Mahatma Gandhi", "Jawaharlal Nehru", "Sardar Patel", "Subhash Chandra Bose"],
+    correctAnswer: 1,
+    explanation: "Under the presidency of Jawaharlal Nehru, the Congress passed the 'Purna Swaraj' (Complete Independence) resolution in 1929.",
+    topic: "Independence",
+    difficulty: "medium"
+  },
+  {
+    id: "b70",
+    question: "Which article allows the Parliament to amend the Constitution?",
+    options: ["Article 352", "Article 360", "Article 368", "Article 370"],
+    correctAnswer: 2,
+    explanation: "Article 368 in Part XX of the Constitution deals with the powers of Parliament to amend the Constitution and its procedure.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b71",
+    question: "The 'Finance Commission' is constituted by the President every:",
+    options: ["2 years", "3 years", "5 years", "6 years"],
+    correctAnswer: 2,
+    explanation: "Under Article 280, the President constitutes the Finance Commission every five years to recommend the distribution of taxes between Union and States.",
+    topic: "Constitutional Bodies",
+    difficulty: "easy"
+  },
+  {
+    id: "b72",
+    question: "Which movement started with the Dandi March?",
+    options: ["Quit India Movement", "Non-Cooperation Movement", "Civil Disobedience Movement", "Khilafat Movement"],
+    correctAnswer: 2,
+    explanation: "The Civil Disobedience Movement began in 1930 when Gandhi broke the Salt Law at Dandi.",
+    topic: "Independence",
+    difficulty: "easy"
+  },
+  {
+    id: "b73",
+    question: "Who is the highest law officer of the Government of India?",
+    options: ["Chief Justice of India", "Attorney General of India", "Law Minister", "Solicitor General"],
+    correctAnswer: 1,
+    explanation: "The Attorney General (Article 76) is the chief legal advisor to the government and its primary lawyer in the Supreme Court.",
+    topic: "Polity",
+    difficulty: "medium"
+  },
+  {
+    id: "b74",
+    question: "The 'Panchayati Raj' was first adopted by which Indian state?",
+    options: ["Andhra Pradesh", "Rajasthan", "Bihar", "Gujarat"],
+    correctAnswer: 1,
+    explanation: "Rajasthan was the first state to adopt Panchayati Raj, inaugurated by PM Nehru in Nagaur district on October 2, 1959.",
+    topic: "Local Government",
+    difficulty: "medium"
+  },
+  {
+    id: "b75",
+    question: "Who was the first Indian woman to preside over the UN General Assembly?",
+    options: ["Sarojini Naidu", "Vijaya Lakshmi Pandit", "Indira Gandhi", "Rajkumari Amrit Kaur"],
+    correctAnswer: 1,
+    explanation: "Vijaya Lakshmi Pandit (sister of Nehru) was elected as the first woman president of the UN General Assembly in 1953.",
+    topic: "General History",
+    difficulty: "hard"
+  },
+  {
+    id: "b76",
+    question: "Which schedule of the Constitution deals with the 'Anti-Defection Law'?",
+    options: ["8th Schedule", "9th Schedule", "10th Schedule", "11th Schedule"],
+    correctAnswer: 2,
+    explanation: "The 10th Schedule was added by the 52nd Amendment (1985) to prevent political defections.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b77",
+    question: "Who founded the 'All India Muslim League' in 1906?",
+    options: ["Muhammad Ali Jinnah", "Sir Syed Ahmed Khan", "Aga Khan and Nawab Salimullah", "Liaquat Ali Khan"],
+    correctAnswer: 2,
+    explanation: "The Muslim League was founded in Dacca (now Dhaka) in 1906 primarily by the Aga Khan and the Nawab of Dacca.",
+    topic: "Independence",
+    difficulty: "hard"
+  },
+  {
+    id: "b78",
+    question: "Which Constitutional Amendment is related to the 'Right to Education'?",
+    options: ["42nd Amendment", "44th Amendment", "86th Amendment", "92nd Amendment"],
+    correctAnswer: 2,
+    explanation: "The 86th Amendment Act (2002) inserted Article 21A, making education a fundamental right for children aged 6–14.",
+    topic: "Fundamental Rights",
+    difficulty: "medium"
+  },
+  {
+    id: "b79",
+    question: "Who was the first Speaker of the Lok Sabha?",
+    options: ["G.V. Mavalankar", "M.A. Ayyangar", "Hukam Singh", "N. Sanjiva Reddy"],
+    correctAnswer: 0,
+    explanation: "Ganesh Vasudev Mavalankar served as the first Speaker of the Lok Sabha from 1952 to 1956.",
+    topic: "Parliament",
+    difficulty: "medium"
+  },
+  {
+    id: "b80",
+    question: "The 'Cabinet Mission' came to India in which year?",
+    options: ["1942", "1945", "1946", "1947"],
+    correctAnswer: 2,
+    explanation: "The Cabinet Mission arrived in 1946 to discuss the transfer of power and the framing of the Constitution.",
+    topic: "Independence",
+    difficulty: "medium"
+  },
+  {
+    id: "b81",
+    question: "The concept of 'Concurrent List' was borrowed from which country?",
+    options: ["USA", "Canada", "Australia", "Germany"],
+    correctAnswer: 2,
+    explanation: "The idea of the Concurrent List (subjects on which both Centre and States can legislate) was borrowed from Australia.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b82",
+    question: "Which article empowers the Supreme Court to issue writs for the enforcement of Fundamental Rights?",
+    options: ["Article 32", "Article 226", "Article 131", "Article 143"],
+    correctAnswer: 0,
+    explanation: "Article 32 gives the Supreme Court writ jurisdiction, while Article 226 gives similar powers to High Courts.",
+    topic: "Judiciary",
+    difficulty: "medium"
+  },
+  {
+    id: "b83",
+    question: "In which year was the 'National Anthem' (Jana Gana Mana) first sung?",
+    options: ["1911", "1947", "1950", "1921"],
+    correctAnswer: 0,
+    explanation: "It was first sung on December 27, 1911, at the Calcutta session of the Indian National Congress.",
+    topic: "National Symbols",
+    difficulty: "hard"
+  },
+  {
+    id: "b84",
+    question: "Who was the first woman to be elected as the President of India?",
+    options: ["Indira Gandhi", "Pratibha Patil", "Draupadi Murmu", "Sarojini Naidu"],
+    correctAnswer: 1,
+    explanation: "Pratibha Patil was the 12th President of India and the first woman to hold the office (2007–2012).",
+    topic: "President",
+    difficulty: "easy"
+  },
+  {
+    id: "b85",
+    question: "The 'Ryotwari System' of land revenue was introduced by:",
+    options: ["Thomas Munro", "Lord Cornwallis", "Lord Wellesley", "Warren Hastings"],
+    correctAnswer: 0,
+    explanation: "Sir Thomas Munro and Alexander Read introduced the Ryotwari system in the Madras Presidency.",
+    topic: "General History",
+    difficulty: "hard"
+  },
+  {
+    id: "b86",
+    question: "Which article deals with the 'Election Commission' of India?",
+    options: ["Article 320", "Article 324", "Article 330", "Article 352"],
+    correctAnswer: 1,
+    explanation: "Article 324 provides for the establishment of an Election Commission to direct and control elections.",
+    topic: "Elections",
+    difficulty: "medium"
+  },
+  {
+    id: "b87",
+    question: "Who was the founder of 'Azad Hind Fauj' (INA)?",
+    options: ["Subhash Chandra Bose", "Rash Behari Bose", "Captain Mohan Singh", "Bhagat Singh"],
+    correctAnswer: 2,
+    explanation: "While Bose later led it, the Indian National Army was initially founded by Captain Mohan Singh in Singapore in 1942.",
+    topic: "Independence",
+    difficulty: "hard"
+  },
+  {
+    id: "b88",
+    question: "The 'Preamble' is based on the Objective Resolution. Who drafted it?",
+    options: ["Dr. B.R. Ambedkar", "Jawaharlal Nehru", "B.N. Rau", "K.M. Munshi"],
+    correctAnswer: 1,
+    explanation: "The Objective Resolution was drafted and moved by Jawaharlal Nehru on December 13, 1946.",
+    topic: "Constitution",
+    difficulty: "medium"
+  },
+  {
+    id: "b89",
+    question: "Which fundamental right was abolished by the 44th Amendment?",
+    options: ["Right to Religion", "Right to Property", "Right to Education", "Right to Assembly"],
+    correctAnswer: 1,
+    explanation: "The 44th Amendment Act of 1978 removed the Right to Property as a Fundamental Right.",
+    topic: "Fundamental Rights",
+    difficulty: "easy"
+  },
+  {
+    id: "b90",
+    question: "Who was the first Indian Governor-General of Independent India?",
+    options: ["Lord Mountbatten", "C. Rajagopalachari", "Dr. Rajendra Prasad", "Sardar Patel"],
+    correctAnswer: 1,
+    explanation: "C. Rajagopalachari was the only Indian to hold the post of Governor-General (1948–1950).",
+    topic: "Independence",
+    difficulty: "medium"
+  },
+  {
+    id: "b91",
+    question: "The 'Interstate Council' is established by whom?",
+    options: ["The Parliament", "The President", "The NITI Aayog", "The Chief Justice"],
+    correctAnswer: 1,
+    explanation: "Under Article 263, the President can establish an Interstate Council to coordinate between the Union and States.",
+    topic: "Polity",
+    difficulty: "hard"
+  },
+  {
+    id: "b92",
+    question: "In which session was the 'National Song' (Vande Mataram) first sung?",
+    options: ["1885 session", "1896 session", "1905 session", "1911 session"],
+    correctAnswer: 1,
+    explanation: "Vande Mataram was first sung by Rabindranath Tagore at the 1896 session of the Indian National Congress.",
+    topic: "National Symbols",
+    difficulty: "hard"
+  },
+  {
+    id: "b93",
+    question: "Who appoints the Governor of a State?",
+    options: ["The Chief Minister", "The Prime Minister", "The President", "The Chief Justice of High Court"],
+    correctAnswer: 2,
+    explanation: "The Governor of a State is appointed by the President by warrant under his hand and seal (Article 155).",
+    topic: "State Government",
+    difficulty: "easy"
+  },
+  {
+    id: "b94",
+    question: "The 'Residuary Powers' (powers not in any list) in India rest with:",
+    options: ["The States", "The Union Government", "Both Union and States", "The Supreme Court"],
+    correctAnswer: 1,
+    explanation: "Unlike the USA, in India, the residuary powers of legislation are vested in the Parliament (Union Government).",
+    topic: "Polity",
+    difficulty: "medium"
+  },
+  {
+    id: "b95",
+    question: "Which Article of the Constitution deals with the 'Comptroller and Auditor General'?",
+    options: ["Article 76", "Article 148", "Article 110", "Article 280"],
+    correctAnswer: 1,
+    explanation: "Article 148 provides for an independent office of the CAG of India.",
+    topic: "Constitutional Bodies",
+    difficulty: "medium"
+  },
+  {
+    id: "b96",
+    question: "The 'Quit India' resolution was passed in which city?",
+    options: ["Bombay", "Calcutta", "Madras", "Delhi"],
+    correctAnswer: 0,
+    explanation: "The resolution was passed at the Gowalia Tank Maidan in Bombay (now Mumbai) on August 8, 1942.",
+    topic: "Independence",
+    difficulty: "medium"
+  },
+  {
+    id: "b97",
+    question: "Who was the Chairman of the 'State Committee' (Committee for negotiating with States) of the Constituent Assembly?",
+    options: ["Sardar Patel", "Jawaharlal Nehru", "Dr. Rajendra Prasad", "Dr. Ambedkar"],
+    correctAnswer: 1,
+    explanation: "Contrary to popular belief, Jawaharlal Nehru chaired the States Committee, while Patel was crucial for actual integration.",
+    topic: "Constitution",
+    difficulty: "hard"
+  },
+  {
+    id: "b98",
+    question: "Which Article allows for the 'Impeachment of the President'?",
+    options: ["Article 52", "Article 61", "Article 72", "Article 123"],
+    correctAnswer: 1,
+    explanation: "Article 61 prescribes the procedure for the impeachment of the President on the grounds of 'violation of the Constitution'.",
+    topic: "President",
+    difficulty: "medium"
+  },
+  {
+    id: "b99",
+    question: "The 'Poona Pact' (1932) was an agreement between:",
+    options: ["Gandhi and Irwin", "Gandhi and Ambedkar", "Nehru and Jinnah", "Congress and Muslim League"],
+    correctAnswer: 1,
+    explanation: "The Poona Pact was signed between Mahatma Gandhi and Dr. B.R. Ambedkar to provide reserved seats for depressed classes in provincial legislatures.",
+    topic: "Independence",
+    difficulty: "medium"
+  },
+  {
+    id: "b100",
+    question: "Which Constitutional Amendment added the 'Fundamental Duties'?",
+    options: ["24th Amendment", "42nd Amendment", "44th Amendment", "52nd Amendment"],
+    correctAnswer: 1,
+    explanation: "Fundamental Duties were incorporated in Part IV-A (Article 51A) by the 42nd Amendment Act, 1976, on the recommendation of the Swaran Singh Committee.",
+    topic: "Fundamental Duties",
+    difficulty: "medium"
+  }
   ],
   intermediate: [
     {
