@@ -9,19 +9,25 @@ GoogleSignin.configure({
 
 export const signInWithGoogle = async () => {
     try {
-        // Check if your device supports Google Play
+        console.log('STEP 1: Checking Play Services');
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-        // Get the users ID token
-        const { idToken, user } = await GoogleSignin.signIn();
+        console.log('STEP 2: Signing In');
+        const calculateUserInfo = await GoogleSignin.signIn();
+        console.log('STEP 3: User Info:', calculateUserInfo);
 
-        // Create a Google credential with the token
+        const userInfo = calculateUserInfo.data || calculateUserInfo;
+        const { idToken } = userInfo;
+
+        if (!idToken) throw new Error('No ID Token found');
+
+        console.log('STEP 4: Creating Credential');
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-        // Sign-in the user with the credential
+        console.log('STEP 5: Firebase Sign In');
         return auth().signInWithCredential(googleCredential);
     } catch (error) {
-        console.error('Google Sign-In Error:', error);
+        console.error('AuthService Error Location:', error);
         throw error;
     }
 };

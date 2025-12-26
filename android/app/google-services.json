@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "57549035472-b24m690ng20j2q1pujitbbij1cl241fv.apps.googleusercontent.com",
+          "client_id": "57549035472-0u4dfpmfrhmjpo2bnuu951mja5tm754m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.targetpolity",
-            "certificate_hash": "fca9f92d8b20c410601068c1f4d3703862bbbaaa"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {

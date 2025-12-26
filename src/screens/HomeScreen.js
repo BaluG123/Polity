@@ -8,6 +8,7 @@ import {
   Dimensions,
   StatusBar,
   Alert,
+  Image,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,7 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const { width } = Dimensions.get('window');
 
 import { signInWithGoogle, signOut } from '../services/AuthService';
-import { Image } from 'react-native';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 const HomeScreen = ({ navigation }) => {
   const { studyStreak } = useSelector(state => state.progress);
@@ -48,16 +49,20 @@ const HomeScreen = ({ navigation }) => {
       try {
         await signInWithGoogle();
       } catch (error) {
-        // Error handling is managed in AuthService, but added here for safety
-        if (error.code === 'statusCodes.SIGN_IN_CANCELLED') {
-          // user cancelled the login flow
-        } else if (error.code === 'statusCodes.IN_PROGRESS') {
-          // operation (e.g. sign in) is in progress already
-        } else if (error.code === 'statusCodes.PLAY_SERVICES_NOT_AVAILABLE') {
-          Alert.alert('Error', 'Google Play Services not available or outdated.');
+        if (error && error.code) {
+          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+            console.log('User cancelled the login flow');
+          } else if (error.code === statusCodes.IN_PROGRESS) {
+            console.log('Sign in is in progress already');
+          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+            Alert.alert('Error', 'Google Play Services not available or outdated.');
+          } else {
+            console.error('Google Sign-In Error:', error);
+            Alert.alert('Sign In Failed', `Error: ${error.message || 'Unknown error'}`);
+          }
         } else {
-          console.error(error);
-          Alert.alert('Sign In Failed', 'Could not sign in with Google. Please try again.');
+          console.error('Unknown Sign-In Error:', error);
+          Alert.alert('Sign In Failed', 'An unknown error occurred.');
         }
       }
     }

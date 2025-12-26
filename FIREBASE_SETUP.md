@@ -3,9 +3,9 @@
 Since I cannot access your Firebase Console, you need to perform these steps manually.
 
 ## 1. Get SHA-1 Fingerprint
-**SHA-1**: `FC:A9:F9:2D:8B:20:C4:10:60:10:68:C1:F4:D3:70:38:62:BB:BA:AA`
+**SHA-1**: `5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25`
 
-Copy this key and paste it into the Firebase Console.
+**Crucial**: This is the key from `android/app/debug.keystore`. Use this one!
 
 ## 2. Firebase Console Setup
 1. Go to **Project Settings** -> **General**.
