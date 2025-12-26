@@ -329,8 +329,14 @@ const ConstitutionScreen = ({ navigation }) => {
               selectedPart === option.id && styles.filterOptionActive
             ]}
             onPress={() => setSelectedPart(option.id)}
+            activeOpacity={0.7}
           >
-            <Text style={styles.filterIcon}>{option.icon}</Text>
+            <Text style={[
+              styles.filterIcon,
+              selectedPart === option.id && { transform: [{ scale: 1.1 }] }
+            ]}>
+              {option.icon}
+            </Text>
             <Text style={[
               styles.filterText,
               selectedPart === option.id && styles.filterTextActive
@@ -422,13 +428,13 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingTop: 50,
-    paddingBottom: 15,
+    paddingBottom: 12,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
   headerContent: {
-    marginBottom: 15,
+    marginBottom: 12,
   },
   headerTitle: {
     fontSize: 24,
@@ -458,39 +464,57 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     backgroundColor: '#FFFFFF',
-    paddingVertical: 10,
+    paddingVertical: 15,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowRadius: 4,
   },
   filterContent: {
     paddingHorizontal: 20,
+    gap: 12,
   },
   filterOption: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    marginRight: 10,
+    justifyContent: 'center',
+    backgroundColor: '#F8F9FA',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    marginRight: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    minWidth: 80,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
   },
   filterOptionActive: {
     backgroundColor: '#E3F2FD',
+    borderColor: '#1976D2',
+    elevation: 3,
+    shadowColor: '#1976D2',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   filterIcon: {
-    fontSize: 16,
-    marginRight: 5,
+    fontSize: 20,
+    marginBottom: 4,
   },
   filterText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666',
     fontWeight: '600',
+    textAlign: 'center',
   },
   filterTextActive: {
     color: '#1976D2',
+    fontWeight: 'bold',
   },
   content: {
     flex: 1,

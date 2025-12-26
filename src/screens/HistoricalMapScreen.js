@@ -32,13 +32,13 @@ const HistoricalMapScreen = ({ navigation }) => {
   }, [dispatch]);
 
   const categories = [
-    { id: 'all', title: 'All Events', icon: '📚', color: '#1976D2' },
-    { id: 'Independence', title: 'Independence', icon: '🇮🇳', color: '#FF9800' },
-    { id: 'Constitution', title: 'Constitution', icon: '📜', color: '#1976D2' },
-    { id: 'Amendment', title: 'Amendments', icon: '📝', color: '#9C27B0' },
-    { id: 'Judiciary', title: 'Judiciary', icon: '⚖️', color: '#E91E63' },
-    { id: 'Emergency', title: 'Emergency', icon: '⚠️', color: '#F44336' },
-    { id: 'Federalism', title: 'Federalism', icon: '🗺️', color: '#607D8B' },
+    { id: 'all', title: 'All', icon: '📚', color: '#1976D2' },
+    { id: 'Independence', title: 'Indep', icon: '🇮🇳', color: '#FF9800' },
+    { id: 'Constitution', title: 'Const', icon: '📜', color: '#1976D2' },
+    { id: 'Amendment', title: 'Amend', icon: '📝', color: '#9C27B0' },
+    { id: 'Judiciary', title: 'Court', icon: '⚖️', color: '#E91E63' },
+    { id: 'Emergency', title: 'Emerg', icon: '⚠️', color: '#F44336' },
+    { id: 'Federalism', title: 'Federal', icon: '🗺️', color: '#607D8B' },
   ];
 
   const filteredEvents = selectedCategory === 'all' 
@@ -280,13 +280,13 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingTop: 50,
-    paddingBottom: 15,
+    paddingBottom: 12,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
   headerContent: {
-    marginBottom: 15,
+    marginBottom: 12,
   },
   headerTitle: {
     fontSize: 24,
@@ -327,12 +327,12 @@ const styles = StyleSheet.create({
   },
   categoryContainer: {
     backgroundColor: '#FFFFFF',
-    paddingVertical: 10,
-    elevation: 2,
+    paddingVertical: 4,
+    elevation: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowOpacity: 0.05,
+    shadowRadius: 1,
   },
   categoryContent: {
     paddingHorizontal: 20,
@@ -340,24 +340,25 @@ const styles = StyleSheet.create({
   categoryOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F9FA',
-    borderRadius: 15,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginRight: 8,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 12,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    marginRight: 4,
     borderWidth: 1,
     borderColor: 'transparent',
+    height: 22,
   },
   categoryOptionActive: {
     backgroundColor: '#E3F2FD',
     borderColor: '#1976D2',
   },
   categoryIcon: {
-    fontSize: 16,
-    marginRight: 5,
+    fontSize: 10,
+    marginRight: 2,
   },
   categoryText: {
-    fontSize: 14,
+    fontSize: 10,
     color: '#666',
     fontWeight: '600',
   },
