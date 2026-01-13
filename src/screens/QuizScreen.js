@@ -33,7 +33,6 @@ const QuizScreen = ({ navigation }) => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [showDetailedResults, setShowDetailedResults] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSeeding, setIsSeeding] = useState(false);
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
@@ -45,21 +44,6 @@ const QuizScreen = ({ navigation }) => {
     const fetchedLevels = await FirestoreService.getQuizLevels();
     setLevels(fetchedLevels);
     setIsLoading(false);
-  };
-
-  const handleSeedDatabase = async () => {
-    setIsSeeding(true);
-    try {
-      const success = await FirestoreService.seedDatabase();
-      if (success) {
-        Alert.alert('Success', 'Database seeded successfully!');
-        loadLevels();
-      }
-    } catch (e) {
-      Alert.alert('Error', 'Failed to seed database');
-    } finally {
-      setIsSeeding(false);
-    }
   };
 
   useEffect(() => {
@@ -200,14 +184,8 @@ const QuizScreen = ({ navigation }) => {
         <ActivityIndicator size="large" color="#1976D2" style={{ marginTop: 50 }} />
       ) : levels.length === 0 ? (
         <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>No quiz levels available.</Text>
-          <TouchableOpacity
-            style={styles.seedButton}
-            onPress={handleSeedDatabase}
-            disabled={isSeeding}
-          >
-            {isSeeding ? <ActivityIndicator color="#fff" /> : <Text style={styles.seedButtonText}>Initialize Database (Seed Data)</Text>}
-          </TouchableOpacity>
+          <Text style={styles.emptyText}>Loading quiz levels...</Text>
+          <ActivityIndicator size="large" color="#1976D2" style={{ marginTop: 20 }} />
         </View>
       ) : (
         levels.map((level) => (
@@ -882,19 +860,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  seedButton: {
-    backgroundColor: '#1976D2',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginTop: 20,
-    alignSelf: 'center',
-  },
-  seedButtonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 16,
   },
   emptyState: {
     alignItems: 'center',

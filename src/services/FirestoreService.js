@@ -7,14 +7,75 @@ const RESULTS_COLLECTION = 'quiz_results';
 const LEADERBOARD_COLLECTION = 'leaderboard';
 
 export const FirestoreService = {
+    // Check if levels need updating and update them automatically
+    checkAndUpdateLevels: async () => {
+        try {
+            const snapshot = await firestore().collection(LEVELS_COLLECTION).get();
+            
+            if (snapshot.empty) {
+                // No levels exist, seed everything
+                return await FirestoreService.seedDatabase();
+            }
+            
+            // Check if any level needs updating by comparing timeLimit
+            let needsUpdate = false;
+            const existingLevels = {};
+            
+            snapshot.docs.forEach(doc => {
+                existingLevels[doc.id] = doc.data();
+            });
+            
+            // Compare with local data
+            for (const level of QUIZ_LEVELS) {
+                const existing = existingLevels[level.id];
+                if (!existing || existing.timeLimit !== level.timeLimit || existing.questionsCount !== level.questionsCount) {
+                    needsUpdate = true;
+                    break;
+                }
+            }
+            
+            if (needsUpdate) {
+                // Update levels silently
+                const batch = firestore().batch();
+                QUIZ_LEVELS.forEach((level) => {
+                    const docRef = firestore().collection(LEVELS_COLLECTION).doc(level.id);
+                    batch.set(docRef, level);
+                });
+                await batch.commit();
+            }
+            
+            return true;
+        } catch (error) {
+            return false;
+        }
+    },
+
     // Check if database is seeded
     checkIsSeeded: async () => {
         try {
             const snapshot = await firestore().collection(LEVELS_COLLECTION).limit(1).get();
             return !snapshot.empty;
         } catch (error) {
-            console.error('Error checking seed status:', error);
             return false;
+        }
+    },
+
+    // Update quiz levels only (without re-seeding questions)
+    updateQuizLevels: async () => {
+        try {
+            const batch = firestore().batch();
+
+            // Update Levels only
+            QUIZ_LEVELS.forEach((level) => {
+                const docRef = firestore().collection(LEVELS_COLLECTION).doc(level.id);
+                batch.set(docRef, level, { merge: true }); // Use merge to update existing
+            });
+
+            await batch.commit();
+            return true;
+        } catch (error) {
+            console.error('Error updating quiz levels:', error);
+            throw error;
         }
     },
 
@@ -23,27 +84,26 @@ export const FirestoreService = {
         try {
             const batch = firestore().batch();
 
-            // Seed Levels
+            // Seed/Update Levels (overwrite existing)
             QUIZ_LEVELS.forEach((level) => {
                 const docRef = firestore().collection(LEVELS_COLLECTION).doc(level.id);
                 batch.set(docRef, level);
             });
 
-            // Seed Questions
+            // Seed Questions (only if they don't exist to avoid duplicates)
             Object.keys(QUIZ_QUESTIONS).forEach((levelId) => {
                 const questions = QUIZ_QUESTIONS[levelId];
                 questions.forEach((q) => {
                     const docRef = firestore()
                         .collection(QUESTIONS_COLLECTION)
                         .doc(q.id);
-                    batch.set(docRef, { ...q, levelId });
+                    batch.set(docRef, { ...q, levelId }, { merge: true });
                 });
             });
 
             await batch.commit();
             return true;
         } catch (error) {
-            console.error('Error seeding database:', error);
             throw error;
         }
     },
@@ -51,15 +111,16 @@ export const FirestoreService = {
     // Fetch Quiz Levels
     getQuizLevels: async () => {
         try {
+            // First, check and update levels if needed
+            await FirestoreService.checkAndUpdateLevels();
+            
             const snapshot = await firestore().collection(LEVELS_COLLECTION).orderBy('questionsCount', 'asc').get();
             if (snapshot.empty) {
-                // Fallback to local data if empty (or auto-seed logic could be here)
                 return QUIZ_LEVELS;
             }
             return snapshot.docs.map(doc => doc.data());
         } catch (error) {
-            console.error('Error fetching levels:', error);
-            return QUIZ_LEVELS; // Fail-safe
+            return QUIZ_LEVELS;
         }
     },
 
@@ -72,11 +133,23 @@ export const FirestoreService = {
                 .get();
 
             if (snapshot.empty) {
-                return QUIZ_QUESTIONS[levelId] || [];
+                // Auto-seed questions for this level if they don't exist
+                const questions = QUIZ_QUESTIONS[levelId] || [];
+                if (questions.length > 0) {
+                    const batch = firestore().batch();
+                    questions.forEach((q) => {
+                        const docRef = firestore()
+                            .collection(QUESTIONS_COLLECTION)
+                            .doc(q.id);
+                        batch.set(docRef, { ...q, levelId });
+                    });
+                    await batch.commit();
+                    return questions;
+                }
+                return [];
             }
             return snapshot.docs.map(doc => doc.data());
         } catch (error) {
-            console.error('Error fetching questions:', error);
             return QUIZ_QUESTIONS[levelId] || [];
         }
     },
@@ -90,7 +163,6 @@ export const FirestoreService = {
             const calculateIntelligentScore = (levelId, score, totalQuestions) => {
                 const percentage = (score / totalQuestions) * 100;
                 
-                // Base points per correct answer
                 const basePointsPerQuestion = {
                     'beginner': 10,
                     'intermediate': 15,
@@ -98,7 +170,6 @@ export const FirestoreService = {
                     'expert': 40
                 };
 
-                // Difficulty multiplier
                 const difficultyMultiplier = {
                     'beginner': 1.0,
                     'intermediate': 1.5,
@@ -106,28 +177,24 @@ export const FirestoreService = {
                     'expert': 3.0
                 };
 
-                // Performance bonus based on percentage
                 let performanceBonus = 1.0;
-                if (percentage >= 90) performanceBonus = 2.0;      // Excellent: 200% bonus
-                else if (percentage >= 80) performanceBonus = 1.5; // Very Good: 150% bonus
-                else if (percentage >= 70) performanceBonus = 1.2; // Good: 120% bonus
-                else if (percentage >= 60) performanceBonus = 1.0; // Average: 100% (no bonus)
-                else performanceBonus = 0.5;                       // Below Average: 50% penalty
+                if (percentage >= 90) performanceBonus = 2.0;
+                else if (percentage >= 80) performanceBonus = 1.5;
+                else if (percentage >= 70) performanceBonus = 1.2;
+                else if (percentage >= 60) performanceBonus = 1.0;
+                else performanceBonus = 0.5;
 
-                // Speed bonus (assuming faster completion = better performance)
-                const speedBonus = 1.1; // 10% bonus for completing quiz
-
-                // Calculate final points
+                const speedBonus = 1.1;
                 const basePoints = score * (basePointsPerQuestion[levelId] || 10);
                 const difficultyPoints = basePoints * (difficultyMultiplier[levelId] || 1.0);
                 const finalPoints = Math.round(difficultyPoints * performanceBonus * speedBonus);
 
-                return Math.max(finalPoints, 1); // Minimum 1 point for participation
+                return Math.max(finalPoints, 1);
             };
 
             const intelligentPoints = calculateIntelligentScore(levelId, score, totalQuestions);
 
-            // 1. Save detailed result to user history
+            // Save detailed result to user history
             await firestore()
                 .collection('users')
                 .doc(userId)
@@ -141,7 +208,7 @@ export const FirestoreService = {
                     completedAt: timestamp,
                 });
 
-            // 2. Update Leaderboard (atomic transaction)
+            // Update Leaderboard (atomic transaction)
             const leaderboardRef = firestore().collection(LEADERBOARD_COLLECTION).doc(userId);
 
             await firestore().runTransaction(async (transaction) => {
@@ -157,7 +224,6 @@ export const FirestoreService = {
                     newTotalScore = (data.totalScore || 0) + intelligentPoints;
                     quizzesPlayed = (data.quizzesPlayed || 0) + 1;
                     
-                    // Calculate streak (consecutive quizzes with >60% score)
                     const percentage = (score / totalQuestions) * 100;
                     if (percentage >= 60) {
                         currentStreak = (data.currentStreak || 0) + 1;
@@ -167,7 +233,6 @@ export const FirestoreService = {
                         bestStreak = data.bestStreak || 0;
                     }
                 } else {
-                    // First time user - set initial values
                     const percentage = (score / totalQuestions) * 100;
                     if (percentage >= 60) {
                         currentStreak = 1;
@@ -196,7 +261,6 @@ export const FirestoreService = {
 
             return { success: true, pointsEarned: intelligentPoints };
         } catch (error) {
-            console.error('Error saving quiz result:', error);
             throw error;
         }
     },
@@ -219,7 +283,6 @@ export const FirestoreService = {
             
             return results;
         } catch (error) {
-            console.error('Error fetching leaderboard:', error);
             return [];
         }
     },
@@ -230,7 +293,6 @@ export const FirestoreService = {
             const testDoc = await firestore().collection('test').doc('connection').get();
             return true;
         } catch (error) {
-            console.error('Firestore connection test failed:', error);
             return false;
         }
     },
@@ -246,7 +308,6 @@ export const FirestoreService = {
                 return null;
             }
         } catch (error) {
-            console.error('Error checking user leaderboard entry:', error);
             return null;
         }
     },
@@ -268,7 +329,6 @@ export const FirestoreService = {
             
             return history;
         } catch (error) {
-            console.error('Error getting user quiz history:', error);
             return [];
         }
     }

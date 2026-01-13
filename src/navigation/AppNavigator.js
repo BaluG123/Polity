@@ -129,12 +129,22 @@ const AppNavigator = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Notifications
-    const setupNotifications = async () => {
-      await NotificationService.configure();
-      await NotificationService.scheduleDailyReminder(20, 0); // 8:00 PM
+    let isSetup = false;
+    
+    const setupApp = async () => {
+      if (isSetup) return;
+      isSetup = true;
+      
+      // Setup notifications once
+      try {
+        await NotificationService.configure();
+        await NotificationService.scheduleDailyReminder(20, 0); // 8:00 PM
+      } catch (error) {
+        console.error('Notification setup failed:', error);
+      }
     };
-    setupNotifications();
+    
+    setupApp();
 
     // Auth
     const unsubscribe = subscribeToAuthChanges((user) => {
