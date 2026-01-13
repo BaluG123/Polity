@@ -27,7 +27,7 @@ const SplashScreen = ({ onFinish }) => {
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         <Text style={styles.logo}>🏛️</Text>
         <Text style={styles.title}>TargetPolity</Text>
-        <Text style={styles.subtitle}>Master Indian Constitution</Text>
+        {/* <Text style={styles.subtitle}>Master Indian Constitution</Text> */}
       </Animated.View>
     </LinearGradient>
   );

@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "57549035472-g430gc6nu44o3jtj5neqsqikg1vgatia.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.targetpolity",
+            "certificate_hash": "29acffe287c762e317bf0f75851d01f0ad6e0377"
+          }
+        },
+        {
           "client_id": "57549035472-hegi6idf85i1et3nv2r9gibm4gaorr5c.apps.googleusercontent.com",
           "client_type": 3
         }
