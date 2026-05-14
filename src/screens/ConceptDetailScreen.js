@@ -7,14 +7,18 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { constitutionContent } from '../data/constitutionContent';
+import { getTheme } from '../theme/palette';
 
 const ConceptDetailScreen = ({ route, navigation }) => {
   const { concept, title, content, subtitle } = route.params || {};
   const insets = useSafeAreaInsets();
+  const { themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
 
   const data = constitutionContent[concept?.id];
 
@@ -24,11 +28,11 @@ const ConceptDetailScreen = ({ route, navigation }) => {
   const displaySubtitle = subtitle || data?.subtitle;
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
 
       <LinearGradient
-        colors={['#1976D2', '#1565C0']}
+        colors={[theme.primaryDark, theme.primary, '#00897B']}
         style={[styles.header, { paddingTop: insets.top + 20 }]}
       >
         <View style={styles.headerContent}>
@@ -54,18 +58,18 @@ const ConceptDetailScreen = ({ route, navigation }) => {
       >
         {displayContent ? (
           <View style={styles.section}>
-            <View style={styles.card}>
+            <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
               <Text style={styles.cardTitle}>📖 Detailed Explanation</Text>
-              <Text style={styles.cardContent}>{displayContent}</Text>
+              <Text style={[styles.cardContent, { color: theme.text }]}>{displayContent}</Text>
             </View>
 
             {data?.keyPoints && (
-              <View style={styles.card}>
+              <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                 <Text style={styles.cardTitle}>✨ Key Points</Text>
                 {data.keyPoints.map((point, index) => (
                   <View key={index} style={styles.pointRow}>
                     <Text style={styles.bullet}>•</Text>
-                    <Text style={styles.pointText}>{point}</Text>
+                    <Text style={[styles.pointText, { color: theme.muted }]}>{point}</Text>
                   </View>
                 ))}
               </View>
@@ -73,34 +77,34 @@ const ConceptDetailScreen = ({ route, navigation }) => {
           </View>
         ) : (
           <View style={styles.section}>
-            <View style={styles.card}>
+            <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
               <Text style={styles.cardTitle}>📖 {displayTitle}</Text>
-              <Text style={styles.cardContent}>
+              <Text style={[styles.cardContent, { color: theme.text }]}>
                 Comprehensive information about {displayTitle} is being prepared. This section will include detailed explanations, key concepts, constitutional provisions, and relevant case studies.
               </Text>
             </View>
             
-            <View style={styles.card}>
+            <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
               <Text style={styles.cardTitle}>🔍 What You'll Learn</Text>
               <View style={styles.pointRow}>
                 <Text style={styles.bullet}>•</Text>
-                <Text style={styles.pointText}>Constitutional provisions and articles</Text>
+                <Text style={[styles.pointText, { color: theme.muted }]}>Constitutional provisions and articles</Text>
               </View>
               <View style={styles.pointRow}>
                 <Text style={styles.bullet}>•</Text>
-                <Text style={styles.pointText}>Historical background and evolution</Text>
+                <Text style={[styles.pointText, { color: theme.muted }]}>Historical background and evolution</Text>
               </View>
               <View style={styles.pointRow}>
                 <Text style={styles.bullet}>•</Text>
-                <Text style={styles.pointText}>Landmark cases and judgments</Text>
+                <Text style={[styles.pointText, { color: theme.muted }]}>Landmark cases and judgments</Text>
               </View>
               <View style={styles.pointRow}>
                 <Text style={styles.bullet}>•</Text>
-                <Text style={styles.pointText}>Practical applications and examples</Text>
+                <Text style={[styles.pointText, { color: theme.muted }]}>Practical applications and examples</Text>
               </View>
               <View style={styles.pointRow}>
                 <Text style={styles.bullet}>•</Text>
-                <Text style={styles.pointText}>Exam-relevant points and tips</Text>
+                <Text style={[styles.pointText, { color: theme.muted }]}>Exam-relevant points and tips</Text>
               </View>
             </View>
           </View>
@@ -111,10 +115,7 @@ const ConceptDetailScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
+  container: { flex: 1 },
   header: {
     paddingBottom: 25,
     paddingHorizontal: 20,
@@ -159,19 +160,17 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 15,
   },
   contentText: {
     fontSize: 16,
-    color: '#666',
     lineHeight: 24,
   },
   card: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
+    borderWidth: 1,
     elevation: 3,
     shadowColor: '#000',
     shadowOpacity: 0.1,
@@ -185,7 +184,6 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     fontSize: 16,
-    color: '#37474F',
     lineHeight: 26,
     textAlign: 'justify',
   },
@@ -202,7 +200,6 @@ const styles = StyleSheet.create({
   },
   pointText: {
     fontSize: 15,
-    color: '#455A64',
     lineHeight: 22,
     flex: 1,
   },

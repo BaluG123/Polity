@@ -7,12 +7,16 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { getTheme } from '../theme/palette';
 
 const JudiciaryScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  const { themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
 
   const judiciaryTopics = [
     {
@@ -514,7 +518,7 @@ PROPOSED REFORMS:
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar barStyle="light-content" backgroundColor="#E91E63" />
       
       <LinearGradient
@@ -542,12 +546,12 @@ PROPOSED REFORMS:
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>⚖️ Court Hierarchy</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Court Hierarchy</Text>
           
           {judiciaryTopics.map((topic) => (
             <TouchableOpacity
               key={topic.id}
-              style={[styles.topicCard, { borderLeftColor: topic.color }]}
+              style={[styles.topicCard, { borderLeftColor: topic.color, backgroundColor: theme.surface, borderColor: theme.border }]}
               onPress={() => handleTopicPress(topic)}
               activeOpacity={0.7}
             >
@@ -556,50 +560,50 @@ PROPOSED REFORMS:
                   <Text style={styles.topicIconText}>{topic.icon}</Text>
                 </View>
                 <View style={styles.topicInfo}>
-                  <Text style={styles.topicTitle}>{topic.title}</Text>
-                  <Text style={styles.topicSubtitle}>{topic.subtitle}</Text>
+                  <Text style={[styles.topicTitle, { color: theme.text }]}>{topic.title}</Text>
+                  <Text style={[styles.topicSubtitle, { color: theme.muted }]}>{topic.subtitle}</Text>
                 </View>
-                <Icon name="arrow-forward-ios" size={16} color="#666" />
+                <Icon name="arrow-forward-ios" size={16} color={theme.muted} />
               </View>
             </TouchableOpacity>
           ))}
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📚 Landmark Cases</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Landmark Cases</Text>
           
           {landmarkCases.map((case_, index) => (
-            <View key={index} style={styles.caseCard}>
+            <View key={index} style={[styles.caseCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
               <Text style={styles.caseTitle}>{case_.title}</Text>
-              <Text style={styles.caseDescription}>{case_.description}</Text>
+              <Text style={[styles.caseDescription, { color: theme.text }]}>{case_.description}</Text>
               <View style={styles.impactContainer}>
                 <Icon name="gavel" size={16} color="#E91E63" />
-                <Text style={styles.impactText}>{case_.impact}</Text>
+                <Text style={[styles.impactText, { color: theme.muted }]}>{case_.impact}</Text>
               </View>
             </View>
           ))}
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🔑 Key Principles</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Key Principles</Text>
           
-          <View style={styles.principleCard}>
+          <View style={[styles.principleCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <Text style={styles.principleTitle}>🔹 Independence of Judiciary</Text>
-            <Text style={styles.principleText}>
+            <Text style={[styles.principleText, { color: theme.muted }]}>
               Judges are independent from executive and legislative interference, ensuring impartial justice.
             </Text>
           </View>
 
-          <View style={styles.principleCard}>
+          <View style={[styles.principleCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <Text style={styles.principleTitle}>🔹 Rule of Law</Text>
-            <Text style={styles.principleText}>
+            <Text style={[styles.principleText, { color: theme.muted }]}>
               All persons, including government officials, are subject to and accountable under the law.
             </Text>
           </View>
 
-          <View style={styles.principleCard}>
+          <View style={[styles.principleCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <Text style={styles.principleTitle}>🔹 Access to Justice</Text>
-            <Text style={styles.principleText}>
+            <Text style={[styles.principleText, { color: theme.muted }]}>
               Legal aid, Lok Adalats, and PIL ensure justice is accessible to all citizens.
             </Text>
           </View>
@@ -610,10 +614,7 @@ PROPOSED REFORMS:
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
+  container: { flex: 1 },
   header: {
     paddingBottom: 25,
     paddingHorizontal: 20,
@@ -654,15 +655,16 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 15,
   },
   topicCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 15,
     marginBottom: 15,
     borderLeftWidth: 4,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -690,18 +692,18 @@ const styles = StyleSheet.create({
   topicTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 5,
   },
   topicSubtitle: {
     fontSize: 14,
-    color: '#666',
   },
   caseCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 15,
     marginBottom: 12,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
     elevation: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -718,7 +720,6 @@ const styles = StyleSheet.create({
   },
   caseDescription: {
     fontSize: 14,
-    color: '#333',
     marginBottom: 8,
   },
   impactContainer: {
@@ -727,15 +728,14 @@ const styles = StyleSheet.create({
   },
   impactText: {
     fontSize: 13,
-    color: '#666',
     marginLeft: 8,
     fontStyle: 'italic',
   },
   principleCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 15,
     marginBottom: 12,
+    borderWidth: 1,
     elevation: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -750,7 +750,6 @@ const styles = StyleSheet.create({
   },
   principleText: {
     fontSize: 14,
-    color: '#666',
     lineHeight: 20,
   },
 });

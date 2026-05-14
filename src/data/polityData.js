@@ -237,15 +237,45 @@ export const HISTORICAL_EVENTS = [
     title: "Government of India Act 1858",
     date: "1858-08-02",
     location: {
-      latitude: 51.5074,
-      longitude: -0.1278,
-      name: "London (Royal Assent)"
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Delhi (British India administration)"
     },
     description: "Transferred the powers of the East India Company to the British Crown following the 1857 revolt.",
-    significance: "End of Company Rule; start of the British Raj.",
+    significance: "End of Company Rule; start of the British Raj. The map marks its effect on Indian administration.",
     category: "British Era",
     icon: "👑",
     color: "#5D4037"
+  },
+  {
+    id: "indian_councils_act_1861",
+    title: "Indian Councils Act 1861",
+    date: "1861-08-01",
+    location: {
+      latitude: 22.5726,
+      longitude: 88.3639,
+      name: "Calcutta"
+    },
+    description: "Restored legislative powers to Bombay and Madras and introduced Indians into legislative councils by nomination.",
+    significance: "A cautious beginning of legislative association after the Crown took control.",
+    category: "British Era",
+    icon: "🏛️",
+    color: "#455A64"
+  },
+  {
+    id: "indian_councils_act_1892",
+    title: "Indian Councils Act 1892",
+    date: "1892-06-20",
+    location: {
+      latitude: 18.9388,
+      longitude: 72.8354,
+      name: "Bombay Presidency"
+    },
+    description: "Expanded legislative councils and allowed limited indirect election through recommendation.",
+    significance: "An early constitutional step toward representative institutions in colonial India.",
+    category: "British Era",
+    icon: "🗳️",
+    color: "#455A64"
   },
   {
     id: "morley_minto_1909",
@@ -263,6 +293,51 @@ export const HISTORICAL_EVENTS = [
     color: "#5D4037"
   },
   {
+    id: "montagu_chelmsford_1919",
+    title: "Government of India Act 1919",
+    date: "1919-12-23",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Delhi"
+    },
+    description: "Introduced dyarchy in provinces and expanded legislative councils.",
+    significance: "Opened limited provincial self-government but kept decisive control with the colonial executive.",
+    category: "British Era",
+    icon: "⚖️",
+    color: "#5D4037"
+  },
+  {
+    id: "nehru_report_1928",
+    title: "Nehru Report",
+    date: "1928-08-28",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Delhi"
+    },
+    description: "Proposed a dominion constitution for India with fundamental rights and responsible government.",
+    significance: "One of the earliest Indian-authored constitutional blueprints.",
+    category: "Constitution",
+    icon: "📘",
+    color: "#1976D2"
+  },
+  {
+    id: "dandi_march",
+    title: "Dandi March",
+    date: "1930-04-06",
+    location: {
+      latitude: 20.8880,
+      longitude: 72.8010,
+      name: "Dandi, Gujarat"
+    },
+    description: "Mahatma Gandhi broke the salt law after a march from Sabarmati to Dandi.",
+    significance: "Turned civil disobedience into a mass political movement and challenged colonial legitimacy.",
+    category: "Independence",
+    icon: "🌊",
+    color: "#FF9800"
+  },
+  {
     id: "govt_india_act_1935",
     title: "Government of India Act 1935",
     date: "1935-08-02",
@@ -276,6 +351,21 @@ export const HISTORICAL_EVENTS = [
     category: "British Era",
     icon: "📋",
     color: "#1976D2"
+  },
+  {
+    id: "quit_india_movement",
+    title: "Quit India Movement",
+    date: "1942-08-08",
+    location: {
+      latitude: 18.9388,
+      longitude: 72.8354,
+      name: "Gowalia Tank Maidan, Bombay"
+    },
+    description: "The All India Congress Committee launched the Quit India Movement with the call of Do or Die.",
+    significance: "Marked a decisive mass demand for immediate British withdrawal.",
+    category: "Independence",
+    icon: "🔥",
+    color: "#FF9800"
   },
 
   // --- CONSTITUTION FORMATION ERA ---
@@ -292,6 +382,21 @@ export const HISTORICAL_EVENTS = [
     significance: "Authorized the creation of the body that wrote our Constitution.",
     category: "Constitution",
     icon: "🤝",
+    color: "#1976D2"
+  },
+  {
+    id: "constituent_assembly_elections",
+    title: "Constituent Assembly Elections",
+    date: "1946-07-01",
+    location: {
+      latitude: 22.5726,
+      longitude: 88.3639,
+      name: "Provincial Assemblies across India"
+    },
+    description: "Members of the Constituent Assembly were elected indirectly by provincial assemblies.",
+    significance: "Gave the constitution-making body a representative political base within the limits of the Cabinet Mission Plan.",
+    category: "Constitution",
+    icon: "🗳️",
     color: "#1976D2"
   },
   {
@@ -384,6 +489,134 @@ export const HISTORICAL_EVENTS = [
     icon: "🏛️",
     color: "#4CAF50"
   },
+  {
+    id: "election_commission_1950",
+    title: "Election Commission Established",
+    date: "1950-01-25",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "New Delhi"
+    },
+    description: "The Election Commission of India was established under Article 324.",
+    significance: "Created the constitutional authority that conducts elections for the world's largest democracy.",
+    category: "Elections",
+    icon: "🗳️",
+    color: "#795548"
+  },
+  {
+    id: "first_amendment_1951",
+    title: "First Constitutional Amendment",
+    date: "1951-06-18",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Inserted restrictions on free speech, enabled land reform protections, and introduced the Ninth Schedule.",
+    significance: "Shows how Parliament started balancing rights, reform and judicial review soon after the Constitution began.",
+    category: "Amendment",
+    icon: "🧩",
+    color: "#9C27B0",
+    translations: {
+      hi: {
+        title: "पहला संविधान संशोधन",
+        description: "अभिव्यक्ति की स्वतंत्रता पर उचित प्रतिबंध जोड़े, भूमि सुधारों को संरक्षण दिया और नौवीं अनुसूची लाई।",
+        significance: "यह दिखाता है कि संविधान लागू होते ही संसद ने अधिकार, सुधार और न्यायिक समीक्षा के बीच संतुलन बनाना शुरू किया।",
+        locationName: "संसद भवन, नई दिल्ली"
+      }
+    }
+  },
+  {
+    id: "first_general_election",
+    title: "First General Election",
+    date: "1951-10-25",
+    location: {
+      latitude: 20.5937,
+      longitude: 78.9629,
+      name: "Across India"
+    },
+    description: "India held its first Lok Sabha election on the basis of universal adult franchise.",
+    significance: "Proved that a poor, newly independent, diverse country could run a mass democratic election.",
+    category: "Elections",
+    icon: "🇮🇳",
+    color: "#795548"
+  },
+  {
+    id: "andhra_state_1953",
+    title: "Andhra State Formation",
+    date: "1953-10-01",
+    location: {
+      latitude: 15.9129,
+      longitude: 79.7400,
+      name: "Andhra State"
+    },
+    description: "Andhra became the first state formed on linguistic lines after Potti Sriramulu's fast and death.",
+    significance: "Forced India to seriously address linguistic reorganisation within a democratic federal framework.",
+    category: "Federalism",
+    icon: "🗺️",
+    color: "#3F51B5"
+  },
+  {
+    id: "states_reorganisation_1956",
+    title: "States Reorganisation Act",
+    date: "1956-11-01",
+    location: {
+      latitude: 20.5937,
+      longitude: 78.9629,
+      name: "Across India"
+    },
+    description: "Reorganised state boundaries largely on linguistic lines after the Fazl Ali Commission report.",
+    significance: "Made Indian federalism more stable by recognising language-based democratic aspirations.",
+    category: "Federalism",
+    icon: "🗺️",
+    color: "#3F51B5"
+  },
+  {
+    id: "seventh_amendment_1956",
+    title: "Seventh Amendment",
+    date: "1956-10-19",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "New Delhi"
+    },
+    description: "Implemented constitutional changes required for state reorganisation and High Court jurisdiction.",
+    significance: "Connected constitutional text with the new federal map of India.",
+    category: "Amendment",
+    icon: "📌",
+    color: "#9C27B0"
+  },
+  {
+    id: "golaknath_case",
+    title: "Golaknath Case",
+    date: "1967-02-27",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "The Supreme Court held that Parliament could not amend Fundamental Rights.",
+    significance: "Triggered the constitutional struggle that later produced the Basic Structure doctrine.",
+    category: "Judiciary",
+    icon: "⚖️",
+    color: "#E91E63"
+  },
+  {
+    id: "bank_nationalisation_case",
+    title: "Bank Nationalisation Case",
+    date: "1970-02-10",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "R.C. Cooper v Union of India reshaped property rights and judicial review of economic policy.",
+    significance: "A key step in the rights-versus-socialist-policy debate before the 44th Amendment.",
+    category: "Judiciary",
+    icon: "🏦",
+    color: "#E91E63"
+  },
 
   // --- POST-INDEPENDENCE MILESTONES ---
   {
@@ -400,6 +633,246 @@ export const HISTORICAL_EVENTS = [
     category: "Judiciary",
     icon: "⚖️",
     color: "#E91E63"
+  },
+  {
+    id: "forty_second_amendment",
+    title: "42nd Amendment",
+    date: "1976-12-18",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Known as the Mini Constitution; added Socialist, Secular and Integrity to the Preamble and Fundamental Duties.",
+    significance: "One of the most sweeping constitutional changes, later partly corrected by the 44th Amendment.",
+    category: "Amendment",
+    icon: "📚",
+    color: "#9C27B0"
+  },
+  {
+    id: "maneka_gandhi_case",
+    title: "Maneka Gandhi Case",
+    date: "1978-01-25",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "Expanded Article 21 by requiring procedure affecting liberty to be fair, just and reasonable.",
+    significance: "Turned Article 21 into the heart of modern civil liberties jurisprudence.",
+    category: "Judiciary",
+    icon: "🕊️",
+    color: "#E91E63"
+  },
+  {
+    id: "forty_fourth_amendment",
+    title: "44th Amendment",
+    date: "1978-04-30",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Removed the right to property from Fundamental Rights and added safeguards against Emergency misuse.",
+    significance: "A democratic correction after the Emergency experience.",
+    category: "Amendment",
+    icon: "🛡️",
+    color: "#9C27B0"
+  },
+  {
+    id: "minerva_mills_case",
+    title: "Minerva Mills Case",
+    date: "1980-07-31",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "Reaffirmed Basic Structure and balanced Fundamental Rights with Directive Principles.",
+    significance: "Protected constitutional harmony between liberty and welfare.",
+    category: "Judiciary",
+    icon: "⚖️",
+    color: "#E91E63"
+  },
+  {
+    id: "anti_defection_law",
+    title: "52nd Amendment: Anti-Defection Law",
+    date: "1985-03-01",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Inserted the Tenth Schedule to curb political defections by elected representatives.",
+    significance: "Changed party discipline, coalition politics and the Speaker's constitutional role.",
+    category: "Amendment",
+    icon: "🔁",
+    color: "#9C27B0"
+  },
+  {
+    id: "indra_sawhney_case",
+    title: "Indra Sawhney Case",
+    date: "1992-11-16",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "Upheld OBC reservations while setting the 50% ceiling and excluding the creamy layer.",
+    significance: "Defined the modern constitutional framework for social justice reservations.",
+    category: "Judiciary",
+    icon: "⚖️",
+    color: "#E91E63"
+  },
+  {
+    id: "panchayati_raj_73rd",
+    title: "73rd Amendment: Panchayati Raj",
+    date: "1992-12-24",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Gave constitutional status to Panchayats through Part IX and the Eleventh Schedule.",
+    significance: "Deepened grassroots democracy and local self-government.",
+    category: "Amendment",
+    icon: "🌾",
+    color: "#4CAF50"
+  },
+  {
+    id: "municipalities_74th",
+    title: "74th Amendment: Municipalities",
+    date: "1992-12-24",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Gave constitutional status to urban local bodies through Part IXA and the Twelfth Schedule.",
+    significance: "Made urban governance a constitutional responsibility.",
+    category: "Amendment",
+    icon: "🏙️",
+    color: "#4CAF50"
+  },
+  {
+    id: "sr_bommai_case",
+    title: "S.R. Bommai Case",
+    date: "1994-03-11",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "Made President's Rule under Article 356 subject to judicial review.",
+    significance: "Strengthened federalism and reduced arbitrary dismissal of state governments.",
+    category: "Judiciary",
+    icon: "🏛️",
+    color: "#E91E63"
+  },
+  {
+    id: "vishaka_case",
+    title: "Vishaka Guidelines",
+    date: "1997-08-13",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "Laid down binding guidelines against sexual harassment at workplaces.",
+    significance: "Showed how constitutional rights can fill legislative gaps to protect dignity.",
+    category: "Judiciary",
+    icon: "🛡️",
+    color: "#E91E63"
+  },
+  {
+    id: "rti_act_2005",
+    title: "Right to Information Act",
+    date: "2005-06-15",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Created a legal right for citizens to seek information from public authorities.",
+    significance: "Made transparency a practical democratic tool for ordinary citizens.",
+    category: "Rights",
+    icon: "🔎",
+    color: "#009688"
+  },
+  {
+    id: "right_to_education_86th",
+    title: "86th Amendment: Right to Education",
+    date: "2002-12-12",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Inserted Article 21A, making education a Fundamental Right for children aged 6 to 14.",
+    significance: "Moved elementary education from policy aspiration to enforceable right.",
+    category: "Amendment",
+    icon: "🎓",
+    color: "#9C27B0"
+  },
+  {
+    id: "nota_introduction",
+    title: "NOTA in Elections",
+    date: "2013-09-27",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "The Supreme Court directed the Election Commission to provide a None of the Above option.",
+    significance: "Recognised voter choice and secrecy as part of electoral democracy.",
+    category: "Elections",
+    icon: "🗳️",
+    color: "#795548"
+  },
+  {
+    id: "puttaswamy_privacy",
+    title: "Right to Privacy Judgment",
+    date: "2017-08-24",
+    location: {
+      latitude: 28.6139,
+      longitude: 77.2090,
+      name: "Supreme Court of India"
+    },
+    description: "A nine-judge bench held privacy to be a Fundamental Right under the Constitution.",
+    significance: "A foundational judgment for digital rights, dignity and personal liberty.",
+    category: "Judiciary",
+    icon: "🔐",
+    color: "#E91E63"
+  },
+  {
+    id: "gst_101st_amendment",
+    title: "101st Amendment: GST",
+    date: "2016-09-08",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Introduced the Goods and Services Tax and created the GST Council.",
+    significance: "A major example of cooperative federalism in taxation.",
+    category: "Amendment",
+    icon: "💰",
+    color: "#9C27B0"
+  },
+  {
+    id: "ews_103rd_amendment",
+    title: "103rd Amendment: EWS Reservation",
+    date: "2019-01-12",
+    location: {
+      latitude: 28.6172,
+      longitude: 77.2081,
+      name: "Parliament House, New Delhi"
+    },
+    description: "Enabled reservation for Economically Weaker Sections in education and public employment.",
+    significance: "Expanded reservation policy beyond social and educational backwardness.",
+    category: "Amendment",
+    icon: "⚖️",
+    color: "#9C27B0"
   },
   {
     id: "emergency_1975",

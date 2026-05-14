@@ -7,12 +7,16 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { getTheme } from '../theme/palette';
 
 const CaseStudiesScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  const { themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
 
   const cases = [
     {
@@ -34,11 +38,11 @@ const CaseStudiesScreen = ({ navigation }) => {
   ];
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
       
       <LinearGradient
-        colors={['#1976D2', '#1565C0']}
+        colors={[theme.primaryDark, theme.primary, '#00897B']}
         style={styles.header}
       >
         <View style={styles.headerContent}>
@@ -54,14 +58,14 @@ const CaseStudiesScreen = ({ navigation }) => {
         contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
       >
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>⚖️ Constitutional Cases</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Constitutional Cases</Text>
           {cases.map((caseItem) => (
-            <TouchableOpacity key={caseItem.id} style={styles.caseCard}>
+            <TouchableOpacity key={caseItem.id} style={[styles.caseCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
               <Text style={styles.caseIcon}>{caseItem.icon}</Text>
               <View style={styles.caseInfo}>
-                <Text style={styles.caseTitle}>{caseItem.title}</Text>
+                <Text style={[styles.caseTitle, { color: theme.text }]}>{caseItem.title}</Text>
                 <Text style={styles.caseYear}>{caseItem.year}</Text>
-                <Text style={styles.caseSignificance}>{caseItem.significance}</Text>
+                <Text style={[styles.caseSignificance, { color: theme.muted }]}>{caseItem.significance}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -72,10 +76,7 @@ const CaseStudiesScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
+  container: { flex: 1 },
   header: {
     paddingTop: 50,
     paddingBottom: 30,
@@ -107,16 +108,15 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 15,
   },
   caseCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 15,
     marginBottom: 15,
     flexDirection: 'row',
     alignItems: 'center',
+    borderWidth: 1,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
   caseTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 5,
   },
   caseYear: {
@@ -144,7 +143,6 @@ const styles = StyleSheet.create({
   },
   caseSignificance: {
     fontSize: 14,
-    color: '#666',
   },
 });
 

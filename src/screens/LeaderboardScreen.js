@@ -8,19 +8,23 @@ import {
     RefreshControl,
     StatusBar,
     TouchableOpacity,
+    Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FirestoreService } from '../services/FirestoreService';
 import { useSelector } from 'react-redux';
+import { getTheme } from '../theme/palette';
 
 const LeaderboardScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const { user } = useSelector(state => state.auth);
+    const { themeMode } = useSelector(state => state.app);
     const insets = useSafeAreaInsets();
+    const theme = getTheme(themeMode);
 
     useEffect(() => {
         loadLeaderboard();
@@ -80,7 +84,11 @@ const LeaderboardScreen = ({ navigation }) => {
         }
 
         return (
-            <View style={[styles.rankCard, isCurrentUser && styles.currentUserCard]}>
+            <View style={[
+                styles.rankCard,
+                { backgroundColor: isCurrentUser ? theme.surfaceAlt : theme.surface, borderColor: isCurrentUser ? theme.primary : theme.border },
+                isCurrentUser && styles.currentUserCard,
+            ]}>
                 <View style={styles.rankPosition}>
                     {iconName ? (
                         <Icon name={iconName} size={24} color={rankColor} />
@@ -93,36 +101,36 @@ const LeaderboardScreen = ({ navigation }) => {
                     {item.photoURL ? (
                         <Image source={{ uri: item.photoURL }} style={styles.avatar} />
                     ) : (
-                        <View style={styles.avatarPlaceholder}>
-                            <Text style={styles.avatarInitials}>
+                        <View style={[styles.avatarPlaceholder, { backgroundColor: theme.surfaceAlt }]}>
+                            <Text style={[styles.avatarInitials, { color: theme.muted }]}>
                                 {(item.displayName || 'U').charAt(0).toUpperCase()}
                             </Text>
                         </View>
                     )}
                     <View>
-                        <Text style={styles.userName} numberOfLines={1}>
+                        <Text style={[styles.userName, { color: theme.text }]} numberOfLines={1}>
                             {item.displayName || 'Anonymous'}
                         </Text>
-                        <Text style={styles.userStats}>
+                        <Text style={[styles.userStats, { color: theme.muted }]}>
                             {item.quizzesPlayed || 0} Quizzes • Streak: {item.currentStreak || 0}
                         </Text>
                     </View>
                 </View>
 
                 <View style={styles.scoreContainer}>
-                    <Text style={styles.scoreText}>{item.totalScore || 0}</Text>
-                    <Text style={styles.scoreLabel}>pts</Text>
+                    <Text style={[styles.scoreText, { color: theme.primary }]}>{item.totalScore || 0}</Text>
+                    <Text style={[styles.scoreLabel, { color: theme.muted }]}>pts</Text>
                 </View>
             </View>
         );
     };
 
     return (
-        <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+            <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
 
             <LinearGradient
-                colors={['#1976D2', '#1565C0']}
+                colors={[theme.primaryDark, theme.primary, '#00897B']}
                 style={[styles.header, { paddingTop: insets.top + 20 }]}
             >
                 <View style={styles.headerContent}>
@@ -144,21 +152,21 @@ const LeaderboardScreen = ({ navigation }) => {
             </LinearGradient>
 
             <View style={styles.leaderboardSection}>
-                <Text style={styles.leaderboardTitle}>🏆 Top Players</Text>
+                <Text style={[styles.leaderboardTitle, { color: theme.text }]}>Top Players</Text>
                 <FlatList
                     data={data}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.userId}
                     contentContainerStyle={styles.listContent}
                     refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#1976D2']} />
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[theme.primary]} tintColor={theme.primary} />
                     }
                     ListEmptyComponent={
                         !loading && (
                             <View style={styles.emptyContainer}>
-                                <Icon name="emoji-events" size={60} color="#E0E0E0" />
-                                <Text style={styles.emptyText}>No rankings yet.</Text>
-                                <Text style={styles.emptySubText}>Be the first to take a quiz!</Text>
+                                <Icon name="emoji-events" size={60} color={theme.muted} />
+                                <Text style={[styles.emptyText, { color: theme.text }]}>No rankings yet.</Text>
+                                <Text style={[styles.emptySubText, { color: theme.muted }]}>Be the first to take a quiz!</Text>
                             </View>
                         )
                     }
@@ -171,7 +179,6 @@ const LeaderboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
     },
     header: {
         paddingBottom: 25,
@@ -271,7 +278,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#FFFFFF',
     },
-    userInfo: {
+    userStatsInfo: {
         flex: 1,
     },
     userStatsName: {
@@ -332,7 +339,6 @@ const styles = StyleSheet.create({
     leaderboardTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
         marginBottom: 15,
         textAlign: 'center',
     },
@@ -340,12 +346,12 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     rankCard: {
-        backgroundColor: '#FFFFFF',
         borderRadius: 15,
         padding: 15,
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 15,
+        borderWidth: 1,
         elevation: 2,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
@@ -354,8 +360,6 @@ const styles = StyleSheet.create({
     },
     currentUserCard: {
         borderWidth: 2,
-        borderColor: '#1976D2',
-        backgroundColor: '#E3F2FD',
     },
     rankPosition: {
         width: 40,
@@ -382,7 +386,6 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#E0E0E0',
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 12,
@@ -390,16 +393,13 @@ const styles = StyleSheet.create({
     avatarInitials: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#666',
     },
     userName: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#333',
     },
     userStats: {
         fontSize: 12,
-        color: '#666',
     },
     scoreContainer: {
         alignItems: 'flex-end',
@@ -408,11 +408,9 @@ const styles = StyleSheet.create({
     scoreText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#1976D2',
     },
     scoreLabel: {
         fontSize: 12,
-        color: '#666',
     },
     emptyContainer: {
         alignItems: 'center',
@@ -422,12 +420,10 @@ const styles = StyleSheet.create({
     emptyText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#666',
         marginTop: 20,
     },
     emptySubText: {
         fontSize: 14,
-        color: '#999',
         marginTop: 5,
     },
 });

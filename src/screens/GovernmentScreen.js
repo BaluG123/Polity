@@ -7,12 +7,16 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { getTheme } from '../theme/palette';
 
 const GovernmentScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  const { themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
 
   const governmentTopics = [
     {
@@ -735,8 +739,8 @@ SIGNIFICANCE:
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#FF9800" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="light-content" backgroundColor="#F57C00" />
       
       <LinearGradient
         colors={['#FF9800', '#F57C00']}
@@ -763,12 +767,12 @@ SIGNIFICANCE:
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🏛️ Government Levels</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Government Levels</Text>
           
           {governmentTopics.map((topic) => (
             <TouchableOpacity
               key={topic.id}
-              style={[styles.topicCard, { borderLeftColor: topic.color }]}
+              style={[styles.topicCard, { borderLeftColor: topic.color, backgroundColor: theme.surface, borderColor: theme.border }]}
               onPress={() => handleTopicPress(topic)}
               activeOpacity={0.7}
             >
@@ -777,35 +781,35 @@ SIGNIFICANCE:
                   <Text style={styles.topicIconText}>{topic.icon}</Text>
                 </View>
                 <View style={styles.topicInfo}>
-                  <Text style={styles.topicTitle}>{topic.title}</Text>
-                  <Text style={styles.topicSubtitle}>{topic.subtitle}</Text>
+                  <Text style={[styles.topicTitle, { color: theme.text }]}>{topic.title}</Text>
+                  <Text style={[styles.topicSubtitle, { color: theme.muted }]}>{topic.subtitle}</Text>
                 </View>
-                <Icon name="arrow-forward-ios" size={16} color="#666" />
+                <Icon name="arrow-forward-ios" size={16} color={theme.muted} />
               </View>
             </TouchableOpacity>
           ))}
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📊 Key Features</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Key Features</Text>
           
-          <View style={styles.featureCard}>
+          <View style={[styles.featureCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <Text style={styles.featureTitle}>🔹 Parliamentary System</Text>
-            <Text style={styles.featureText}>
+            <Text style={[styles.featureText, { color: theme.muted }]}>
               India follows the Westminster model with a President as Head of State and Prime Minister as Head of Government.
             </Text>
           </View>
 
-          <View style={styles.featureCard}>
+          <View style={[styles.featureCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <Text style={styles.featureTitle}>🔹 Federal Structure</Text>
-            <Text style={styles.featureText}>
+            <Text style={[styles.featureText, { color: theme.muted }]}>
               Three-tier government system: Union (Centre), State, and Local levels with defined powers and responsibilities.
             </Text>
           </View>
 
-          <View style={styles.featureCard}>
+          <View style={[styles.featureCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <Text style={styles.featureTitle}>🔹 Separation of Powers</Text>
-            <Text style={styles.featureText}>
+            <Text style={[styles.featureText, { color: theme.muted }]}>
               Executive, Legislative, and Judiciary work independently with checks and balances.
             </Text>
           </View>
@@ -816,10 +820,7 @@ SIGNIFICANCE:
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
+  container: { flex: 1 },
   header: {
     paddingBottom: 25,
     paddingHorizontal: 20,
@@ -860,15 +861,16 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 15,
   },
   topicCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 15,
     marginBottom: 15,
     borderLeftWidth: 4,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -896,18 +898,16 @@ const styles = StyleSheet.create({
   topicTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 5,
   },
   topicSubtitle: {
     fontSize: 14,
-    color: '#666',
   },
   featureCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 15,
     marginBottom: 12,
+    borderWidth: 1,
     elevation: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -922,7 +922,6 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
-    color: '#666',
     lineHeight: 20,
   },
 });

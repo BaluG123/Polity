@@ -1,203 +1,78 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  StatusBar,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
+import { ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { getTheme } from '../theme/palette';
 
 const ExploreScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const insets = useSafeAreaInsets();
+  const { themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
 
   const topics = [
-    {
-      id: 'constitution',
-      title: 'Constitution',
-      subtitle: 'Articles & Amendments',
-      icon: '📜',
-      color: '#1976D2',
-      screen: 'Constitution',
-    },
-    {
-      id: 'historical_events',
-      title: 'Historical Events',
-      subtitle: 'Timeline & Map View',
-      icon: '📅',
-      color: '#4CAF50',
-      screen: 'Map',
-    },
-    {
-      id: 'government',
-      title: 'Government Structure',
-      subtitle: 'Union, State & Local',
-      icon: '🏛️',
-      color: '#FF9800',
-      screen: 'Government',
-    },
-    {
-      id: 'judiciary',
-      title: 'Judiciary',
-      subtitle: 'Courts & Legal System',
-      icon: '⚖️',
-      color: '#E91E63',
-      screen: 'Judiciary',
-    },
-  ];
+    { id: 'constitution', title: 'Constitution', subtitle: 'Articles, rights, DPSP, amendments', icon: 'article', color: '#1976D2', screen: 'Constitution' },
+    { id: 'historical_events', title: 'Historical Events Map', subtitle: 'Political milestones across India', icon: 'map', color: '#009688', screen: 'Map' },
+    { id: 'government', title: 'Government Structure', subtitle: 'Union, State and Local government', icon: 'account-balance', color: '#F57C00', screen: 'Government' },
+    { id: 'judiciary', title: 'Judiciary', subtitle: 'Courts, doctrines and landmark cases', icon: 'gavel', color: '#D81B60', screen: 'Judiciary' },
+    { id: 'quiz', title: 'Offline Quiz Practice', subtitle: 'Exam-style questions with explanations', icon: 'quiz', color: '#6A1B9A', screen: 'Quiz' },
+  ].filter(item => {
+    const q = searchQuery.trim().toLowerCase();
+    return !q || item.title.toLowerCase().includes(q) || item.subtitle.toLowerCase().includes(q);
+  });
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
-      
-      {/* Header */}
-      <LinearGradient
-        colors={['#1976D2', '#1565C0']}
-        style={styles.header}
-      >
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Explore Topics</Text>
-          <Text style={styles.headerSubtitle}>
-            Discover comprehensive study materials
-          </Text>
-        </View>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} backgroundColor={theme.background} />
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <Text style={[styles.title, { color: theme.text }]}>Explore</Text>
+        <Text style={[styles.subtitle, { color: theme.muted }]}>
+          One place for concepts, context, practice and revision.
+        </Text>
 
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
+        <View style={[styles.searchBox, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <Icon name="search" size={20} color={theme.muted} />
           <TextInput
-            style={styles.searchInput}
-            placeholder="Search topics..."
+            style={[styles.searchInput, { color: theme.text }]}
+            placeholder="Search polity topics"
+            placeholderTextColor={theme.muted}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholderTextColor="#999"
           />
         </View>
-      </LinearGradient>
 
-      <ScrollView 
-        style={styles.content}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📚 Study Topics</Text>
-          {topics.map((topic) => (
-            <TouchableOpacity
-              key={topic.id}
-              style={[styles.topicCard, { borderLeftColor: topic.color }]}
-              onPress={() => navigation.navigate(topic.screen)}
-              activeOpacity={0.7}
-            >
-              <View style={styles.topicHeader}>
-                <Text style={styles.topicIcon}>{topic.icon}</Text>
-                <View style={styles.topicInfo}>
-                  <Text style={styles.topicTitle}>{topic.title}</Text>
-                  <Text style={styles.topicSubtitle}>{topic.subtitle}</Text>
-                </View>
-                <Icon name="arrow-forward-ios" size={16} color="#666" />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {topics.map(topic => (
+          <TouchableOpacity
+            key={topic.id}
+            style={[styles.topicCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
+            onPress={() => navigation.navigate(topic.screen)}
+            activeOpacity={0.82}>
+            <View style={[styles.topicIcon, { backgroundColor: topic.color }]}>
+              <Icon name={topic.icon} size={24} color="#FFFFFF" />
+            </View>
+            <View style={styles.topicText}>
+              <Text style={[styles.topicTitle, { color: theme.text }]}>{topic.title}</Text>
+              <Text style={[styles.topicSubtitle, { color: theme.muted }]}>{topic.subtitle}</Text>
+            </View>
+            <Icon name="chevron-right" size={24} color={theme.muted} />
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
-  header: {
-    paddingTop: 50,
-    paddingBottom: 15,
-    paddingHorizontal: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-  headerContent: {
-    marginBottom: 15,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 5,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#E3F2FD',
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-  },
-  searchIcon: {
-    marginRight: 10,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: '#333',
-  },
-  content: {
-    flex: 1,
-    paddingTop: 10,
-  },
-  section: {
-    paddingHorizontal: 20,
-    marginBottom: 25,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-  },
-  topicCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 12,
-    borderLeftWidth: 4,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  topicHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  topicIcon: {
-    fontSize: 30,
-    marginRight: 15,
-  },
-  topicInfo: {
-    flex: 1,
-  },
-  topicTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
-  },
-  topicSubtitle: {
-    fontSize: 14,
-    color: '#666',
-  },
+  container: { flex: 1 },
+  content: { padding: 20, paddingBottom: 40 },
+  title: { fontSize: 30, fontWeight: '900', marginTop: 14 },
+  subtitle: { fontSize: 14, lineHeight: 21, marginTop: 6, marginBottom: 18 },
+  searchBox: { height: 52, borderRadius: 14, borderWidth: 1, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', marginBottom: 18 },
+  searchInput: { flex: 1, fontSize: 15, marginLeft: 10 },
+  topicCard: { borderWidth: 1, borderRadius: 14, padding: 14, marginBottom: 12, flexDirection: 'row', alignItems: 'center' },
+  topicIcon: { width: 48, height: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  topicText: { flex: 1, marginLeft: 13 },
+  topicTitle: { fontSize: 16, fontWeight: '900' },
+  topicSubtitle: { fontSize: 13, lineHeight: 18, marginTop: 3 },
 });
 
 export default ExploreScreen;

@@ -10,17 +10,31 @@ import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { getTheme } from '../theme/palette';
 
 const ProgressScreen = ({ navigation }) => {
   const { studyStreak, completedTopics, quizScores } = useSelector(state => state.progress);
+  const { themeMode } = useSelector(state => state.app);
   const insets = useSafeAreaInsets();
+  const theme = getTheme(themeMode);
+
+  const averageScore = quizScores.length
+    ? Math.round(quizScores.reduce((sum, item) => sum + (item.score || 0), 0) / quizScores.length)
+    : 0;
+
+  const stats = [
+    { label: 'Day Streak', value: studyStreak, icon: 'local-fire-department', color: '#F57C00' },
+    { label: 'Topics Done', value: completedTopics.length, icon: 'check-circle', color: '#2E7D32' },
+    { label: 'Quizzes Taken', value: quizScores.length, icon: 'quiz', color: '#D81B60' },
+    { label: 'Avg Score', value: `${averageScore}%`, icon: 'trending-up', color: '#1976D2' },
+  ];
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
       
       <LinearGradient
-        colors={['#1976D2', '#1565C0']}
+        colors={[theme.primaryDark, theme.primary, '#00897B']}
         style={styles.header}
       >
         <View style={styles.headerContent}>
@@ -36,32 +50,23 @@ const ProgressScreen = ({ navigation }) => {
         contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
       >
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📊 Statistics</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Statistics</Text>
           
           <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <Icon name="local-fire-department" size={32} color="#FF6F00" />
-              <Text style={styles.statValue}>{studyStreak}</Text>
-              <Text style={styles.statLabel}>Day Streak</Text>
-            </View>
-            
-            <View style={styles.statCard}>
-              <Icon name="check-circle" size={32} color="#4CAF50" />
-              <Text style={styles.statValue}>{completedTopics.length}</Text>
-              <Text style={styles.statLabel}>Topics Done</Text>
-            </View>
-            
-            <View style={styles.statCard}>
-              <Icon name="quiz" size={32} color="#E91E63" />
-              <Text style={styles.statValue}>{quizScores.length}</Text>
-              <Text style={styles.statLabel}>Quizzes Taken</Text>
-            </View>
-            
-            <View style={styles.statCard}>
-              <Icon name="trending-up" size={32} color="#2196F3" />
-              <Text style={styles.statValue}>85%</Text>
-              <Text style={styles.statLabel}>Overall Score</Text>
-            </View>
+            {stats.map(item => (
+              <View key={item.label} style={[styles.statCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                <Icon name={item.icon} size={30} color={item.color} />
+                <Text style={[styles.statValue, { color: theme.text }]}>{item.value}</Text>
+                <Text style={[styles.statLabel, { color: theme.muted }]}>{item.label}</Text>
+              </View>
+            ))}
+          </View>
+
+          <View style={[styles.noteCard, { backgroundColor: theme.surfaceAlt, borderColor: theme.border }]}>
+            <Icon name="insights" size={22} color={theme.primary} />
+            <Text style={[styles.noteText, { color: theme.muted }]}>
+              Build a simple loop: read one concept, inspect its map context, then take one quiz. Progress will become richer as topic completion is connected across screens.
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -70,10 +75,7 @@ const ProgressScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
+  container: { flex: 1 },
   header: {
     paddingTop: 50,
     paddingBottom: 30,
@@ -102,24 +104,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 25,
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-  },
+  sectionTitle: { fontSize: 22, fontWeight: '900', marginBottom: 15 },
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
   statCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 20,
     alignItems: 'center',
     width: '48%',
     marginBottom: 15,
+    borderWidth: 1,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -128,15 +125,16 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: '900',
     marginTop: 10,
     marginBottom: 5,
   },
   statLabel: {
     fontSize: 14,
-    color: '#666',
+    fontWeight: '700',
   },
+  noteCard: { borderWidth: 1, borderRadius: 14, padding: 16, flexDirection: 'row', gap: 10, marginTop: 4 },
+  noteText: { flex: 1, fontSize: 13, lineHeight: 20 },
 });
 
 export default ProgressScreen;

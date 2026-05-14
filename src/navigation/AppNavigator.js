@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform, Dimensions } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { Image, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { subscribeToAuthChanges } from '../services/AuthService';
 import { setUser } from '../store/slices/authSlice';
+import { getText } from '../data/i18n';
+import { getTheme } from '../theme/palette';
 
 // Screens
 import HomeScreen from '../screens/HomeScreen';
@@ -24,23 +25,57 @@ import HistoricalMapScreen from '../screens/HistoricalMapScreen';
 import LeaderboardScreen from '../screens/LeaderboardScreen';
 import GovernmentScreen from '../screens/GovernmentScreen';
 import JudiciaryScreen from '../screens/JudiciaryScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
-const TabNavigator = () => {
-  const insets = useSafeAreaInsets();
-  const { height: screenHeight } = Dimensions.get('window');
-
-  // Calculate appropriate tab bar height based on device
-  const tabBarHeight = Platform.OS === 'ios'
-    ? Math.max(60 + insets.bottom, 80)
-    : Math.min(65, screenHeight * 0.08);
+const DrawerHeader = props => {
+  const { language, themeMode } = useSelector(state => state.app);
+  const { user } = useSelector(state => state.auth);
+  const theme = getTheme(themeMode);
+  const t = key => getText(language, key);
 
   return (
-    <Tab.Navigator
+    <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={{ padding: 20, paddingTop: 14, borderBottomWidth: 1, borderBottomColor: theme.border }}>
+        <Text style={{ fontSize: 26, fontWeight: '900', color: theme.text }}>TargetPolity</Text>
+        <Text style={{ fontSize: 12, color: theme.muted, marginTop: 4 }}>{t('appTagline')}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 18 }}>
+          {user?.photoURL ? (
+            <Image source={{ uri: user.photoURL }} style={{ width: 46, height: 46, borderRadius: 23 }} />
+          ) : (
+            <View style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="person" size={26} color="#FFFFFF" />
+            </View>
+          )}
+          <View style={{ marginLeft: 12, flex: 1 }}>
+            <Text numberOfLines={1} style={{ color: theme.text, fontSize: 15, fontWeight: '900' }}>
+              {user?.displayName || t('guest')}
+            </Text>
+            <Text numberOfLines={1} style={{ color: theme.muted, fontSize: 12, marginTop: 2 }}>
+              {user?.email || t('studyMode')}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={{ flex: 1, paddingTop: 8 }}>
+        <DrawerItemList {...props} />
+      </View>
+    </DrawerContentScrollView>
+  );
+};
+
+const DrawerNavigator = () => {
+  const { language, themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
+  const t = key => getText(language, key);
+
+  return (
+    <Drawer.Navigator
+      drawerContent={props => <DrawerHeader {...props} />}
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        drawerIcon: ({ color, size }) => {
           let iconName;
 
           if (route.name === 'Home') {
@@ -53,73 +88,74 @@ const TabNavigator = () => {
             iconName = 'map';
           } else if (route.name === 'Quiz') {
             iconName = 'quiz';
+          } else if (route.name === 'Progress') {
+            iconName = 'trending-up';
+          } else if (route.name === 'Bookmarks') {
+            iconName = 'bookmark';
+          } else if (route.name === 'Leaderboard') {
+            iconName = 'emoji-events';
+          } else if (route.name === 'Settings') {
+            iconName = 'settings';
           }
 
-          return <Icon name={iconName} size={focused ? size + 2 : size} color={color} />;
+          return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#1976D2',
-        tabBarInactiveTintColor: '#757575',
-        tabBarStyle: {
-          backgroundColor: '#FFFFFF',
-          borderTopWidth: 1,
-          borderTopColor: '#E0E0E0',
-          height: tabBarHeight,
-          paddingBottom: Platform.OS === 'ios' ? insets.bottom : 8,
-          paddingTop: 8,
-          elevation: 8,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          position: 'absolute',
-        },
-        tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '600',
-          marginBottom: Platform.OS === 'ios' ? 0 : 4,
-        },
-        tabBarItemStyle: {
-          paddingVertical: 4,
-        },
-        headerShown: false,
+        headerShown: true,
+        headerStyle: { backgroundColor: theme.surface },
+        headerTintColor: theme.text,
+        headerTitleStyle: { fontWeight: '900' },
+        drawerActiveTintColor: theme.primary,
+        drawerInactiveTintColor: theme.muted,
+        drawerActiveBackgroundColor: theme.dark ? '#1E3A5F' : '#E3F2FD',
+        drawerStyle: { backgroundColor: theme.background },
+        drawerLabelStyle: { fontSize: 14, fontWeight: '800' },
       })}
     >
-      <Tab.Screen
+      <Drawer.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarLabel: 'Home',
+          drawerLabel: t('home'),
+          title: t('home'),
         }}
       />
-      <Tab.Screen
+      <Drawer.Screen
         name="Explore"
         component={ExploreScreen}
         options={{
-          tabBarLabel: 'Explore',
+          drawerLabel: t('explore'),
+          title: t('explore'),
         }}
       />
-      <Tab.Screen
+      <Drawer.Screen
         name="Constitution"
         component={ConstitutionScreen}
         options={{
-          tabBarLabel: 'Constitution',
+          drawerLabel: t('constitution'),
+          title: t('constitution'),
         }}
       />
-      <Tab.Screen
+      <Drawer.Screen
         name="Map"
         component={HistoricalMapScreen}
         options={{
-          tabBarLabel: 'Events Map',
+          drawerLabel: t('map'),
+          title: t('map'),
         }}
       />
-      <Tab.Screen
+      <Drawer.Screen
         name="Quiz"
         component={QuizScreen}
         options={{
-          tabBarLabel: 'Quiz',
+          drawerLabel: t('quiz'),
+          title: t('quiz'),
         }}
       />
-    </Tab.Navigator>
+      <Drawer.Screen name="Progress" component={ProgressScreen} options={{ drawerLabel: t('progress'), title: t('progress') }} />
+      <Drawer.Screen name="Bookmarks" component={BookmarkScreen} options={{ drawerLabel: t('bookmarks'), title: t('bookmarks') }} />
+      <Drawer.Screen name="Leaderboard" component={LeaderboardScreen} options={{ drawerLabel: t('leaderboard'), title: t('leaderboard') }} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} options={{ drawerLabel: t('settings'), title: t('settings') }} />
+    </Drawer.Navigator>
   );
 };
 
@@ -127,6 +163,8 @@ import NotificationService from '../services/NotificationService';
 
 const AppNavigator = () => {
   const dispatch = useDispatch();
+  const { themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
 
   useEffect(() => {
     let isSetup = false;
@@ -168,7 +206,7 @@ const AppNavigator = () => {
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#1976D2',
+            backgroundColor: theme.primary,
           },
           headerTintColor: '#FFFFFF',
           headerTitleStyle: {
@@ -179,12 +217,7 @@ const AppNavigator = () => {
       >
         <Stack.Screen
           name="Main"
-          component={TabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Leaderboard"
-          component={LeaderboardScreen}
+          component={DrawerNavigator}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -217,20 +250,6 @@ const AppNavigator = () => {
           options={({ route }) => ({
             title: route.params?.title || 'Case Study',
           })}
-        />
-        <Stack.Screen
-          name="Progress"
-          component={ProgressScreen}
-          options={{
-            title: 'Your Progress',
-          }}
-        />
-        <Stack.Screen
-          name="Bookmarks"
-          component={BookmarkScreen}
-          options={{
-            title: 'Bookmarks',
-          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

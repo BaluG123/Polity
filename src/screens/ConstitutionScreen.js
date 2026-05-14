@@ -9,18 +9,21 @@ import {
   StatusBar,
   FlatList,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setSelectedTopic } from '../store/slices/politySlice';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { INDIAN_CONSTITUTION } from '../data/polityData';
+import { getTheme } from '../theme/palette';
 
 const ConstitutionScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPart, setSelectedPart] = useState('all');
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
+  const { themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
 
   // Data remains identical to maintain functionality
   const constitutionParts = [
@@ -196,7 +199,7 @@ const ConstitutionScreen = ({ navigation }) => {
 
   const renderConstitutionPart = ({ item }) => (
     <TouchableOpacity
-      style={[styles.partCard, { borderLeftColor: item.color }]}
+      style={[styles.partCard, { borderLeftColor: item.color, backgroundColor: theme.surface, borderColor: theme.border }]}
       onPress={() => handlePartPress(item)}
       activeOpacity={0.7}
     >
@@ -205,24 +208,24 @@ const ConstitutionScreen = ({ navigation }) => {
           <Text style={styles.partIcon}>{item.icon}</Text>
         </View>
         <View style={styles.partInfo}>
-          <Text style={styles.partTitle}>{item.title}</Text>
+          <Text style={[styles.partTitle, { color: theme.text }]}>{item.title}</Text>
           <Text style={[styles.partArticles, { color: item.color }]}>{item.articles}</Text>
         </View>
         <Icon name="chevron-right" size={20} color="#BDC3C7" />
       </View>
-      <Text style={styles.partDescription}>{item.description}</Text>
+      <Text style={[styles.partDescription, { color: theme.muted }]}>{item.description}</Text>
     </TouchableOpacity>
   );
 
   const renderImportantArticle = ({ item }) => (
-    <TouchableOpacity style={styles.articleCard} onPress={() => handleArticlePress(item)} activeOpacity={0.7}>
+    <TouchableOpacity style={[styles.articleCard, { backgroundColor: theme.surface, borderColor: theme.border }]} onPress={() => handleArticlePress(item)} activeOpacity={0.7}>
       <View style={styles.articleHeader}>
         <View style={[styles.articleNumber, { backgroundColor: item.importance === 'high' ? '#E91E63' : '#FF9800' }]}>
           <Text style={styles.articleNumberText}>{item.number}</Text>
         </View>
         <View style={styles.articleInfo}>
-          <Text style={styles.articleTitle}>{item.title}</Text>
-          <Text style={styles.articlePart}>{item.part}</Text>
+          <Text style={[styles.articleTitle, { color: theme.text }]}>{item.title}</Text>
+          <Text style={[styles.articlePart, { color: theme.muted }]}>{item.part}</Text>
         </View>
         <View style={[styles.importanceBadge, { backgroundColor: item.importance === 'high' ? '#FFEBEF' : '#FFF4E5' }]}>
           <Text style={[styles.importanceText, { color: item.importance === 'high' ? '#E91E63' : '#FF9800' }]}>
@@ -234,39 +237,39 @@ const ConstitutionScreen = ({ navigation }) => {
   );
 
   const renderAmendment = ({ item }) => (
-    <View style={styles.amendmentCard}>
+    <View style={[styles.amendmentCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <View style={styles.amendmentHeader}>
         <View style={styles.amendmentBadge}>
           <Text style={styles.amendmentNumberText}>{item.number}</Text>
           <Text style={styles.amendmentYear}>{item.year}</Text>
         </View>
         <View style={styles.amendmentInfo}>
-          <Text style={styles.amendmentTitle}>{item.title}</Text>
-          <Text style={styles.amendmentDescription} numberOfLines={2}>{item.description}</Text>
+          <Text style={[styles.amendmentTitle, { color: theme.text }]}>{item.title}</Text>
+          <Text style={[styles.amendmentDescription, { color: theme.muted }]} numberOfLines={2}>{item.description}</Text>
         </View>
       </View>
     </View>
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.primary} />
 
       {/* Header Section */}
-      <LinearGradient colors={['#1976D2', '#1565C0']} style={[styles.header, { paddingTop: insets.top + 20 }]}>
+      <LinearGradient colors={[theme.primaryDark, theme.primary]} style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>Indian Constitution</Text>
           <Text style={styles.headerSubtitle}>Digital Compendium of Laws & Provisions</Text>
         </View>
 
-        <View style={styles.searchContainer}>
+        <View style={[styles.searchContainer, { backgroundColor: theme.surface }]}>
           <Icon name="search" size={20} color="#1976D2" style={styles.searchIcon} />
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, { color: theme.text }]}
             placeholder="Search articles, parts, or keywords..."
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholderTextColor="#90A4AE"
+            placeholderTextColor={theme.muted}
           />
         </View>
       </LinearGradient>
@@ -277,7 +280,7 @@ const ConstitutionScreen = ({ navigation }) => {
           {filterOptions.map(option => (
             <TouchableOpacity
               key={option.id}
-              style={[styles.filterPill, selectedPart === option.id && styles.filterPillActive]}
+              style={[styles.filterPill, { backgroundColor: theme.surface }, selectedPart === option.id && styles.filterPillActive]}
               onPress={() => setSelectedPart(option.id)}
             >
               <Icon
@@ -299,7 +302,7 @@ const ConstitutionScreen = ({ navigation }) => {
         {/* Parts Section */}
         {(selectedPart === 'all' || selectedPart === 'government') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Constitution Parts</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Constitution Parts</Text>
             <FlatList
               data={constitutionParts}
               renderItem={renderConstitutionPart}
@@ -312,7 +315,7 @@ const ConstitutionScreen = ({ navigation }) => {
         {/* Articles Section */}
         {(selectedPart === 'all' || selectedPart === 'rights') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Important Articles</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Important Articles</Text>
             <FlatList
               data={importantArticles}
               renderItem={renderImportantArticle}
@@ -325,7 +328,7 @@ const ConstitutionScreen = ({ navigation }) => {
         {/* Amendments Section */}
         {(selectedPart === 'all' || selectedPart === 'amendments') && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Key Amendments</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Key Amendments</Text>
             <FlatList
               data={amendments}
               renderItem={renderAmendment}
@@ -337,7 +340,7 @@ const ConstitutionScreen = ({ navigation }) => {
 
         {/* At a Glance Stats */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Summary</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Summary</Text>
           <View style={styles.statsGrid}>
             {[
               { val: '395', lab: 'Articles' },
@@ -345,9 +348,9 @@ const ConstitutionScreen = ({ navigation }) => {
               { val: '12', lab: 'Schedules' },
               { val: '105', lab: 'Amendments' }
             ].map((stat, i) => (
-              <View key={i} style={styles.statCard}>
+              <View key={i} style={[styles.statCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                 <Text style={styles.statValue}>{stat.val}</Text>
-                <Text style={styles.statLabel}>{stat.lab}</Text>
+                <Text style={[styles.statLabel, { color: theme.muted }]}>{stat.lab}</Text>
               </View>
             ))}
           </View>
@@ -410,11 +413,13 @@ const styles = StyleSheet.create({
 
   // Part Cards
   partCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     borderLeftWidth: 5,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
     elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.05,
@@ -429,10 +434,10 @@ const styles = StyleSheet.create({
 
   // Article Cards
   articleCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 16,
     marginBottom: 10,
+    borderWidth: 1,
     elevation: 2,
   },
   articleHeader: { flexDirection: 'row', alignItems: 'center' },
@@ -445,7 +450,7 @@ const styles = StyleSheet.create({
   importanceText: { fontSize: 9, fontWeight: '900' },
 
   // Amendment Cards
-  amendmentCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 15, marginBottom: 10, borderBottomWidth: 1, borderBottomColor: '#ECEFF1' },
+  amendmentCard: { borderRadius: 16, padding: 15, marginBottom: 10, borderWidth: 1 },
   amendmentHeader: { flexDirection: 'row' },
   amendmentBadge: { alignItems: 'center', paddingRight: 15, borderRightWidth: 1, borderRightColor: '#F1F5F9', marginRight: 15 },
   amendmentNumberText: { fontSize: 16, fontWeight: '800', color: '#1976D2' },
@@ -456,7 +461,7 @@ const styles = StyleSheet.create({
 
   // Stats Grid
   statsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-  statCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 15, alignItems: 'center', width: '23%', elevation: 1 },
+  statCard: { borderRadius: 16, padding: 15, alignItems: 'center', width: '23%', elevation: 1, borderWidth: 1 },
   statValue: { fontSize: 18, fontWeight: '800', color: '#1976D2' },
   statLabel: { fontSize: 10, color: '#78909C', marginTop: 2 }
 });

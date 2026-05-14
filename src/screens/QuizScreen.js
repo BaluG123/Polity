@@ -7,21 +7,21 @@ import {
   TouchableOpacity,
   StatusBar,
   Modal,
-  Dimensions,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import { FirestoreService } from '../services/FirestoreService';
-
-const { width } = Dimensions.get('window');
+import { QUIZ_LEVELS, QUIZ_QUESTIONS } from '../data/polityData';
+import { getTheme } from '../theme/palette';
 
 const QuizScreen = ({ navigation }) => {
   const { user } = useSelector(state => state.auth);
-  const [levels, setLevels] = useState([]);
+  const { themeMode } = useSelector(state => state.app);
+  const theme = getTheme(themeMode);
+  const [levels, setLevels] = useState(QUIZ_LEVELS);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -32,46 +32,14 @@ const QuizScreen = ({ navigation }) => {
   const [quizStarted, setQuizStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [showDetailedResults, setShowDetailedResults] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    loadLevels();
+    setLevels(QUIZ_LEVELS);
   }, []);
 
-  const loadLevels = async () => {
-    setIsLoading(true);
-    const fetchedLevels = await FirestoreService.getQuizLevels();
-    setLevels(fetchedLevels);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    let timer;
-    if (quizStarted && timeLeft > 0 && !showResult) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    } else if (timeLeft === 0 && quizStarted && !showResult) {
-      handleQuizEnd();
-    }
-    return () => clearTimeout(timer);
-  }, [timeLeft, quizStarted, showResult]);
-
   const handleLevelSelect = async (level) => {
-    if (!user) {
-      Alert.alert(
-        'Sign In Required',
-        'You need to sign in to take the quiz and track your progress.',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Sign In', onPress: () => navigation.navigate('Home') } // Go to profile/home to sign in
-        ]
-      );
-      return;
-    }
-
-    setIsLoading(true);
-    const questions = await FirestoreService.getQuestionsByLevel(level.id);
-    setIsLoading(false);
+    const questions = QUIZ_QUESTIONS[level.id] || [];
 
     if (questions.length === 0) {
       Alert.alert('Oops', 'No questions found for this level yet.');
@@ -120,7 +88,7 @@ const QuizScreen = ({ navigation }) => {
     }
   };
 
-  const handleQuizEnd = async (finalScore = score) => {
+  const handleQuizEnd = useCallback(async (finalScore = score) => {
     setShowResult(true);
     if (user && selectedLevel) {
       try {
@@ -138,12 +106,22 @@ const QuizScreen = ({ navigation }) => {
         }
       } catch (error) {
         console.error('Failed to save score:', error);
-        Alert.alert('Error', 'Failed to save your score to the leaderboard. Please check your internet connection.');
+        Alert.alert('Leaderboard Sync Failed', 'Your offline quiz is complete. Sign in again later to sync leaderboard points.');
       }
     } else {
       console.log('Cannot save score - user or selectedLevel missing:', { user: !!user, selectedLevel: !!selectedLevel });
     }
-  };
+  }, [currentQuestions.length, score, selectedLevel, user]);
+
+  useEffect(() => {
+    let timer;
+    if (quizStarted && timeLeft > 0 && !showResult) {
+      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    } else if (timeLeft === 0 && quizStarted && !showResult) {
+      handleQuizEnd();
+    }
+    return () => clearTimeout(timer);
+  }, [timeLeft, quizStarted, showResult, handleQuizEnd]);
 
   const handleRestartQuiz = () => {
     setQuizStarted(false);
@@ -177,21 +155,13 @@ const QuizScreen = ({ navigation }) => {
 
   const renderLevelSelection = () => (
     <View style={styles.levelContainer}>
-      <Text style={styles.levelTitle}>Choose Your Level</Text>
-      <Text style={styles.levelSubtitle}>Select difficulty based on your knowledge</Text>
+      <Text style={[styles.levelTitle, { color: theme.text }]}>Choose Your Level</Text>
+      <Text style={[styles.levelSubtitle, { color: theme.muted }]}>Offline practice first. Sign in only if you want leaderboard points.</Text>
 
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#1976D2" style={{ marginTop: 50 }} />
-      ) : levels.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>Loading quiz levels...</Text>
-          <ActivityIndicator size="large" color="#1976D2" style={{ marginTop: 20 }} />
-        </View>
-      ) : (
-        levels.map((level) => (
+      {levels.map((level) => (
           <TouchableOpacity
             key={level.id}
-            style={[styles.levelCard, { borderLeftColor: level.color }]}
+            style={[styles.levelCard, { borderLeftColor: level.color, backgroundColor: theme.surface }]}
             onPress={() => handleLevelSelect(level)}
             activeOpacity={0.7}
           >
@@ -200,29 +170,28 @@ const QuizScreen = ({ navigation }) => {
                 <Text style={styles.levelIconText}>{level.icon}</Text>
               </View>
               <View style={styles.levelInfo}>
-                <Text style={styles.levelName}>{level.title}</Text>
-                <Text style={styles.levelDescription}>{level.subtitle}</Text>
+                <Text style={[styles.levelName, { color: theme.text }]}>{level.title}</Text>
+                <Text style={[styles.levelDescription, { color: theme.muted }]}>{level.subtitle}</Text>
               </View>
-              <Icon name="arrow-forward-ios" size={16} color="#666" />
+              <Icon name="arrow-forward-ios" size={16} color={theme.muted} />
             </View>
 
             <View style={styles.levelStats}>
               <View style={styles.levelStat}>
                 <Icon name="quiz" size={16} color={level.color} />
-                <Text style={styles.levelStatText}>{level.questionsCount} Questions</Text>
+                <Text style={[styles.levelStatText, { color: theme.muted }]}>{level.questionsCount} Questions</Text>
               </View>
               <View style={styles.levelStat}>
                 <Icon name="timer" size={16} color={level.color} />
-                <Text style={styles.levelStatText}>{Math.floor(level.timeLimit / 60)} Minutes</Text>
+                <Text style={[styles.levelStatText, { color: theme.muted }]}>{Math.floor(level.timeLimit / 60)} Minutes</Text>
               </View>
               <View style={styles.levelStat}>
                 <Icon name="trending-up" size={16} color={level.color} />
-                <Text style={styles.levelStatText}>{level.minScore}%+ Required</Text>
+                <Text style={[styles.levelStatText, { color: theme.muted }]}>{level.minScore}%+ Target</Text>
               </View>
             </View>
           </TouchableOpacity>
-        ))
-      )}
+        ))}
     </View>
   );
 
@@ -234,32 +203,32 @@ const QuizScreen = ({ navigation }) => {
       <View style={styles.questionContainer}>
         {/* Header with timer and progress */}
         <View style={styles.quizHeader}>
-          <View style={styles.timerContainer}>
+          <View style={[styles.timerContainer, { backgroundColor: theme.surface }]}>
             <Icon name="timer" size={20} color={timeLeft < 60 ? "#F44336" : "#1976D2"} />
             <Text style={[styles.timerText, { color: timeLeft < 60 ? "#F44336" : "#1976D2" }]}>
               {formatTime(timeLeft)}
             </Text>
           </View>
-          <View style={styles.progressInfo}>
-            <Text style={styles.progressText}>
+          <View style={[styles.progressInfo, { backgroundColor: theme.surface }]}>
+            <Text style={[styles.progressText, { color: theme.muted }]}>
               {currentQuestion + 1} of {currentQuestions.length}
             </Text>
           </View>
         </View>
 
         <View style={styles.progressContainer}>
-          <View style={styles.progressBar}>
+          <View style={[styles.progressBar, { backgroundColor: theme.border }]}>
             <View style={[styles.progressFill, { width: `${progress}%` }]} />
           </View>
         </View>
 
-        <View style={styles.levelBadge}>
+        <View style={[styles.levelBadge, { backgroundColor: theme.surface }]}>
           <Text style={[styles.levelBadgeText, { color: selectedLevel.color }]}>
             {selectedLevel.icon} {selectedLevel.title}
           </Text>
         </View>
 
-        <Text style={styles.questionText}>{question.question}</Text>
+        <Text style={[styles.questionText, { color: theme.text }]}>{question.question}</Text>
 
         <View style={styles.optionsContainer}>
           {question.options.map((option, index) => (
@@ -267,6 +236,7 @@ const QuizScreen = ({ navigation }) => {
               key={index}
               style={[
                 styles.optionButton,
+                { backgroundColor: theme.surface, borderColor: theme.border },
                 selectedAnswer === index && styles.optionButtonSelected
               ]}
               onPress={() => handleAnswerSelect(index)}
@@ -274,10 +244,12 @@ const QuizScreen = ({ navigation }) => {
               <View style={styles.optionContent}>
                 <View style={[
                   styles.optionCircle,
+                  { backgroundColor: theme.surfaceAlt },
                   selectedAnswer === index && styles.optionCircleSelected
                 ]}>
                   <Text style={[
                     styles.optionLetter,
+                    { color: theme.muted },
                     selectedAnswer === index && styles.optionLetterSelected
                   ]}>
                     {String.fromCharCode(65 + index)}
@@ -285,6 +257,7 @@ const QuizScreen = ({ navigation }) => {
                 </View>
                 <Text style={[
                   styles.optionText,
+                  { color: theme.text },
                   selectedAnswer === index && styles.optionTextSelected
                 ]}>
                   {option}
@@ -317,10 +290,10 @@ const QuizScreen = ({ navigation }) => {
 
     return (
       <View style={styles.resultContainer}>
-        <Text style={styles.resultTitle}>Quiz Completed! 🎉</Text>
+        <Text style={[styles.resultTitle, { color: theme.text }]}>Quiz Completed</Text>
 
-        <View style={[styles.scoreContainer, { borderColor: performance.color }]}>
-          <Text style={styles.scoreValue}>{score}/{currentQuestions.length}</Text>
+        <View style={[styles.scoreContainer, { borderColor: performance.color, backgroundColor: theme.surface }]}>
+          <Text style={[styles.scoreValue, { color: theme.text }]}>{score}/{currentQuestions.length}</Text>
           <Text style={[styles.scorePercentage, { color: performance.color }]}>{percentage}%</Text>
           <Text style={[styles.performanceMessage, { color: performance.color }]}>
             {performance.message}
@@ -328,26 +301,26 @@ const QuizScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.resultStats}>
-          <View style={styles.resultStat}>
+          <View style={[styles.resultStat, { backgroundColor: theme.surface }]}>
             <Icon name="check-circle" size={24} color="#4CAF50" />
-            <Text style={styles.resultStatValue}>{score}</Text>
-            <Text style={styles.resultStatLabel}>Correct</Text>
+            <Text style={[styles.resultStatValue, { color: theme.text }]}>{score}</Text>
+            <Text style={[styles.resultStatLabel, { color: theme.muted }]}>Correct</Text>
           </View>
-          <View style={styles.resultStat}>
+          <View style={[styles.resultStat, { backgroundColor: theme.surface }]}>
             <Icon name="cancel" size={24} color="#F44336" />
-            <Text style={styles.resultStatValue}>{currentQuestions.length - score}</Text>
-            <Text style={styles.resultStatLabel}>Wrong</Text>
+            <Text style={[styles.resultStatValue, { color: theme.text }]}>{currentQuestions.length - score}</Text>
+            <Text style={[styles.resultStatLabel, { color: theme.muted }]}>Wrong</Text>
           </View>
-          <View style={styles.resultStat}>
+          <View style={[styles.resultStat, { backgroundColor: theme.surface }]}>
             <Icon name="timer" size={24} color="#FF9800" />
-            <Text style={styles.resultStatValue}>{formatTime(selectedLevel.timeLimit - timeLeft)}</Text>
-            <Text style={styles.resultStatLabel}>Time Used</Text>
+            <Text style={[styles.resultStatValue, { color: theme.text }]}>{formatTime(selectedLevel.timeLimit - timeLeft)}</Text>
+            <Text style={[styles.resultStatLabel, { color: theme.muted }]}>Time Used</Text>
           </View>
         </View>
 
         <View style={styles.resultActions}>
           <TouchableOpacity
-            style={styles.detailsButton}
+            style={[styles.detailsButton, { backgroundColor: theme.surface }]}
             onPress={() => setShowDetailedResults(true)}
           >
             <Icon name="visibility" size={20} color="#1976D2" />
@@ -370,7 +343,7 @@ const QuizScreen = ({ navigation }) => {
       presentationStyle="pageSheet"
       onRequestClose={() => setShowDetailedResults(false)}
     >
-      <View style={styles.modalContainer}>
+      <View style={[styles.modalContainer, { backgroundColor: theme.background }]}>
         <LinearGradient
           colors={[selectedLevel?.color || '#1976D2', '#1565C0']}
           style={styles.modalHeader}
@@ -389,7 +362,7 @@ const QuizScreen = ({ navigation }) => {
 
         <ScrollView style={styles.detailsContent}>
           {userAnswers.map((answer, index) => (
-            <View key={index} style={styles.answerReviewCard}>
+            <View key={index} style={[styles.answerReviewCard, { backgroundColor: theme.surface }]}>
               <View style={styles.answerHeader}>
                 <Text style={styles.questionNumber}>Question {index + 1}</Text>
                 <View style={[
@@ -404,7 +377,7 @@ const QuizScreen = ({ navigation }) => {
                 </View>
               </View>
 
-              <Text style={styles.reviewQuestion}>{answer.question.question}</Text>
+              <Text style={[styles.reviewQuestion, { color: theme.text }]}>{answer.question.question}</Text>
 
               <View style={styles.answersSection}>
                 {answer.question.options.map((option, optionIndex) => (
@@ -438,7 +411,7 @@ const QuizScreen = ({ navigation }) => {
 
               <View style={styles.explanationSection}>
                 <Text style={styles.explanationTitle}>💡 Explanation:</Text>
-                <Text style={styles.explanationText}>{answer.question.explanation}</Text>
+                <Text style={[styles.explanationText, { color: theme.muted }]}>{answer.question.explanation}</Text>
               </View>
             </View>
           ))}
@@ -448,12 +421,12 @@ const QuizScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.primary} />
 
       {/* Header */}
       <LinearGradient
-        colors={['#1976D2', '#1565C0']}
+        colors={[theme.primaryDark, theme.primary]}
         style={styles.header}
       >
         <View style={styles.headerContent}>
@@ -669,7 +642,6 @@ const styles = StyleSheet.create({
   },
   optionButtonSelected: {
     borderColor: '#1976D2',
-    backgroundColor: '#E3F2FD',
   },
   optionContent: {
     flexDirection: 'row',
@@ -772,7 +744,6 @@ const styles = StyleSheet.create({
   },
   resultStat: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 20,
     flex: 0.3,
@@ -838,7 +809,6 @@ const styles = StyleSheet.create({
   // Modal Styles
   modalContainer: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
   },
   modalHeader: {
     paddingTop: 50,
@@ -885,7 +855,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   answerReviewCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 20,
     marginBottom: 20,
