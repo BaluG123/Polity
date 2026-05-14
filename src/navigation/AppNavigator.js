@@ -153,7 +153,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen name="Progress" component={ProgressScreen} options={{ drawerLabel: t('progress'), title: t('progress') }} />
       <Drawer.Screen name="Bookmarks" component={BookmarkScreen} options={{ drawerLabel: t('bookmarks'), title: t('bookmarks') }} />
-      <Drawer.Screen name="Leaderboard" component={LeaderboardScreen} options={{ drawerLabel: t('leaderboard'), title: t('leaderboard') }} />
+      <Drawer.Screen name="Leaderboard" component={LeaderboardScreen} options={{ drawerLabel: t('leaderboard'), title: t('leaderboard'), headerShown: false }} />
       <Drawer.Screen name="Settings" component={SettingsScreen} options={{ drawerLabel: t('settings'), title: t('settings') }} />
     </Drawer.Navigator>
   );
@@ -235,6 +235,7 @@ const AppNavigator = () => {
           component={TopicDetailScreen}
           options={({ route }) => ({
             title: route.params?.title || 'Topic Details',
+            headerShown: false,
           })}
         />
         <Stack.Screen
@@ -242,6 +243,7 @@ const AppNavigator = () => {
           component={ConceptDetailScreen}
           options={({ route }) => ({
             title: route.params?.title || 'Concept Details',
+            headerShown: false,
           })}
         />
         <Stack.Screen
@@ -249,6 +251,7 @@ const AppNavigator = () => {
           component={CaseStudyDetailScreen}
           options={({ route }) => ({
             title: route.params?.title || 'Case Study',
+            headerShown: false,
           })}
         />
       </Stack.Navigator>
