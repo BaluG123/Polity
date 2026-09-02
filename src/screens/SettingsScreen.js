@@ -1,14 +1,17 @@
 import React from 'react';
-import { Alert, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { statusCodes } from '@react-native-google-signin/google-signin';
 import { LANGUAGES, getText } from '../data/i18n';
 import { signInWithGoogle, signOut } from '../services/AuthService';
 import { setLanguage, setThemeMode } from '../store/slices/appSlice';
-import { getTheme } from '../theme/palette';
+import { getTheme, radius } from '../theme/palette';
+import { type } from '../theme/typography';
+import { space } from '../theme/spacing';
+import { AppHeader, Card } from '../components/ui';
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { language, themeMode } = useSelector(state => state.app);
   const { user } = useSelector(state => state.auth);
@@ -17,9 +20,9 @@ const SettingsScreen = () => {
 
   const handleGoogleAuth = async () => {
     if (user) {
-      Alert.alert('Sign out', 'Do you want to sign out of TargetPolity?', [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Sign Out', style: 'destructive', onPress: signOut },
+      Alert.alert(t('signOutConfirmTitle'), t('signOutConfirmBody'), [
+        { text: t('cancel'), style: 'cancel' },
+        { text: t('signOut'), style: 'destructive', onPress: signOut },
       ]);
       return;
     }
@@ -29,20 +32,18 @@ const SettingsScreen = () => {
     } catch (error) {
       if (error?.code === statusCodes.SIGN_IN_CANCELLED) return;
       if (error?.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        Alert.alert('Google Play Services', 'Google Play Services is not available or needs an update.');
+        Alert.alert(t('googlePlayServicesTitle'), t('googlePlayServicesBody'));
         return;
       }
-      Alert.alert('Sign In Failed', error?.message || 'Please try again later.');
+      Alert.alert(t('signInFailedTitle'), error?.message || t('tryAgainLater'));
     }
   };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} backgroundColor={theme.statusBar} />
+      <AppHeader theme={theme} title={t('settings')} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.title, { color: theme.text }]}>{t('settings')}</Text>
-
-        <View style={[styles.profileCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+        <Card theme={theme} style={styles.profileCard}>
           {user?.photoURL ? (
             <Image source={{ uri: user.photoURL }} style={styles.avatar} />
           ) : (
@@ -51,49 +52,46 @@ const SettingsScreen = () => {
             </View>
           )}
           <View style={styles.profileText}>
-            <Text style={[styles.profileName, { color: theme.text }]}>{user?.displayName || t('guest')}</Text>
-            <Text style={[styles.profileEmail, { color: theme.muted }]}>{user?.email || 'TargetPolity learner'}</Text>
+            <Text style={[type.h3, { color: theme.text }]}>{user?.displayName || t('guest')}</Text>
+            <Text style={[type.caption, { color: theme.muted, textTransform: 'none', marginTop: 4 }]}>{user?.email || t('learnerFallback')}</Text>
           </View>
-        </View>
+        </Card>
 
-        <TouchableOpacity
-          style={[styles.signInCard, { backgroundColor: theme.surface, borderColor: user ? theme.success : theme.primary }]}
-          onPress={handleGoogleAuth}
-          activeOpacity={0.82}>
-          <View style={[styles.googleIconWrap, { backgroundColor: user ? '#E8F5E9' : '#E3F2FD' }]}>
-            <Icon name={user ? 'verified-user' : 'login'} size={24} color={user ? theme.success : theme.primary} />
-          </View>
-          <View style={styles.signInText}>
-            <Text style={[styles.signInTitle, { color: theme.text }]}>
-              {user ? 'Progress sync is active' : 'Sign in with Google'}
-            </Text>
-            <Text style={[styles.signInSubtitle, { color: theme.muted }]}>
-              {user ? 'Tap to sign out from this device.' : 'Save progress, quiz points and leaderboard rank securely.'}
-            </Text>
-          </View>
-          <Icon name="chevron-right" size={24} color={theme.muted} />
+        <TouchableOpacity onPress={handleGoogleAuth} activeOpacity={0.82}>
+          <Card theme={theme} style={[styles.signInCard, { borderColor: user ? theme.success : theme.accent }]}>
+            <View style={[styles.googleIconWrap, { backgroundColor: user ? theme.successSoft : theme.accentSoft }]}>
+              <Icon name={user ? 'verified-user' : 'login'} size={23} color={user ? theme.success : theme.accentDark} />
+            </View>
+            <View style={styles.signInText}>
+              <Text style={[type.h3, { color: theme.text }]}>{user ? t('progressSyncActive') : t('signInWithGoogle')}</Text>
+              <Text style={[type.caption, { color: theme.muted, textTransform: 'none', marginTop: 3 }]}>
+                {user ? t('tapToSignOut') : t('signInSubtitle')}
+              </Text>
+            </View>
+            <Icon name="chevron-right" size={22} color={theme.faint} />
+          </Card>
         </TouchableOpacity>
 
-        <View style={[styles.section, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('theme')}</Text>
+        <Card theme={theme} style={styles.section}>
+          <Text style={[type.h3, { color: theme.text, marginBottom: space.md }]}>{t('theme')}</Text>
           <View style={styles.segment}>
             {['light', 'dark'].map(mode => {
               const active = themeMode === mode;
               return (
                 <TouchableOpacity
                   key={mode}
-                  style={[styles.segmentButton, active && { backgroundColor: theme.primary }]}
+                  style={[styles.segmentButton, { backgroundColor: active ? theme.primary : theme.surfaceAlt }]}
                   onPress={() => dispatch(setThemeMode(mode))}>
-                  <Icon name={mode === 'light' ? 'light-mode' : 'dark-mode'} size={18} color={active ? '#FFFFFF' : theme.muted} />
-                  <Text style={[styles.segmentText, { color: active ? '#FFFFFF' : theme.text }]}>{t(mode)}</Text>
+                  <Icon name={mode === 'light' ? 'light-mode' : 'dark-mode'} size={18} color={active ? theme.onPrimary : theme.muted} />
+                  <Text style={[type.bodyStrong, { color: active ? theme.onPrimary : theme.text, textTransform: 'capitalize' }]}>{t(mode)}</Text>
                 </TouchableOpacity>
               );
             })}
           </View>
-        </View>
+        </Card>
 
-        <View style={[styles.section, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('language')}</Text>
+        <Card theme={theme} style={styles.section}>
+          <Text style={[type.h3, { color: theme.text, marginBottom: space.sm }]}>{t('language')}</Text>
           {LANGUAGES.map(item => {
             const active = item.code === language;
             return (
@@ -102,19 +100,19 @@ const SettingsScreen = () => {
                 style={[styles.languageRow, { borderBottomColor: theme.border }]}
                 onPress={() => dispatch(setLanguage(item.code))}>
                 <View>
-                  <Text style={[styles.languageNative, { color: theme.text }]}>{item.nativeName}</Text>
-                  <Text style={[styles.languageEnglish, { color: theme.muted }]}>{item.englishName}</Text>
+                  <Text style={[type.bodyStrong, { color: theme.text }]}>{item.nativeName}</Text>
+                  <Text style={[type.caption, { color: theme.muted, textTransform: 'none', marginTop: 2 }]}>{item.englishName}</Text>
                 </View>
-                <Icon name={active ? 'check-circle' : 'radio-button-unchecked'} size={22} color={active ? theme.primary : theme.muted} />
+                <Icon name={active ? 'check-circle' : 'radio-button-unchecked'} size={22} color={active ? theme.accentDark : theme.faint} />
               </TouchableOpacity>
             );
           })}
-        </View>
+        </Card>
 
         <View style={[styles.note, { backgroundColor: theme.surfaceAlt }]}>
           <Icon name="verified" size={18} color={theme.success} />
-          <Text style={[styles.noteText, { color: theme.muted }]}>
-            {t('quizAccuracyNote')} {t('comingContent')}
+          <Text style={[type.caption, { color: theme.muted, textTransform: 'none', flex: 1, lineHeight: 19 }]}>
+            {t('comingContent')}
           </Text>
         </View>
       </ScrollView>
@@ -124,43 +122,19 @@ const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { padding: 20, paddingBottom: 40 },
-  title: { fontSize: 28, fontWeight: '900', marginTop: 16, marginBottom: 18 },
-  profileCard: {
-    borderWidth: 1,
-    borderRadius: 14,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
+  content: { padding: space.xl, paddingBottom: 40 },
+  profileCard: { flexDirection: 'row', alignItems: 'center', marginBottom: space.lg, padding: space.lg },
   avatar: { width: 58, height: 58, borderRadius: 29 },
   avatarFallback: { width: 58, height: 58, borderRadius: 29, alignItems: 'center', justifyContent: 'center' },
-  profileText: { flex: 1, marginLeft: 14 },
-  profileName: { fontSize: 17, fontWeight: '900' },
-  profileEmail: { fontSize: 13, marginTop: 4 },
-  signInCard: {
-    borderWidth: 1,
-    borderRadius: 14,
-    padding: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  googleIconWrap: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
-  signInText: { flex: 1, marginLeft: 12 },
-  signInTitle: { fontSize: 16, fontWeight: '900' },
-  signInSubtitle: { fontSize: 12, lineHeight: 17, marginTop: 3 },
-  section: { borderWidth: 1, borderRadius: 14, padding: 16, marginBottom: 16 },
-  sectionTitle: { fontSize: 18, fontWeight: '900', marginBottom: 12 },
-  segment: { flexDirection: 'row', gap: 10 },
-  segmentButton: { flex: 1, height: 44, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 },
-  segmentText: { fontSize: 14, fontWeight: '800', textTransform: 'capitalize' },
-  languageRow: { paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  languageNative: { fontSize: 16, fontWeight: '800' },
-  languageEnglish: { fontSize: 12, marginTop: 2 },
-  note: { borderRadius: 12, padding: 14, flexDirection: 'row', gap: 10 },
-  noteText: { flex: 1, fontSize: 13, lineHeight: 19 },
+  profileText: { flex: 1, marginLeft: space.md + 2 },
+  signInCard: { flexDirection: 'row', alignItems: 'center', marginBottom: space.lg, padding: space.md + 2, borderWidth: 1 },
+  googleIconWrap: { width: 46, height: 46, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },
+  signInText: { flex: 1, marginLeft: space.md },
+  section: { marginBottom: space.lg, padding: space.lg },
+  segment: { flexDirection: 'row', gap: space.sm + 2 },
+  segmentButton: { flex: 1, height: 46, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 6 },
+  languageRow: { paddingVertical: space.sm + 4, borderBottomWidth: StyleSheet.hairlineWidth, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  note: { borderRadius: radius.lg, padding: space.md + 2, flexDirection: 'row', gap: space.sm + 2 },
 });
 
 export default SettingsScreen;

@@ -1,178 +1,66 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { Image, Text, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useDispatch, useSelector } from 'react-redux';
 import { subscribeToAuthChanges } from '../services/AuthService';
 import { setUser } from '../store/slices/authSlice';
 import { getText } from '../data/i18n';
 import { getTheme } from '../theme/palette';
+import { TabBar } from '../components/ui';
 
 // Screens
 import HomeScreen from '../screens/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ConstitutionScreen from '../screens/ConstitutionScreen';
-import CaseStudiesScreen from '../screens/CaseStudiesScreen';
-import QuizScreen from '../screens/QuizScreen';
-import ProgressScreen from '../screens/ProgressScreen';
-import BookmarkScreen from '../screens/BookmarkScreen';
+// Progress, Bookmark and Leaderboard screens removed from primary navigation
 import TopicDetailScreen from '../screens/TopicDetailScreen';
 import ConceptDetailScreen from '../screens/ConceptDetailScreen';
+import CaseStudiesScreen from '../screens/CaseStudiesScreen';
 import CaseStudyDetailScreen from '../screens/CaseStudyDetailScreen';
-import HistoricalMapScreen from '../screens/HistoricalMapScreen';
-import LeaderboardScreen from '../screens/LeaderboardScreen';
+// Leaderboard screen removed from primary navigation
 import GovernmentScreen from '../screens/GovernmentScreen';
 import JudiciaryScreen from '../screens/JudiciaryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import NotificationService from '../services/NotificationService';
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
-const DrawerHeader = props => {
-  const { language, themeMode } = useSelector(state => state.app);
-  const { user } = useSelector(state => state.auth);
-  const theme = getTheme(themeMode);
-  const t = key => getText(language, key);
-
-  return (
-    <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1, backgroundColor: theme.background }}>
-      <View style={{ padding: 20, paddingTop: 14, borderBottomWidth: 1, borderBottomColor: theme.border }}>
-        <Text style={{ fontSize: 26, fontWeight: '900', color: theme.text }}>TargetPolity</Text>
-        <Text style={{ fontSize: 12, color: theme.muted, marginTop: 4 }}>{t('appTagline')}</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 18 }}>
-          {user?.photoURL ? (
-            <Image source={{ uri: user.photoURL }} style={{ width: 46, height: 46, borderRadius: 23 }} />
-          ) : (
-            <View style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name="person" size={26} color="#FFFFFF" />
-            </View>
-          )}
-          <View style={{ marginLeft: 12, flex: 1 }}>
-            <Text numberOfLines={1} style={{ color: theme.text, fontSize: 15, fontWeight: '900' }}>
-              {user?.displayName || t('guest')}
-            </Text>
-            <Text numberOfLines={1} style={{ color: theme.muted, fontSize: 12, marginTop: 2 }}>
-              {user?.email || t('studyMode')}
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View style={{ flex: 1, paddingTop: 8 }}>
-        <DrawerItemList {...props} />
-      </View>
-    </DrawerContentScrollView>
-  );
-};
-
-const DrawerNavigator = () => {
+// The 3 primary destinations. Government stays reachable only via Explore's
+// topic list + the outer Stack (see below) — it used to also be a bottom
+// tab, which meant it was registered as two different routes with two
+// different header behaviors (native tab header AND its own in-screen
+// header rendering at once). Keeping it Stack-only fixes that double header
+// and keeps the tab bar to the 3 destinations that actually need a
+// permanent home.
+const TabNavigator = () => {
   const { language, themeMode } = useSelector(state => state.app);
   const theme = getTheme(themeMode);
   const t = key => getText(language, key);
 
   return (
-    <Drawer.Navigator
-      drawerContent={props => <DrawerHeader {...props} />}
-      screenOptions={({ route }) => ({
-        drawerIcon: ({ color, size }) => {
-          let iconName;
-
-          if (route.name === 'Home') {
-            iconName = 'home';
-          } else if (route.name === 'Explore') {
-            iconName = 'explore';
-          } else if (route.name === 'Constitution') {
-            iconName = 'article';
-          } else if (route.name === 'Map') {
-            iconName = 'map';
-          } else if (route.name === 'Quiz') {
-            iconName = 'quiz';
-          } else if (route.name === 'Progress') {
-            iconName = 'trending-up';
-          } else if (route.name === 'Bookmarks') {
-            iconName = 'bookmark';
-          } else if (route.name === 'Leaderboard') {
-            iconName = 'emoji-events';
-          } else if (route.name === 'Settings') {
-            iconName = 'settings';
-          }
-
-          return <Icon name={iconName} size={size} color={color} />;
-        },
-        headerShown: true,
-        headerStyle: { backgroundColor: theme.surface },
-        headerTintColor: theme.text,
-        headerTitleStyle: { fontWeight: '900' },
-        drawerActiveTintColor: theme.primary,
-        drawerInactiveTintColor: theme.muted,
-        drawerActiveBackgroundColor: theme.dark ? '#1E3A5F' : '#E3F2FD',
-        drawerStyle: { backgroundColor: theme.background },
-        drawerLabelStyle: { fontSize: 14, fontWeight: '800' },
-      })}
+    <Tab.Navigator
+      screenOptions={{ headerShown: false }}
+      tabBar={props => <TabBar {...props} theme={theme} t={t} />}
     >
-      <Drawer.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          drawerLabel: t('home'),
-          title: t('home'),
-        }}
-      />
-      <Drawer.Screen
-        name="Explore"
-        component={ExploreScreen}
-        options={{
-          drawerLabel: t('explore'),
-          title: t('explore'),
-        }}
-      />
-      <Drawer.Screen
-        name="Constitution"
-        component={ConstitutionScreen}
-        options={{
-          drawerLabel: t('constitution'),
-          title: t('constitution'),
-        }}
-      />
-      <Drawer.Screen
-        name="Map"
-        component={HistoricalMapScreen}
-        options={{
-          drawerLabel: t('map'),
-          title: t('map'),
-        }}
-      />
-      <Drawer.Screen
-        name="Quiz"
-        component={QuizScreen}
-        options={{
-          drawerLabel: t('quiz'),
-          title: t('quiz'),
-        }}
-      />
-      <Drawer.Screen name="Progress" component={ProgressScreen} options={{ drawerLabel: t('progress'), title: t('progress') }} />
-      <Drawer.Screen name="Bookmarks" component={BookmarkScreen} options={{ drawerLabel: t('bookmarks'), title: t('bookmarks') }} />
-      <Drawer.Screen name="Leaderboard" component={LeaderboardScreen} options={{ drawerLabel: t('leaderboard'), title: t('leaderboard'), headerShown: false }} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} options={{ drawerLabel: t('settings'), title: t('settings') }} />
-    </Drawer.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Explore" component={ExploreScreen} />
+      <Tab.Screen name="Constitution" component={ConstitutionScreen} />
+    </Tab.Navigator>
   );
 };
-
-import NotificationService from '../services/NotificationService';
 
 const AppNavigator = () => {
   const dispatch = useDispatch();
-  const { themeMode } = useSelector(state => state.app);
-  const theme = getTheme(themeMode);
 
   useEffect(() => {
     let isSetup = false;
-    
+
     const setupApp = async () => {
       if (isSetup) return;
       isSetup = true;
-      
+
       // Setup notifications once
       try {
         await NotificationService.configure();
@@ -181,7 +69,7 @@ const AppNavigator = () => {
         console.error('Notification setup failed:', error);
       }
     };
-    
+
     setupApp();
 
     // Auth
@@ -203,57 +91,15 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: theme.primary,
-          },
-          headerTintColor: '#FFFFFF',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-            fontSize: 18,
-          },
-        }}
-      >
-        <Stack.Screen
-          name="Main"
-          component={DrawerNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Government"
-          component={GovernmentScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Judiciary"
-          component={JudiciaryScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="TopicDetail"
-          component={TopicDetailScreen}
-          options={({ route }) => ({
-            title: route.params?.title || 'Topic Details',
-            headerShown: false,
-          })}
-        />
-        <Stack.Screen
-          name="ConceptDetail"
-          component={ConceptDetailScreen}
-          options={({ route }) => ({
-            title: route.params?.title || 'Concept Details',
-            headerShown: false,
-          })}
-        />
-        <Stack.Screen
-          name="CaseStudyDetail"
-          component={CaseStudyDetailScreen}
-          options={({ route }) => ({
-            title: route.params?.title || 'Case Study',
-            headerShown: false,
-          })}
-        />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Main" component={TabNavigator} />
+        <Stack.Screen name="Government" component={GovernmentScreen} />
+        <Stack.Screen name="Judiciary" component={JudiciaryScreen} />
+        <Stack.Screen name="TopicDetail" component={TopicDetailScreen} />
+        <Stack.Screen name="ConceptDetail" component={ConceptDetailScreen} />
+        <Stack.Screen name="CaseStudies" component={CaseStudiesScreen} />
+        <Stack.Screen name="CaseStudyDetail" component={CaseStudyDetailScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

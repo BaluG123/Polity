@@ -1,5 +1,5 @@
 /**
- * TargetPolity - Political Science Learning App for UPSC/KPSC
+ * Rajakiya - Political Science Learning App for UPSC/KPSC
  * Complete offline polity guide with interactive constitution explorer and historical events map
  */
 
@@ -14,6 +14,9 @@ import AppNavigator from './src/navigation/AppNavigator';
 import ErrorBoundary from './src/components/common/ErrorBoundary';
 import LanguageSelectionScreen from './src/screens/LanguageSelectionScreen';
 import { hydratePreferences } from './src/store/slices/appSlice';
+import { getTheme } from './src/theme/palette';
+
+const preloadTheme = getTheme('light');
 
 const AppGate = () => {
   const dispatch = useDispatch<any>();
@@ -25,8 +28,8 @@ const AppGate = () => {
 
   if (!hydrated) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6F8FB' }}>
-        <ActivityIndicator size="large" color="#1976D2" />
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: preloadTheme.background }}>
+        <ActivityIndicator size="large" color={preloadTheme.primary} />
       </View>
     );
   }

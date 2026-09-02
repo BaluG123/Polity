@@ -55,7 +55,7 @@ class NotificationService {
             await notifee.createTriggerNotification(
                 {
                     title: 'Time to Study! 📚',
-                    body: 'Keep up your streak! Spend 10 minutes on TargetPolity today.',
+                    body: 'Keep up your streak! Spend 10 minutes on Rajakiya today.',
                     android: {
                         channelId: this.channelId,
                         pressAction: {

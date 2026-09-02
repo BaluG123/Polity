@@ -5,7 +5,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { LANGUAGES, getText } from '../data/i18n';
 import { setLanguage } from '../store/slices/appSlice';
-import { getTheme } from '../theme/palette';
+import { getTheme, radius } from '../theme/palette';
+import { type } from '../theme/typography';
+import { space } from '../theme/spacing';
+import { Button } from '../components/ui';
 
 const LanguageSelectionScreen = () => {
   const dispatch = useDispatch();
@@ -20,16 +23,16 @@ const LanguageSelectionScreen = () => {
 
   return (
     <View style={[styles.root, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle="light-content" backgroundColor="#0D47A1" />
-      <LinearGradient colors={['#0D47A1', '#1976D2', '#26A69A']} style={styles.hero}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
+      <LinearGradient colors={theme.heroGradient} style={styles.hero}>
         <Text style={styles.logo}>🏛️</Text>
-        <Text style={styles.title}>TargetPolity</Text>
+        <Text style={styles.title}>Rajakiya</Text>
         <Text style={styles.subtitle}>{t('appTagline')}</Text>
       </LinearGradient>
 
       <View style={styles.panel}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('chooseLanguage')}</Text>
-        <Text style={[styles.sectionSubtitle, { color: theme.muted }]}>{t('chooseLanguageSubtitle')}</Text>
+        <Text style={[type.h1, { color: theme.text }]}>{t('chooseLanguage')}</Text>
+        <Text style={[type.body, { color: theme.muted, marginTop: 6 }]}>{t('chooseLanguageSubtitle')}</Text>
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
           {LANGUAGES.map(item => {
@@ -39,67 +42,56 @@ const LanguageSelectionScreen = () => {
                 key={item.code}
                 style={[
                   styles.languageCard,
-                  { backgroundColor: theme.surface, borderColor: active ? theme.primary : theme.border },
+                  {
+                    backgroundColor: active ? theme.accentSoft : theme.surface,
+                    borderColor: active ? theme.accent : theme.border,
+                  },
                   active && styles.languageCardActive,
                 ]}
                 onPress={() => setSelected(item.code)}
                 activeOpacity={0.78}>
                 <View>
-                  <Text style={[styles.nativeName, { color: theme.text }]}>{item.nativeName}</Text>
-                  <Text style={[styles.englishName, { color: theme.muted }]}>{item.englishName}</Text>
+                  <Text style={[type.h3, { color: theme.text }]}>{item.nativeName}</Text>
+                  <Text style={[type.caption, { color: theme.muted, textTransform: 'none', marginTop: 3 }]}>{item.englishName}</Text>
                 </View>
-                <Icon name={active ? 'radio-button-checked' : 'radio-button-unchecked'} size={24} color={active ? theme.primary : theme.muted} />
+                <Icon
+                  name={active ? 'check-circle' : 'radio-button-unchecked'}
+                  size={24}
+                  color={active ? theme.accentDark : theme.faint}
+                />
               </TouchableOpacity>
             );
           })}
         </ScrollView>
       </View>
 
-      <TouchableOpacity style={styles.continueButton} onPress={handleContinue} activeOpacity={0.85}>
-        <Text style={styles.continueText}>{t('continue')}</Text>
-        <Icon name="arrow-forward" size={20} color="#FFFFFF" />
-      </TouchableOpacity>
+      <View style={styles.footer}>
+        <Button theme={theme} title={t('continue')} icon="arrow-forward" onPress={handleContinue} variant="primary" />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  hero: { paddingTop: 58, paddingBottom: 30, paddingHorizontal: 24 },
-  logo: { fontSize: 54 },
-  title: { color: '#FFFFFF', fontSize: 34, fontWeight: '900', marginTop: 8 },
-  subtitle: { color: '#E3F2FD', fontSize: 15, lineHeight: 22, marginTop: 8 },
-  panel: { flex: 1, paddingHorizontal: 20, paddingTop: 22 },
-  sectionTitle: { fontSize: 24, fontWeight: '900' },
-  sectionSubtitle: { fontSize: 14, lineHeight: 20, marginTop: 6 },
-  list: { paddingTop: 18, paddingBottom: 100 },
+  hero: { paddingTop: 58, paddingBottom: 30, paddingHorizontal: space.xl },
+  logo: { fontSize: 50 },
+  title: { color: '#FFFFFF', fontSize: 32, fontWeight: '900', marginTop: 10, letterSpacing: 0.4 },
+  subtitle: { color: 'rgba(255,255,255,0.82)', fontSize: 15, lineHeight: 22, marginTop: 8 },
+  panel: { flex: 1, paddingHorizontal: space.xl, paddingTop: space.xl },
+  list: { paddingTop: space.lg, paddingBottom: 110 },
   languageCard: {
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginBottom: 10,
+    borderRadius: radius.lg,
+    paddingHorizontal: space.lg,
+    paddingVertical: space.md + 2,
+    marginBottom: space.sm + 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  languageCardActive: { borderWidth: 2 },
-  nativeName: { fontSize: 18, fontWeight: '800' },
-  englishName: { fontSize: 13, marginTop: 3 },
-  continueButton: {
-    position: 'absolute',
-    left: 20,
-    right: 20,
-    bottom: 24,
-    height: 54,
-    borderRadius: 14,
-    backgroundColor: '#1976D2',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    gap: 8,
-  },
-  continueText: { color: '#FFFFFF', fontSize: 17, fontWeight: '900' },
+  languageCardActive: { borderWidth: 1.5 },
+  footer: { position: 'absolute', left: space.xl, right: space.xl, bottom: space.xl },
 });
 
 export default LanguageSelectionScreen;

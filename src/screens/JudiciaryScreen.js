@@ -5,13 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  StatusBar,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getTheme } from '../theme/palette';
+import { AppHeader } from '../components/ui';
 
 const JudiciaryScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -519,26 +518,12 @@ PROPOSED REFORMS:
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle="light-content" backgroundColor="#E91E63" />
-      
-      <LinearGradient
-        colors={['#E91E63', '#C2185B']}
-        style={[styles.header, { paddingTop: insets.top + 20 }]}
-      >
-        <View style={styles.headerContent}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Icon name="arrow-back" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Judiciary</Text>
-          <View style={{ width: 40 }} />
-        </View>
-        <Text style={styles.headerSubtitle}>
-          Courts & Legal System of India
-        </Text>
-      </LinearGradient>
+      <AppHeader
+        theme={theme}
+        title="Judiciary"
+        subtitle="Courts & Legal System of India"
+        onBack={() => navigation.goBack()}
+      />
 
       <ScrollView 
         style={styles.content}

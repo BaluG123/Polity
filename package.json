@@ -12,7 +12,9 @@
     "clean": "cd android && ./gradlew clean && cd ..",
     "clean-ios": "cd ios && xcodebuild clean && cd ..",
     "setup": "./setup.sh",
-    "postinstall": "cd ios && pod install && cd .. || echo 'Skipping iOS pod install'"
+    "postinstall": "cd ios && pod install && cd .. || echo 'Skipping iOS pod install'",
+    "i18n:check": "node scripts/check-i18n.js",
+    "content-i18n:check": "node scripts/check-content-i18n.js"
   },
   "dependencies": {
     "@notifee/react-native": "^9.1.8",

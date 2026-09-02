@@ -4,19 +4,18 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  StatusBar,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
-
 import { constitutionContent } from '../data/constitutionContent';
+import { translateArticle, translatePreambleSpans } from '../data/contentI18n';
 import { getTheme } from '../theme/palette';
+import { AppHeader } from '../components/ui';
 
 const TopicDetailScreen = ({ route, navigation }) => {
   const { topic, title } = route.params || {};
   const insets = useSafeAreaInsets();
-  const { themeMode } = useSelector(state => state.app);
+  const { themeMode, language } = useSelector(state => state.app);
   const theme = getTheme(themeMode);
 
   const renderContent = () => {
@@ -33,60 +32,55 @@ const TopicDetailScreen = ({ route, navigation }) => {
       );
     }
 
-    // Preamble Special Rendering
+    // Preamble Special Rendering — driven by the real span data (with
+    // highlight/footer flags) instead of a hardcoded English duplicate, so
+    // it renders correctly in every language via translatePreambleSpans.
     if (topic?.id === 'preamble') {
+      const spans = translatePreambleSpans(constitutionContent.preamble.content, language);
+      const bodySpans = spans.filter(span => !span.footer);
+      const footerSpan = spans.find(span => span.footer);
+
       return (
         <View style={[styles.preambleContainer, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           <Text style={[styles.preambleText, { color: theme.text }]}>
-            <Text style={styles.highlight}>WE, THE PEOPLE OF INDIA,</Text> having solemnly resolved to constitute India into a
-            <Text style={styles.highlight}> SOVEREIGN SOCIALIST SECULAR DEMOCRATIC REPUBLIC</Text> and to secure to all its citizens:
+            {bodySpans.map((span, index) => (
+              <Text key={index} style={span.highlight ? styles.highlight : undefined}>
+                {span.text}
+              </Text>
+            ))}
           </Text>
 
-          <View style={styles.divider} />
-
-          <Text style={[styles.preambleText, { color: theme.text }]}>
-            <Text style={styles.highlight}>JUSTICE,</Text> social, economic and political;
-          </Text>
-
-          <Text style={[styles.preambleText, { color: theme.text }]}>
-            <Text style={styles.highlight}>LIBERTY</Text> of thought, expression, belief, faith and worship;
-          </Text>
-
-          <Text style={[styles.preambleText, { color: theme.text }]}>
-            <Text style={styles.highlight}>EQUALITY</Text> of status and of opportunity;
-          </Text>
-
-          <Text style={[styles.preambleText, { color: theme.text }]}>
-            and to promote among them all
-          </Text>
-
-          <Text style={[styles.preambleText, { color: theme.text }]}>
-            <Text style={styles.highlight}>FRATERNITY</Text> assuring the dignity of the individual and the unity and integrity of the Nation;
-          </Text>
-
-          <View style={styles.divider} />
-
-          <Text style={[styles.footerText, { color: theme.muted, borderTopColor: theme.border }]}>
-            IN OUR CONSTITUENT ASSEMBLY this twenty-sixth day of November, 1949, do HEREBY ADOPT, ENACT AND GIVE TO OURSELVES THIS CONSTITUTION.
-          </Text>
+          {footerSpan && (
+            <>
+              <View style={styles.divider} />
+              <Text style={[styles.footerText, { color: theme.muted, borderTopColor: theme.border }]}>
+                {footerSpan.text}
+              </Text>
+            </>
+          )}
         </View>
       );
     }
 
-    // Generic Part Rendering (List of Articles)
+    // Generic Part Rendering (List of Articles) — each article is
+    // translated individually so mixed-availability translations still
+    // render correctly (untranslated articles fall back to English).
     if (data.articles) {
       return (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>{data.title}</Text>
-          {data.articles.map((article, index) => (
-            <View key={index} style={[styles.articleCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-              <View style={styles.articleHeader}>
-                <Text style={styles.articleTitle}>{article.title}</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{title || data.title}</Text>
+          {data.articles.map((rawArticle, index) => {
+            const article = translateArticle(rawArticle, language);
+            return (
+              <View key={index} style={[styles.articleCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                <View style={styles.articleHeader}>
+                  <Text style={styles.articleTitle}>{article.title}</Text>
+                </View>
+                <Text style={[styles.articleDescription, { color: theme.muted }]}>{article.description}</Text>
+                <Text style={[styles.articleContent, { color: theme.text }]}>{article.content}</Text>
               </View>
-              <Text style={[styles.articleDescription, { color: theme.muted }]}>{article.description}</Text>
-              <Text style={[styles.articleContent, { color: theme.text }]}>{article.content}</Text>
-            </View>
-          ))}
+            );
+          })}
         </View>
       );
     }
@@ -100,16 +94,7 @@ const TopicDetailScreen = ({ route, navigation }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
-
-      <LinearGradient
-        colors={[theme.primaryDark, theme.primary, '#00897B']}
-        style={styles.header}
-      >
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>{title || 'Topic Details'}</Text>
-        </View>
-      </LinearGradient>
+      <AppHeader theme={theme} title={title || 'Topic Details'} onBack={() => navigation.goBack()} />
 
       <ScrollView
         style={styles.content}

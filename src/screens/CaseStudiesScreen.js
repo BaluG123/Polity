@@ -5,66 +5,58 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  StatusBar,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getTheme } from '../theme/palette';
+import { AppHeader } from '../components/ui';
+import { getText } from '../data/i18n';
+import { LANDMARK_CASES } from '../data/polityData';
+import { translateCase } from '../data/contentI18n';
+
+const CASE_DISPLAY = {
+  kesavananda_bharati: { icon: '⚖️', color: '#E91E63' },
+  maneka_gandhi: { icon: '🛡️', color: '#1976D2' },
+};
 
 const CaseStudiesScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const { themeMode } = useSelector(state => state.app);
+  const { themeMode, language } = useSelector(state => state.app);
   const theme = getTheme(themeMode);
+  const t = key => getText(language, key);
 
-  const cases = [
-    {
-      id: 'kesavananda',
-      title: 'Kesavananda Bharati Case',
-      year: '1973',
-      significance: 'Basic Structure Doctrine',
-      icon: '⚖️',
-      color: '#E91E63',
-    },
-    {
-      id: 'maneka',
-      title: 'Maneka Gandhi Case',
-      year: '1978',
-      significance: 'Expanded Article 21',
-      icon: '🛡️',
-      color: '#1976D2',
-    },
-  ];
+  // Sourced from the real LANDMARK_CASES data (not a hardcoded duplicate) and
+  // translated for the current language, with an English fallback.
+  const cases = LANDMARK_CASES.map(caseItem => ({
+    ...translateCase(caseItem, language),
+    ...CASE_DISPLAY[caseItem.id],
+  }));
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
-      
-      <LinearGradient
-        colors={[theme.primaryDark, theme.primary, '#00897B']}
-        style={styles.header}
-      >
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Landmark Cases</Text>
-          <Text style={styles.headerSubtitle}>
-            Supreme Court judgments that shaped India
-          </Text>
-        </View>
-      </LinearGradient>
+      <AppHeader
+        theme={theme}
+        title={t('landmarkCasesTitle')}
+        subtitle={t('landmarkCasesSubtitle')}
+        onBack={() => navigation.goBack()}
+      />
 
-      <ScrollView 
+      <ScrollView
         style={styles.content}
         contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
       >
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Constitutional Cases</Text>
-          {cases.map((caseItem) => (
-            <TouchableOpacity key={caseItem.id} style={[styles.caseCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          {cases.map(caseItem => (
+            <TouchableOpacity
+              key={caseItem.id}
+              style={[styles.caseCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
+              onPress={() => navigation.navigate('CaseStudyDetail', { caseStudy: caseItem, title: caseItem.title })}
+              activeOpacity={0.7}
+            >
               <Text style={styles.caseIcon}>{caseItem.icon}</Text>
               <View style={styles.caseInfo}>
                 <Text style={[styles.caseTitle, { color: theme.text }]}>{caseItem.title}</Text>
-                <Text style={styles.caseYear}>{caseItem.year}</Text>
+                <Text style={styles.caseYear}>{caseItem.date?.slice(0, 4)}</Text>
                 <Text style={[styles.caseSignificance, { color: theme.muted }]}>{caseItem.significance}</Text>
               </View>
             </TouchableOpacity>
@@ -96,6 +88,7 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: 14,
     color: '#E3F2FD',
+    textAlign: 'center',
   },
   content: {
     flex: 1,

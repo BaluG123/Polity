@@ -5,13 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  StatusBar,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getTheme } from '../theme/palette';
+import { AppHeader } from '../components/ui';
 
 const GovernmentScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -740,26 +739,12 @@ SIGNIFICANCE:
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle="light-content" backgroundColor="#F57C00" />
-      
-      <LinearGradient
-        colors={['#FF9800', '#F57C00']}
-        style={[styles.header, { paddingTop: insets.top + 20 }]}
-      >
-        <View style={styles.headerContent}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Icon name="arrow-back" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Government Structure</Text>
-          <View style={{ width: 40 }} />
-        </View>
-        <Text style={styles.headerSubtitle}>
-          Union, State & Local Government Systems
-        </Text>
-      </LinearGradient>
+      <AppHeader
+        theme={theme}
+        title="Government Structure"
+        subtitle="Union, State & Local Government Systems"
+        onBack={() => navigation.goBack()}
+      />
 
       <ScrollView 
         style={styles.content}

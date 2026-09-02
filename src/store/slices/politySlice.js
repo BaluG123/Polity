@@ -11,12 +11,6 @@ const initialState = {
   constitutionArticles: [],
   historicalEvents: [],
   selectedEvent: null,
-  mapRegion: {
-    latitude: 28.6139, // New Delhi
-    longitude: 77.2090,
-    latitudeDelta: 15,
-    longitudeDelta: 15,
-  },
   loading: false,
   error: null,
 };
@@ -65,9 +59,6 @@ const politySlice = createSlice({
     setSelectedEvent: (state, action) => {
       state.selectedEvent = action.payload;
     },
-    setMapRegion: (state, action) => {
-      state.mapRegion = action.payload;
-    },
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
@@ -92,7 +83,6 @@ export const {
   setConstitutionArticles,
   setHistoricalEvents,
   setSelectedEvent,
-  setMapRegion,
   setLoading,
   setError,
   clearError,

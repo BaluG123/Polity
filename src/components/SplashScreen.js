@@ -1,33 +1,36 @@
 import React, { useEffect, useRef } from 'react';
 import { Text, StyleSheet, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { getTheme } from '../theme/palette';
+
+// Shown before Redux hydrates, so it can't read the saved theme preference —
+// it always renders the light-mode hero gradient, which is intentional
+// (a consistent first frame regardless of device theme).
+const theme = getTheme('light');
 
 const SplashScreen = ({ onFinish }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const riseAnim = useRef(new Animated.Value(14)).current;
 
   useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 2000,
-      useNativeDriver: true,
-    }).start();
+    Animated.parallel([
+      Animated.timing(fadeAnim, { toValue: 1, duration: 650, useNativeDriver: true }),
+      Animated.timing(riseAnim, { toValue: 0, duration: 650, useNativeDriver: true }),
+    ]).start();
 
     const timer = setTimeout(() => {
       onFinish();
-    }, 3000);
+    }, 1800);
 
     return () => clearTimeout(timer);
-  }, [fadeAnim, onFinish]);
+  }, [fadeAnim, riseAnim, onFinish]);
 
   return (
-    <LinearGradient
-      colors={['#1976D2', '#1565C0']}
-      style={styles.container}
-    >
-      <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
-        <Text style={styles.logo}>🏛️</Text>
-        <Text style={styles.title}>TargetPolity</Text>
-        {/* <Text style={styles.subtitle}>Master Indian Constitution</Text> */}
+    <LinearGradient colors={theme.heroGradient} style={styles.container}>
+      <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ translateY: riseAnim }] }]}>
+        <Text style={styles.emblem}>🏛️</Text>
+        <Text style={styles.title}>Rajakiya</Text>
+        <Text style={styles.subtitle}>Indian Polity, mastered.</Text>
       </Animated.View>
     </LinearGradient>
   );
@@ -42,19 +45,22 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
   },
-  logo: {
-    fontSize: 80,
-    marginBottom: 20,
+  emblem: {
+    fontSize: 72,
+    marginBottom: 18,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 36,
+    fontWeight: '900',
     color: '#FFFFFF',
-    marginBottom: 10,
+    letterSpacing: 0.5,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#E3F2FD',
+    fontSize: 15,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.78)',
+    marginTop: 8,
+    letterSpacing: 0.3,
   },
 });
 

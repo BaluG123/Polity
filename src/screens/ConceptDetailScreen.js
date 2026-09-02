@@ -4,53 +4,41 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  StatusBar,
-  TouchableOpacity,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { constitutionContent } from '../data/constitutionContent';
+import { translateArticle } from '../data/contentI18n';
 import { getTheme } from '../theme/palette';
+import { AppHeader } from '../components/ui';
 
 const ConceptDetailScreen = ({ route, navigation }) => {
   const { concept, title, content, subtitle } = route.params || {};
   const insets = useSafeAreaInsets();
-  const { themeMode } = useSelector(state => state.app);
+  const { themeMode, language } = useSelector(state => state.app);
   const theme = getTheme(themeMode);
 
-  const data = constitutionContent[concept?.id];
+  // constitutionContent is keyed by id for preamble/part1-part4a/art14/19/21/44;
+  // translateArticle looks up the matching translated title/content/keyPoints
+  // for the current language and falls back to the English source otherwise.
+  const rawData = constitutionContent[concept?.id];
+  const data = translateArticle(rawData, language);
 
-  // Use passed content or fallback to constitutionContent
+  // A caller that already resolved & translated its own title/content (e.g.
+  // ConstitutionScreen's handleArticlePress / handlePartPress) passes it via
+  // route params; prefer that, then fall back to the id-based lookup above.
   const displayContent = content || data?.content;
   const displayTitle = title || data?.title || 'Concept Details';
   const displaySubtitle = subtitle || data?.subtitle;
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
-
-      <LinearGradient
-        colors={[theme.primaryDark, theme.primary, '#00897B']}
-        style={[styles.header, { paddingTop: insets.top + 20 }]}
-      >
-        <View style={styles.headerContent}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Icon name="arrow-back" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.headerTitle}>{displayTitle}</Text>
-            {displaySubtitle && (
-              <Text style={styles.headerSubtitle}>{displaySubtitle}</Text>
-            )}
-          </View>
-          <View style={{ width: 40 }} />
-        </View>
-      </LinearGradient>
+      <AppHeader
+        theme={theme}
+        title={displayTitle}
+        subtitle={displaySubtitle || undefined}
+        onBack={() => navigation.goBack()}
+      />
 
       <ScrollView
         style={styles.content}
