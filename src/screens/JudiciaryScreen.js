@@ -11,13 +11,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getTheme } from '../theme/palette';
 import { AppHeader } from '../components/ui';
+import { getText } from '../data/i18n';
+import { translateJudiciaryTopic, translateLandmarkCase } from '../data/contentI18n';
 
 const JudiciaryScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const { themeMode } = useSelector(state => state.app);
+  const { themeMode, language } = useSelector(state => state.app);
   const theme = getTheme(themeMode);
+  const t = key => getText(language, key);
 
-  const judiciaryTopics = [
+  const judiciaryTopicsBase = [
     {
       id: 'supreme_court',
       title: 'Supreme Court',
@@ -490,23 +493,30 @@ PROPOSED REFORMS:
     }
   ];
 
-  const landmarkCases = [
+  const judiciaryTopics = judiciaryTopicsBase.map(topic => translateJudiciaryTopic(topic, language));
+
+  const landmarkCasesBase = [
     {
+      id: 'kesavananda_bharati',
       title: 'Kesavananda Bharati (1973)',
       description: 'Established Basic Structure Doctrine',
       impact: 'Limited Parliament\'s amending power'
     },
     {
+      id: 'maneka_gandhi',
       title: 'Maneka Gandhi (1978)',
       description: 'Expanded Article 21 interpretation',
       impact: 'Right to life includes dignity and fair procedure'
     },
     {
+      id: 'vishaka',
       title: 'Vishaka (1997)',
       description: 'Sexual harassment guidelines',
       impact: 'Workplace safety for women'
     }
   ];
+
+  const landmarkCases = landmarkCasesBase.map(c => translateLandmarkCase(c, language));
 
   const handleTopicPress = (topic) => {
     navigation.navigate('ConceptDetail', {
@@ -520,8 +530,8 @@ PROPOSED REFORMS:
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <AppHeader
         theme={theme}
-        title="Judiciary"
-        subtitle="Courts & Legal System of India"
+        title={t('judiciary')}
+        subtitle={t('topicJudiciarySubtitle')}
         onBack={() => navigation.goBack()}
       />
 
@@ -531,7 +541,7 @@ PROPOSED REFORMS:
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Court Hierarchy</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('judSectionHierarchy')}</Text>
           
           {judiciaryTopics.map((topic) => (
             <TouchableOpacity
@@ -555,7 +565,7 @@ PROPOSED REFORMS:
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Landmark Cases</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('landmarkCasesTitle')}</Text>
           
           {landmarkCases.map((case_, index) => (
             <View key={index} style={[styles.caseCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -570,26 +580,26 @@ PROPOSED REFORMS:
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Key Principles</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('judSectionPrinciples')}</Text>
           
           <View style={[styles.principleCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-            <Text style={styles.principleTitle}>🔹 Independence of Judiciary</Text>
+            <Text style={styles.principleTitle}>{`🔹 ${t('judPrincipleIndependence')}`}</Text>
             <Text style={[styles.principleText, { color: theme.muted }]}>
-              Judges are independent from executive and legislative interference, ensuring impartial justice.
+              {t('judPrincipleIndependenceDesc')}
             </Text>
           </View>
 
           <View style={[styles.principleCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-            <Text style={styles.principleTitle}>🔹 Rule of Law</Text>
+            <Text style={styles.principleTitle}>{`🔹 ${t('judPrincipleRuleLaw')}`}</Text>
             <Text style={[styles.principleText, { color: theme.muted }]}>
-              All persons, including government officials, are subject to and accountable under the law.
+              {t('judPrincipleRuleLawDesc')}
             </Text>
           </View>
 
           <View style={[styles.principleCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-            <Text style={styles.principleTitle}>🔹 Access to Justice</Text>
+            <Text style={styles.principleTitle}>{`🔹 ${t('judPrincipleAccess')}`}</Text>
             <Text style={[styles.principleText, { color: theme.muted }]}>
-              Legal aid, Lok Adalats, and PIL ensure justice is accessible to all citizens.
+              {t('judPrincipleAccessDesc')}
             </Text>
           </View>
         </View>

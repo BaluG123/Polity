@@ -11,13 +11,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getTheme } from '../theme/palette';
 import { AppHeader } from '../components/ui';
+import { getText } from '../data/i18n';
+import { translateGovernmentTopic } from '../data/contentI18n';
 
 const GovernmentScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const { themeMode } = useSelector(state => state.app);
+  const { themeMode, language } = useSelector(state => state.app);
   const theme = getTheme(themeMode);
+  const t = key => getText(language, key);
 
-  const governmentTopics = [
+  const governmentTopicsBase = [
     {
       id: 'union_government',
       title: 'Union Government',
@@ -729,6 +732,8 @@ SIGNIFICANCE:
     }
   ];
 
+  const governmentTopics = governmentTopicsBase.map(topic => translateGovernmentTopic(topic, language));
+
   const handleTopicPress = (topic) => {
     navigation.navigate('ConceptDetail', {
       title: topic.title,
@@ -741,8 +746,8 @@ SIGNIFICANCE:
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <AppHeader
         theme={theme}
-        title="Government Structure"
-        subtitle="Union, State & Local Government Systems"
+        title={t('topicGovernmentTitle')}
+        subtitle={t('topicGovernmentSubtitle')}
         onBack={() => navigation.goBack()}
       />
 
@@ -752,7 +757,7 @@ SIGNIFICANCE:
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Government Levels</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('govSectionLevels')}</Text>
           
           {governmentTopics.map((topic) => (
             <TouchableOpacity
@@ -776,26 +781,26 @@ SIGNIFICANCE:
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Key Features</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('govSectionFeatures')}</Text>
           
           <View style={[styles.featureCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-            <Text style={styles.featureTitle}>🔹 Parliamentary System</Text>
+            <Text style={styles.featureTitle}>{`🔹 ${t('govFeatureParliamentary')}`}</Text>
             <Text style={[styles.featureText, { color: theme.muted }]}>
-              India follows the Westminster model with a President as Head of State and Prime Minister as Head of Government.
+              {t('govFeatureParliamentaryDesc')}
             </Text>
           </View>
 
           <View style={[styles.featureCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-            <Text style={styles.featureTitle}>🔹 Federal Structure</Text>
+            <Text style={styles.featureTitle}>{`🔹 ${t('govFeatureFederal')}`}</Text>
             <Text style={[styles.featureText, { color: theme.muted }]}>
-              Three-tier government system: Union (Centre), State, and Local levels with defined powers and responsibilities.
+              {t('govFeatureFederalDesc')}
             </Text>
           </View>
 
           <View style={[styles.featureCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-            <Text style={styles.featureTitle}>🔹 Separation of Powers</Text>
+            <Text style={styles.featureTitle}>{`🔹 ${t('govFeatureSeparation')}`}</Text>
             <Text style={[styles.featureText, { color: theme.muted }]}>
-              Executive, Legislative, and Judiciary work independently with checks and balances.
+              {t('govFeatureSeparationDesc')}
             </Text>
           </View>
         </View>

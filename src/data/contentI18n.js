@@ -125,3 +125,26 @@ export const translateAmendment = (amendment, language) => {
   const t = lookup('amendments', amendment.id, language);
   return t ? { ...amendment, ...t } : amendment;
 };
+
+// A Government-screen topic — { id, title, subtitle, content }.
+export const translateGovernmentTopic = (topic, language) => {
+  if (!topic) return topic;
+  const t = lookup('government', topic.id, language);
+  return t ? { ...topic, ...t } : topic;
+};
+
+// A Judiciary-screen topic — { id, title, subtitle, content }.
+export const translateJudiciaryTopic = (topic, language) => {
+  if (!topic) return topic;
+  const t = lookup('judiciary', topic.id, language);
+  return t ? { ...topic, ...t } : topic;
+};
+
+// A Judiciary-screen landmark case — { id, description, impact }.
+// Case titles (e.g. "Kesavananda Bharati (1973)") stay English, matching
+// how they are cited in Indian legal and exam materials.
+export const translateLandmarkCase = (caseItem, language) => {
+  if (!caseItem) return caseItem;
+  const t = lookup('judiciaryLandmarkCases', caseItem.id, language);
+  return t ? { ...caseItem, ...t } : caseItem;
+};
