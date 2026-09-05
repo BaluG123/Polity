@@ -123,6 +123,14 @@ const NewsCard = React.memo(({ item, height, theme, t, lang, tabH, hintVisible }
           style={s.imgGrad}
         />
 
+        {/* AI-generated disclaimer — top-right of image */}
+        {imgOk && (
+          <View style={s.aiTag}>
+            <Icon name="auto-awesome" size={9} color="rgba(255,255,255,0.8)" />
+            <Text style={s.aiTagTxt}>AI Generated</Text>
+          </View>
+        )}
+
         {/* category + date at bottom of image */}
         <View style={s.imgMeta}>
           <Badge category={item.category || 'general'} t={t} />
@@ -451,6 +459,20 @@ const s = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end',
     paddingHorizontal: space.lg,
     paddingBottom: space.lg + 24, // 24 = card overlap
+  },
+
+  /* AI generated tag */
+  aiTag: {
+    position: 'absolute', top: 10, right: 10,
+    flexDirection: 'row', alignItems: 'center', gap: 3,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    paddingHorizontal: 7, paddingVertical: 3,
+    borderRadius: 4, borderWidth: 0.5,
+    borderColor: 'rgba(255,255,255,0.15)',
+  },
+  aiTagTxt: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: 8, fontWeight: '600', letterSpacing: 0.3,
   },
 
   /* badge */

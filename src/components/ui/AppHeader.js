@@ -3,22 +3,14 @@ import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-nativ
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type } from '../../theme/typography';
 import { space } from '../../theme/spacing';
 
 const HIT_SLOP = { top: 10, bottom: 10, left: 10, right: 10 };
 
 /**
- * The one top bar every screen in the app renders — same navy gradient,
- * same back-button position, same title/subtitle rhythm, so no screen
- * looks like it wandered in from a different app.
- *
- * Tab-root screens (Home, Explore, Constitution) pass `onRightPress`
- * (the settings gear); pushed detail screens pass `onBack` instead. Both
- * slots reserve the same width even when empty, so the title always sits
- * dead-center regardless of which buttons are showing. `children` renders
- * extra header content (e.g. Constitution's inline search field) below the
- * title row, still inside the gradient.
+ * Premium top bar — deep navy gradient with gold accent details.
+ * Tab-root screens pass `onRightPress` (settings gear);
+ * pushed detail screens pass `onBack` instead.
  */
 const AppHeader = ({ theme, title, subtitle, onBack, rightIcon = 'settings', onRightPress, children }) => {
   const insets = useSafeAreaInsets();
@@ -26,30 +18,54 @@ const AppHeader = ({ theme, title, subtitle, onBack, rightIcon = 'settings', onR
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor={theme.primaryDark} />
-      <LinearGradient colors={theme.heroGradient} style={[styles.wrap, { paddingTop: insets.top + space.sm }]}>
+      <LinearGradient
+        colors={theme.heroGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[styles.wrap, { paddingTop: insets.top + space.xs }]}
+      >
+        {/* thin gold line at very top */}
+        <View style={[styles.topAccent, { backgroundColor: theme.accent }]} />
+
         <View style={styles.row}>
           {onBack ? (
             <TouchableOpacity onPress={onBack} style={styles.iconBtn} activeOpacity={0.75} hitSlop={HIT_SLOP}>
-              <Icon name="arrow-back" size={22} color="#FFFFFF" />
+              <View style={styles.iconCircle}>
+                <Icon name="arrow-back" size={18} color="#FFFFFF" />
+              </View>
             </TouchableOpacity>
           ) : (
             <View style={styles.iconBtn} />
           )}
 
           <View style={styles.titleCol}>
-            <Text style={styles.title} numberOfLines={2}>{title}</Text>
+            {/* title with letter-spacing for authority feel */}
+            <Text style={styles.title} numberOfLines={1}>{title}</Text>
             {!!subtitle && (
-              <Text style={styles.subtitle} numberOfLines={1}>{subtitle}</Text>
+              <View style={styles.subtitleRow}>
+                <View style={[styles.subtitleDot, { backgroundColor: theme.accent }]} />
+                <Text style={styles.subtitle} numberOfLines={1}>{subtitle}</Text>
+                <View style={[styles.subtitleDot, { backgroundColor: theme.accent }]} />
+              </View>
             )}
           </View>
 
           {onRightPress ? (
             <TouchableOpacity onPress={onRightPress} style={styles.iconBtn} activeOpacity={0.75} hitSlop={HIT_SLOP}>
-              <Icon name={rightIcon} size={22} color="#FFFFFF" />
+              <View style={styles.iconCircle}>
+                <Icon name={rightIcon} size={18} color="#FFFFFF" />
+              </View>
             </TouchableOpacity>
           ) : (
             <View style={styles.iconBtn} />
           )}
+        </View>
+
+        {/* bottom gold trim */}
+        <View style={styles.trimRow}>
+          <View style={[styles.trimLine, { backgroundColor: theme.accent + '40' }]} />
+          <View style={[styles.trimDiamond, { backgroundColor: theme.accent }]} />
+          <View style={[styles.trimLine, { backgroundColor: theme.accent + '40' }]} />
         </View>
 
         {children}
@@ -61,20 +77,80 @@ const AppHeader = ({ theme, title, subtitle, onBack, rightIcon = 'settings', onR
 const styles = StyleSheet.create({
   wrap: {
     paddingHorizontal: space.lg,
-    paddingBottom: space.lg,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    paddingBottom: space.md,
   },
-  row: { flexDirection: 'row', alignItems: 'center' },
-  iconBtn: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center' },
-  titleCol: { flex: 1, alignItems: 'center', paddingHorizontal: space.xs },
-  title: { ...type.h2, color: '#FFFFFF', textAlign: 'center' },
-  subtitle: {
-    ...type.caption,
-    color: 'rgba(255,255,255,0.78)',
-    textTransform: 'none',
+  topAccent: {
+    height: 2,
+    marginHorizontal: -space.lg,
+    marginBottom: space.sm,
+    opacity: 0.5,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: 44,
+  },
+  iconBtn: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  titleCol: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: space.xs,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
     textAlign: 'center',
+  },
+  subtitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     marginTop: 3,
+  },
+  subtitleDot: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+  },
+  subtitle: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.65)',
+    letterSpacing: 0.8,
+    textAlign: 'center',
+  },
+  trimRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: space.sm,
+    paddingHorizontal: space.xl,
+  },
+  trimLine: {
+    flex: 1,
+    height: 1,
+  },
+  trimDiamond: {
+    width: 6,
+    height: 6,
+    borderRadius: 1,
+    transform: [{ rotate: '45deg' }],
+    marginHorizontal: 8,
   },
 });
 
