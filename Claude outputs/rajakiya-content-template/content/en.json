@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "articles": [
+    {
+      "id": "2026-09-05-parliament-monsoon-session",
+      "category": "parliament",
+      "date": "2026-09-05",
+      "image": "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/rajakiya-content/main/images/parliament-01.jpg",
+      "title": "Monsoon Session Sees Passage of Three Key Bills",
+      "summary": "Parliament wrapped up its monsoon session with the passage of the Digital India Bill, an amendment to the Representation of the People Act, and a new framework for federal-state fiscal transfers. The Digital India Bill introduces data-protection duties for platforms and creates a new grievance-redressal authority. The RP Act amendment tightens disclosure rules for candidates. Fiscal transfer changes give states a bigger say in how devolved funds are spent — a long-standing demand of southern states."
+    },
+    {
+      "id": "2026-09-04-sc-basic-structure",
+      "category": "judiciary",
+      "date": "2026-09-04",
+      "image": "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/rajakiya-content/main/images/sc-01.jpg",
+      "title": "Supreme Court Reaffirms Basic Structure Doctrine",
+      "summary": "In a five-judge constitution bench ruling, the Supreme Court reaffirmed that Parliament cannot amend the basic structure of the Constitution — extending the Kesavananda Bharati (1973) logic to a new fact pattern. The judgment strikes down an amendment that would have curtailed judicial review of certain executive orders. The bench held that judicial review is itself a part of the basic structure and cannot be diluted even by a constitutional amendment."
+    },
+    {
+      "id": "2026-09-03-election-commission-guidelines",
+      "category": "election",
+      "date": "2026-09-03",
+      "image": "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/rajakiya-content/main/images/eci-01.jpg",
+      "title": "ECI Issues New Guidelines for Social Media Campaigns",
+      "summary": "The Election Commission of India has released updated guidelines for political campaigning on social media platforms. All political ads must now carry clear disclaimers identifying the sponsor and funding source. Parties must submit their digital ad spend for weekly audit during the 45 days before a poll. AI-generated content depicting real politicians must carry a visible disclosure. Violations can lead to takedown orders and, in serious cases, referral to the CEC for disqualification proceedings."
+    },
+    {
+      "id": "2026-09-02-uniform-civil-code",
+      "category": "policy",
+      "date": "2026-09-02",
+      "image": "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/rajakiya-content/main/images/policy-01.jpg",
+      "title": "Uttarakhand's UCC Enters Second Year of Implementation",
+      "summary": "Uttarakhand's Uniform Civil Code — the first state-level UCC in independent India — completed one year of implementation this week. The state government released data showing over 12,000 marriage registrations and 800 live-in relationship declarations under the new law. Constitutional scholars remain divided on whether states can enact a UCC unilaterally, given that personal law falls in the Concurrent List. A challenge is pending before the Uttarakhand High Court."
+    },
+    {
+      "id": "2026-09-01-73rd-amendment-review",
+      "category": "amendment",
+      "date": "2026-09-01",
+      "image": "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/rajakiya-content/main/images/amendment-01.jpg",
+      "title": "Panel Set Up to Review 73rd Amendment Implementation",
+      "summary": "A parliamentary standing committee has been set up to review the working of the 73rd Constitutional Amendment, which created the Panchayati Raj system in 1992. The panel will examine fiscal devolution to panchayats, functional autonomy, and the reservation of seats for women and marginalised communities. Its report is expected within a year and will guide any further constitutional changes needed to strengthen grassroots democracy."
+    }
+  ]
+}

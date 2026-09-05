@@ -23,6 +23,7 @@ import GovernmentScreen from '../screens/GovernmentScreen';
 import JudiciaryScreen from '../screens/JudiciaryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import NotificationService from '../services/NotificationService';
+import NewsService from '../services/NewsService';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -65,6 +66,12 @@ const AppNavigator = () => {
       try {
         await NotificationService.configure();
         await NotificationService.scheduleDailyReminder(20, 0); // 8:00 PM
+
+        // Check for new news content
+        const { hasUpdate } = await NewsService.checkForUpdates();
+        if (hasUpdate) {
+          await NotificationService.showNewsUpdate();
+        }
       } catch (error) {
         console.error('Notification setup failed:', error);
       }

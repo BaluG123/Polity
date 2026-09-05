@@ -18,6 +18,13 @@ class NotificationService {
             name: 'Study Reminders',
             importance: AndroidImportance.HIGH,
         });
+
+        // News-updates channel
+        await notifee.createChannel({
+            id: 'news-updates',
+            name: 'News Updates',
+            importance: AndroidImportance.HIGH,
+        });
         
         this.isConfigured = true;
     }
@@ -77,6 +84,23 @@ class NotificationService {
     async cancelAll() {
         await notifee.cancelAllNotifications();
         this.isScheduled = false;
+    }
+
+    async showNewsUpdate() {
+        try {
+            await this.configure();
+            await notifee.displayNotification({
+                title: 'New on Rajakiya 📰',
+                body: 'Fresh polity updates are waiting for you!',
+                android: {
+                    channelId: 'news-updates',
+                    pressAction: { id: 'default' },
+                    importance: AndroidImportance.HIGH,
+                },
+            });
+        } catch (e) {
+            console.warn('News notification failed:', e);
+        }
     }
 
     // Reset flags for testing

@@ -6,7 +6,7 @@ import { radius, shadow } from '../../theme/palette';
 import { space } from '../../theme/spacing';
 import { type } from '../../theme/typography';
 
-const ICONS = { Home: 'home', Explore: 'explore', Constitution: 'menu-book' };
+const ICONS = { Home: 'article', Explore: 'explore', Constitution: 'menu-book' };
 const LABEL_KEYS = { Home: 'home', Explore: 'explore', Constitution: 'constitution' };
 
 /**
