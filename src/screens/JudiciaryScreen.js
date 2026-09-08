@@ -497,10 +497,34 @@ PROPOSED REFORMS:
 
   const landmarkCasesBase = [
     {
+      id: 'gopalan',
+      title: 'A.K. Gopalan (1950)',
+      description: 'Early, narrow reading of Article 21 - "procedure established by law" only',
+      impact: 'Overturned by Maneka Gandhi (1978)'
+    },
+    {
+      id: 'golaknath',
+      title: 'Golak Nath (1967)',
+      description: 'Parliament cannot amend or take away Fundamental Rights',
+      impact: 'Led to the 24th Amendment restoring amending power'
+    },
+    {
       id: 'kesavananda_bharati',
       title: 'Kesavananda Bharati (1973)',
       description: 'Established Basic Structure Doctrine',
-      impact: 'Limited Parliament\'s amending power'
+      impact: "Limited Parliament's amending power"
+    },
+    {
+      id: 'indira_gandhi_raj_narain',
+      title: 'Indira Gandhi v. Raj Narain (1975)',
+      description: 'First case to apply the Basic Structure Doctrine to strike down an amendment',
+      impact: 'Struck down a clause of the 39th Amendment'
+    },
+    {
+      id: 'adm_jabalpur',
+      title: 'ADM Jabalpur (1976)',
+      description: 'Habeas Corpus case - Article 21 held suspended during Emergency',
+      impact: "Repudiated by the Court itself in Puttaswamy (2017)"
     },
     {
       id: 'maneka_gandhi',
@@ -509,10 +533,82 @@ PROPOSED REFORMS:
       impact: 'Right to life includes dignity and fair procedure'
     },
     {
+      id: 'minerva_mills',
+      title: 'Minerva Mills (1980)',
+      description: 'Balance between Fundamental Rights and Directive Principles is basic structure',
+      impact: 'Struck down unlimited amending power under the 42nd Amendment'
+    },
+    {
+      id: 'olga_tellis',
+      title: 'Olga Tellis (1985)',
+      description: 'Right to livelihood is part of the right to life',
+      impact: 'Landmark for socio-economic rights'
+    },
+    {
+      id: 'shah_bano',
+      title: 'Shah Bano (1985)',
+      description: 'Maintenance rights for divorced Muslim women under Section 125 CrPC',
+      impact: 'Central to the Uniform Civil Code debate'
+    },
+    {
+      id: 'mc_mehta_oleum',
+      title: 'M.C. Mehta - Oleum Gas Leak (1986)',
+      description: "Created the 'Absolute Liability' principle for hazardous industries",
+      impact: 'Governs Indian law on industrial accidents'
+    },
+    {
+      id: 'indra_sawhney',
+      title: 'Indra Sawhney (1992)',
+      description: 'Upheld OBC reservation, capped total reservation at 50%',
+      impact: 'Introduced creamy layer exclusion'
+    },
+    {
+      id: 'second_judges_case',
+      title: 'Second Judges Case (1993)',
+      description: "Gave the Chief Justice's recommendation primacy in appointments",
+      impact: 'Created the collegium system'
+    },
+    {
+      id: 'sr_bommai',
+      title: 'S.R. Bommai (1994)',
+      description: "Article 356 proclamations subject to judicial review",
+      impact: "Curbed misuse of President's Rule"
+    },
+    {
       id: 'vishaka',
       title: 'Vishaka (1997)',
       description: 'Sexual harassment guidelines',
       impact: 'Workplace safety for women'
+    },
+    {
+      id: 'shreya_singhal',
+      title: 'Shreya Singhal (2015)',
+      description: 'Struck down Section 66A of the IT Act',
+      impact: 'Landmark for online free speech'
+    },
+    {
+      id: 'puttaswamy_privacy',
+      title: 'K.S. Puttaswamy - Privacy (2017)',
+      description: 'Declared privacy a Fundamental Right under Article 21',
+      impact: 'Foundation for later Aadhaar and Section 377 rulings'
+    },
+    {
+      id: 'shayara_bano',
+      title: 'Shayara Bano - Triple Talaq (2017)',
+      description: 'Declared instant triple talaq unconstitutional',
+      impact: 'Led to a law criminalising instant triple talaq'
+    },
+    {
+      id: 'navtej_singh_johar',
+      title: 'Navtej Singh Johar (2018)',
+      description: 'Decriminalised consensual homosexual conduct between adults',
+      impact: 'Landmark for LGBTQ+ rights in India'
+    },
+    {
+      id: 'ayodhya_verdict',
+      title: 'Ayodhya Verdict - M. Siddiq (2019)',
+      description: 'Resolved the Ram Janmabhoomi-Babri Masjid title dispute',
+      impact: "Site awarded for a temple, alternate land for a mosque"
     }
   ];
 
