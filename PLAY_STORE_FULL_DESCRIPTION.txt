@@ -1,0 +1,36 @@
+IMPORTANT DISCLAIMER: Rajakiya is an independent educational app made by a private developer. It is NOT an official application of the Government of India, any Ministry, Parliament, the Supreme Court of India, the Election Commission of India, or any other government body. Rajakiya does NOT represent, speak for, or act on behalf of any government entity. We are not affiliated with, endorsed by, or connected to the Government of India.
+
+All material in this app is for learning and exam preparation only. It may be simplified, summarised, or delayed. It is not official law, not a government notification, and not legal advice.
+
+For original official information, please use these public government / statutory websites:
+National Portal of India: https://www.india.gov.in
+Constitution / Legislative Department: https://legislative.gov.in
+India Code: https://www.indiacode.nic.in
+Gazette of India: https://egazette.gov.in
+Parliament of India: https://sansad.in
+Supreme Court of India: https://www.sci.gov.in
+Election Commission of India: https://www.eci.gov.in
+Press Information Bureau: https://www.pib.gov.in
+Ministry of Law and Justice: https://legalaffairs.gov.in
+
+Rajakiya is a private study companion for UPSC and State PSC aspirants, law students, political science learners, and citizens who want Indian polity explained in simple language.
+
+WHAT YOU CAN LEARN
+- Daily polity news cards: unofficial educational summaries of Parliament, courts, elections, policy, and constitutional topics (not official press releases)
+- Government structure: Executive, Legislature, and Local Bodies (Panchayati Raj, Municipalities)
+- Judiciary: court hierarchy, landmark cases summarised for study, Fundamental Rights, DPSP, writs
+- Constitution study notes: Articles by Parts, Schedules in plain language, amendments, Preamble, Fundamental Duties — this is NOT the official Gazette text
+
+AVAILABLE IN 7 LANGUAGES
+English • हिन्दी • ಕನ್ನಡ • தமிழ் • తెలుగు • বাংলা • मराठी
+If wording differs, the official text on government websites listed above prevails.
+
+DESIGN
+Dark mode, card-based UI, and cached content that may work offline after download. Optional Google Sign-In can save bookmarks and reading preferences. You can use the core learning content without an account.
+
+WHO IT IS FOR
+UPSC & State PSC aspirants; law, journalism, and political science students; citizens who want a simple introduction to India's constitutional system.
+
+Rajakiya organises study material in a mobile-first format. Content is written and updated by our team and can become outdated. Always verify important facts on the official websites listed at the top of this description.
+
+Download Rajakiya as an independent educational companion — not as a substitute for official government websites.

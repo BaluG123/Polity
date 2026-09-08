@@ -83,7 +83,7 @@ const PageCounter = ({ idx, total, theme }) => (
 
 /* ── Full-screen news card (Inshorts style) ─────────── */
 
-const NewsCard = React.memo(({ item, height, theme, t, lang, tabH, hintVisible }) => {
+const NewsCard = React.memo(({ item, height, theme, t, lang, ctaReserve, hintVisible }) => {
   const [imgOk, setImgOk] = useState(false);
   const imgH = Math.round(height * 0.42);
   const cat = CAT[item.category] || CAT.general;
@@ -150,7 +150,8 @@ const NewsCard = React.memo(({ item, height, theme, t, lang, tabH, hintVisible }
           {
             backgroundColor: theme.surface,
             borderColor: theme.border,
-            paddingBottom: tabH + space.lg,
+            paddingBottom: ctaReserve,
+            overflow: 'hidden',
           },
         ]}
       >
@@ -158,13 +159,18 @@ const NewsCard = React.memo(({ item, height, theme, t, lang, tabH, hintVisible }
         <View style={[s.accentBar, { backgroundColor: theme.accent }]} />
 
         {/* headline */}
-        <Text style={[s.title, { color: theme.text }]} numberOfLines={3}>
+        <Text
+          style={[s.title, { color: theme.text }]}
+          numberOfLines={4}
+          adjustsFontSizeToFit
+          minimumFontScale={0.85}
+        >
           {item.title}
         </Text>
 
-        {/* body */}
+        {/* body — truncated, safely clear of the floating Read More CTA */}
         <View style={s.bodyWrap}>
-          <Text style={[s.body, { color: theme.muted }]}>
+          <Text style={[s.body, { color: theme.muted }]} numberOfLines={3}>
             {item.summary || item.content || ''}
           </Text>
         </View>
@@ -322,9 +328,14 @@ const HomeScreen = ({ navigation }) => {
   const [error, setError]         = useState(null);
   const [curIdx, setCurIdx]       = useState(0);
   const [boxH, setBoxH]          = useState(0);
+  const [barH, setBarH]          = useState(0);
 
   // tab-bar height = bar (64) + safe-area bottom
   const TAB_H = 64 + Math.max(insets.bottom, 10);
+  // total space the floating page-counter / Read More bar occupies above the tab
+  // bar — measured live via onLayout so it's always exact, never guessed. Falls
+  // back to a sane minimum before the first layout pass measures the real value.
+  const CTA_RESERVE = TAB_H + space.sm + Math.max(barH, 54) + space.md;
 
   /* ── fetch logic ── */
 
@@ -373,12 +384,17 @@ const HomeScreen = ({ navigation }) => {
           theme={theme}
           t={t}
           lang={language}
-          tabH={TAB_H}
+          ctaReserve={CTA_RESERVE}
           hintVisible={index === 0 && articles.length > 1}
         />
       ) : null,
-    [boxH, theme, t, language, TAB_H, articles.length],
+    [boxH, theme, t, language, CTA_RESERVE, articles.length],
   );
+
+  const onReadMore = useCallback(() => {
+    const current = articles[curIdx];
+    if (current) navigation.navigate('ArticleDetail', { article: current });
+  }, [articles, curIdx, navigation]);
 
   /* ── determine what to show ── */
 
@@ -426,15 +442,33 @@ const HomeScreen = ({ navigation }) => {
               maxToRenderPerBatch={3}
               windowSize={5}
             />
-            {/* floating page counter — sits above the tab bar */}
-            {articles.length > 1 && (
+            {/* single floating bottom bar — page counter + Read More CTA in one
+                row, rendered once per screen (not per card) so there is never a
+                second element competing for the same space above the tab bar */}
+            <View
+              style={[s.bottomBar, { bottom: TAB_H + space.sm }]}
+              pointerEvents="box-none"
+            >
               <View
-                style={[s.pgFloat, { bottom: TAB_H + space.sm }]}
-                pointerEvents="none"
+                style={[
+                  s.bottomBarPill,
+                  { backgroundColor: theme.surface, borderColor: theme.border },
+                ]}
+                onLayout={e => setBarH(e.nativeEvent.layout.height)}
               >
-                <PageCounter idx={curIdx} total={articles.length} theme={theme} />
+                {articles.length > 1 && (
+                  <PageCounter idx={curIdx} total={articles.length} theme={theme} />
+                )}
+                <TouchableOpacity
+                  style={[s.readMoreBtn, { backgroundColor: theme.accent }]}
+                  activeOpacity={0.85}
+                  onPress={onReadMore}
+                >
+                  <Text style={[s.readMoreTxt, { color: theme.onAccent }]}>{t('readMore')}</Text>
+                  <Icon name="arrow-forward" size={15} color={theme.onAccent} />
+                </TouchableOpacity>
               </View>
-            )}
+            </View>
           </>
         ) : null}
       </View>
@@ -509,11 +543,30 @@ const s = StyleSheet.create({
   },
   hintTxt: { fontSize: 12, fontWeight: '600' },
 
+  /* single floating bottom bar — page counter + Read More, one element,
+     rendered once per screen so it can never collide with itself */
+  bottomBar: {
+    position: 'absolute', left: 0, right: 0,
+    alignItems: 'center',
+  },
+  bottomBarPill: {
+    flexDirection: 'row', alignItems: 'center',
+    gap: space.md,
+    paddingLeft: space.lg, paddingRight: space.sm, paddingVertical: space.sm,
+    borderRadius: radius.pill, borderWidth: StyleSheet.hairlineWidth,
+    ...shadow.raised,
+  },
+  readMoreBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 6, paddingHorizontal: 16, paddingVertical: 9,
+    borderRadius: radius.pill,
+  },
+  readMoreTxt: { fontSize: 13, fontWeight: '800', letterSpacing: 0.3 },
+
   /* page counter */
-  pgFloat: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
-  pgRow:   { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  pgLine:  { width: 20, height: 1 },
-  pgNum:   { fontSize: 12, fontWeight: '700', letterSpacing: 0.5 },
+  pgRow:  { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  pgLine: { width: 14, height: 1 },
+  pgNum:  { fontSize: 12, fontWeight: '700', letterSpacing: 0.5 },
 
   /* skeleton shimmer */
   skelImg: {

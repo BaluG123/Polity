@@ -22,6 +22,7 @@ import CaseStudyDetailScreen from '../screens/CaseStudyDetailScreen';
 import GovernmentScreen from '../screens/GovernmentScreen';
 import JudiciaryScreen from '../screens/JudiciaryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import ArticleDetailScreen from '../screens/ArticleDetailScreen';
 import NotificationService from '../services/NotificationService';
 import NewsService from '../services/NewsService';
 
@@ -107,6 +108,7 @@ const AppNavigator = () => {
         <Stack.Screen name="CaseStudies" component={CaseStudiesScreen} />
         <Stack.Screen name="CaseStudyDetail" component={CaseStudyDetailScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="ArticleDetail" component={ArticleDetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
